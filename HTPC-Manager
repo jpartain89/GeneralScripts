@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Script to clone and partially setup HTPC-Manager
+
+DIR=$(dirname "$(readlink -f "$0")")
+GIT_DIR=/home/jpartain89/git
+. $DIR/myfunctions/allunix
+$USER=jpartain89
+
+main ()
+    {
+        echo ""
+        echo "Installing HTPC Manager dependencies."
+        press_enter &&
+        apt-get update && apt-get install build-essential git python-imaging python-dev python-setuptools python-pip python-cherrypy vnstat -y
+
+        sudo pip install --upgrade psutil
+
+        if [[ ! -e "$GIT_DIR/htpcmanager" ]]; then
+            echo ""
+            echo "The HTPC Manager git repo is not downloaded."
+            echo "Doing that now."
+            press_enter &&
+            git clone https://github.com/Hellowlol/HTPC-Manager "$GIT_DIR/htpcmanager"
+        fi
+        ln -s "$GIT_DIR/htpcmanager" "/opt/htpcmanager"
+        chown -R $USER:$USER "$GIT_DIR/htpcmanager"
+        chown -R $USER:$USER "/opt/htpcmanager"
+
+        if [[ ! -e /etc/init.d/htpcmanager ]]; then
+            echo ""
+            echo "Copying over the init.d script."
+            press_enter &&
+            cp /opt/htpcmanager/initscripts/initd /etc/init.d/htpcmanager
+            chmod +x /etc/init.d/htpcmanager
+            update-rc.d htpcmanager defaults
+        fi
+
+        echo ""
+        echo "Now, nano will open with the init.d script to be edited."
+        echo "There are some configuration settings that at least need a glance."
+        press_enter &&
+        nano /etc/init.d/htpcmanager &&
+        echo ""
+        echo "Now running the python program in the Terminal, "
+        echo "Since its the first time its been run."
+        echo "To exit that, please press `cntrl-D`"
+        python /opt/htpcmanager/Htpc.py
+    }
+
+yes_sudo && main
