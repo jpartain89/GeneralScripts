@@ -28,4 +28,4 @@ main ()
         fi
     }
 
-yes_sudo && main
+not_sudo && main
