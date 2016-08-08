@@ -3,28 +3,29 @@
 # Script to auto-clone the generalrepo git repo, along with copying the git map
 # code. And any other repo I want auto-added.
 
-DIR="$( cd "$( dirname "$0" )" && pwd )"
+DIR=$(dirname $(readlink -f $0))
+GIT_DIR=/home/jpartain89/git
 . $DIR/myfunctions/allunix
 
 main ()
     {
         # Git clones my "General Scripts" repo recursively with the submodule.
-        if [[ ! -e "$DIR/git/generalscripts" ]]; then
-            git clone --recursive https://jpartain89@github.com/jpartain89/generalscripts.git "$DIR/git/generalscripts"
+        if [[ ! -e "$GIT_DIR/git/generalscripts" ]]; then
+            git clone --recursive https://jpartain89@github.com/jpartain89/generalscripts.git "$GIT_DIR/git/generalscripts"
         fi
 
         # Clones the git-map repo and then copys the program to the right spot
         if [[ ! -f /usr/local/bin/git-map ]]; then
-            if [[ ! -e "$DIR/git/git-map" ]]; then
-                git clone https://github.com/icefox/git-map.git "$DIR/git/git-map"
+            if [[ ! -e "$GIT_DIR/git/git-map" ]]; then
+                git clone https://github.com/icefox/git-map.git "$GIT_DIR/git/git-map"
             fi
-            sudo cp "$DIR/git/git-map/git-map" "/usr/local/bin/git-map"
+            sudo cp "$GIT_DIR/git/git-map/git-map" "/usr/local/bin/git-map"
             sudo chmod +x /usr/local/bin/git-map
         fi
 
         # Copys the conffiles directory that all my vm's use
-        if [[ ! -e "$DIR/git/conffiles" ]]; then
-            git clone https://jpartain89@github.com/jpartain89/conffiles.git "$DIR/git/conffiles"
+        if [[ ! -e "$GIT_DIR/git/conffiles" ]]; then
+            git clone https://jpartain89@github.com/jpartain89/conffiles.git "$GIT_DIR/git/conffiles"
         fi
     }
 
