@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Script to clone and partially setup HTPC-Manager
 
