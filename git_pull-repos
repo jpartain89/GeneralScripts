@@ -18,8 +18,8 @@ main ()
             if [[ ! -e "$DIR/git/git-map" ]]; then
                 git clone https://github.com/icefox/git-map.git "$DIR/git/git-map"
             fi
-            cp "$DIR/git/git-map/git-map" "/usr/local/bin/git-map"
-            chmod +x /usr/local/bin/git-map
+            sudo cp "$DIR/git/git-map/git-map" "/usr/local/bin/git-map"
+            sudo chmod +x /usr/local/bin/git-map
         fi
 
         # Copys the conffiles directory that all my vm's use
