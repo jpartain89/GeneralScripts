@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # Default git script to pull both repo and submodule repo
 
