@@ -3,7 +3,7 @@
 # Script to auto-clone the generalrepo git repo, along with copying the git map
 # code. And any other repo I want auto-added.
 
-DIR=$(dirname $(readlink -f $0))
+DIR=$(dirname "$(readlink -f "$0")")
 GIT_DIR=/home/jpartain89/git
 . $DIR/myfunctions/allunix
 
