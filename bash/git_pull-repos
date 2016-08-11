@@ -6,6 +6,7 @@
 DIR=$(dirname "$(readlink -f "$0")")
 GIT_DIR=/home/jpartain89/git
 . $DIR/myfunctions/allunix
+USER=jpartain89
 
 main ()
     {
