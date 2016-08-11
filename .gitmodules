@@ -1,3 +1,3 @@
 [submodule "myfunctions"]
-	path = bash/myfunctions
+	path = myfunctions
 	url = https://jpartain89@github.com/jpartain89/myfunctions.git
