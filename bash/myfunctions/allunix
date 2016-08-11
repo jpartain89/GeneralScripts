@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# This is my unix-versally available functions file
+# (it can be used - or rather, will be tested - on macOS and Ubuntu)
+
+# This item forces the user to "press enter to continue", then clears the
+# screen for the next output.
+press_enter ()
+    {
+        echo ""
+		echo -n "Press Enter to continue"
+	    read -r
+        clear
+    }
+
+# This one is overly shortened, and I will hopefully begin exploring the
+# referenced file more, for more system info I might need.
+# the `*` in  `/etc/*-release ` is specifically needed for, say, using Raspbian
+# on a Raspberry Pi. Doesn't work w/ macOS.
+os_info ()
+	{
+        #
+		. /etc/*-release
+		export OS=$ID
+	}
+
+# Check if running as sudo.
+# If user is SUDO, it wont say anything.
+# If no SUDO, it will show the text, then force a "press enter"
+yes_sudo ()
+    {
+        if [[ $EUID != 0 ]]; then
+            echo ""
+            echo "Sorry, you have to use sudo in order to run this script."
+            press_enter
+            exit 1
+        fi
+    }
+
+# To force running without sudo
+not_sudo ()
+    {
+        if [[ $EUID == 0 ]]; then
+            echo ""
+            echo "Sorry, but this specific script is requiring - oddly enough -"
+            echo "for you to NOT run as sudo!"
+            echo "Weird, right?"
+            echo "Oh well, sorry. Redo the script without sudo!"
+            press_enter
+            exit 1
+        fi
+    }
