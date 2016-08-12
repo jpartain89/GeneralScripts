@@ -1,0 +1,26 @@
+# Ansible Play to update, upgrade, dist-upgrade, and autoremove --purge
+
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Update Apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 7200
+
+    - name: Upgrade Apt
+      apt:
+        upgrade: full
+
+    - name: Dist-Upgrade Apt
+      apt:
+        upgrade: dist
+
+    - name: AutoRemove Apt Packages
+      shell:
+        'apt-get autoremove --purge -y'
+      register: ara
+
+    - name: Show Autoremove Output
+      debug: var=ara.stdout_lines

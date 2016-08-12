@@ -1,0 +1,3 @@
+local-nginx ansible_host=192.168.1.30 ansible_port=22230
+local-web ansible_host=192.168.1.40 ansible_port=22240
+local-downloader ansible_host=192.168.1.45 ansible_port=22245
