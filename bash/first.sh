@@ -4,8 +4,13 @@ set -e
 # First Step Script.
 # Splits off between Linux/macOS to start
 
+if [[ $(uname -s) == 'Darwin' ]]; then
+    GIT_DIR=/Users/jpartain89/git
+else
+    GIT_DIR=/home/jpartain89/git
+fi
+
 DIR=$(dirname "$(readlink -f "$0")")
-GIT_DIR=/home/jpartain89/git
 
 if [[ ! -e "$GIT_DIR" ]]; then
     mkdir "$GIT_DIR"
