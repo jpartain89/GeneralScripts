@@ -1,14 +1,21 @@
 #!/bin/bash
+set -e
 
 # Simple auto-cloner and runner for general scripts
 
 DIR=$(dirname "$(readlink -f "$0")")
 GIT_DIR=/home/jpartain89/git
+source "$GIT_DIR/generalscripts/myfunctions/allunix"
 
 main ()
     {
         if [[ ! -e "$GIT_DIR/generalscripts" ]]; then
+            if [[ ! -e "$GIT_DIR" ]]; then
+                mkdir "$GIT_DIR"
+            fi
             git clone --recursive https://jpartain89@github.com/jpartain89/generalscripts.git "$GIT_DIR/generalscripts"
             sudo "$GIT_DIR/generalscripts/git_pull-repos"
         fi
     }
+
+yes_sudo && main

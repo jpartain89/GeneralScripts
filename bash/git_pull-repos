@@ -5,10 +5,15 @@
 
 DIR=$(dirname "$(readlink -f "$0")")
 GIT_DIR=/home/jpartain89/git
-. "$GIT_DIR/generalscripts/myfunctions/allunix"
+source "$GIT_DIR/generalscripts/myfunctions/allunix"
 USER=jpartain89
 
 main ()
+    {
+        git-repos && os_type
+    }
+
+git-repos ()
     {
         # Git clones my "General Scripts" repo recursively with the submodule.
         if [[ ! -e "$GIT_DIR/generalscripts" ]]; then
@@ -30,4 +35,21 @@ main ()
         fi
     }
 
-not_sudo && main
+linux-dotfiles ()
+    {
+        if [[ ! -e "$GIT_DIR/linux_dotfiles" ]]; then
+            git clone https://jpartain89@github.com/jpartain89/linux_dotfiles.git "$GIT_DIR/linux_dotfiles"
+        fi
+    }
+
+linux-function ()
+    {
+        linux-dotfiles
+    }
+
+macOS-function ()
+    {
+        exit 0
+    }
+
+yes_sudo && main
