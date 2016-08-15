@@ -51,7 +51,7 @@ linux_dotfiles ()
         fi
     }
 
-macOS-dotfiles ()
+macOS_dotfiles ()
     {
         if [[ ! -e "$GIT_DIR/macOS_dotfiles" ]]; then
             git clone https://jpartain89@github.com/jpartain89/macos_dotfiles.git "$GIT_DIR/macos_dotfiles"
@@ -66,12 +66,12 @@ os_type ()
                 echo ""
                 echo "Looks like you're running linux."
                 echo "Cloning linux_dotfiles and bootstrapping"
-                linux-dotfiles;;
+                linux_dotfiles;;
             Darwin )
                 echo ""
                 echo "Looks like you're running macOS."
                 echo "Cloning macOS_dotfiles and bootstrapping"
-                macOS-dotfiles;;
+                macOS_dotfiles;;
             * )
                 echo ""
                 echo "Not running Linux or macOS."
