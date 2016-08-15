@@ -56,6 +56,7 @@ macOS-dotfiles ()
         if [[ ! -e "$GIT_DIR/macOS_dotfiles" ]]; then
             git clone https://jpartain89@github.com/jpartain89/macos_dotfiles.git "$GIT_DIR/macos_dotfiles"
             source "$GIT_DIR/macos_dotfiles/bootstrap.sh"
+        fi
     }
 
 os_type ()
@@ -80,4 +81,4 @@ os_type ()
         esac
     }
 
-allunix_clone && git_repos && os_type && main
+allunix_clone && git_repos && os_type
