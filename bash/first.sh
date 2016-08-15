@@ -21,7 +21,7 @@ allunix_clone ()
         fi
     }
 
-git-repos ()
+git_repos ()
     {
         # Git clones my "General Scripts" repo recursively with the submodule.
         if [[ ! -e "$GIT_DIR/generalscripts" ]]; then
