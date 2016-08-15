@@ -70,6 +70,11 @@ linux_dotfiles ()
         if [[ ! -e "$GIT_DIR/linux_dotfiles" ]]; then
             git clone https://jpartain89@github.com/jpartain89/linux_dotfiles.git "$GIT_DIR/linux_dotfiles"
             source "$GIT_DIR/linux_dotfiles/bootstrap.sh"
+        else
+            echo ""
+            echo "linux_dotfiles already cloned. Exiting..."
+            echo ""
+            exit 0
         fi
     }
 
