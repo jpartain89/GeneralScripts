@@ -32,6 +32,7 @@ allunix_clone ()
             export ALLUNIX="$GIT_DIR/myfunctions/allunix" &&
             source "$ALLUNIX"
         fi
+        chown -R jpartain89:jpartain89 "$GIT_DIR/myfunctions"
     }
 
 git_repos ()
@@ -42,6 +43,7 @@ git_repos ()
             echo "Cloning GeneralScripts repo"
             echo ""
             git clone --recursive https://jpartain89@github.com/jpartain89/generalscripts.git "$GIT_DIR/generalscripts"
+            chown -R jpartain89:jpartain89 "$GIT_DIR/generalscripts"
             if [[ ! -f /usr/local/bin/map-pull-sub ]]; then
                 echo ""
                 echo "Copying map-pull-sub over to /usr/local/bin"
@@ -58,6 +60,7 @@ git_repos ()
                 echo "Cloning git-map repo"
                 echo ""
                 git clone https://github.com/icefox/git-map.git "$GIT_DIR/git-map"
+                chown -R jpartain89:jpartain89 "$GIT_DIR/git-map"
             fi
             echo ""
             echo "Copying git-map to /usr/local/bin"
@@ -69,6 +72,7 @@ git_repos ()
         # Copys the conffiles directory that all my vm's use
         if [[ ! -e "$GIT_DIR/conffiles" ]]; then
             git clone https://jpartain89@github.com/jpartain89/conffiles.git "$GIT_DIR/conffiles"
+            chown -R jpartain89:jpartain89 "$GIT_DIR/conffiles"
         fi
     }
 
@@ -77,6 +81,7 @@ linux_dotfiles ()
         if [[ ! -e "$GIT_DIR/linux_dotfiles" ]]; then
             git clone https://jpartain89@github.com/jpartain89/linux_dotfiles.git "$GIT_DIR/linux_dotfiles"
             source "$GIT_DIR/linux_dotfiles/bootstrap.sh"
+            chown -R jpartain89:jpartain89 "$GIT_DIR/linux_dotfiles"
         else
             echo ""
             echo "linux_dotfiles already cloned. Exiting..."
@@ -90,6 +95,7 @@ macOS_dotfiles ()
         if [[ ! -e "$GIT_DIR/macOS_dotfiles" ]]; then
             git clone https://jpartain89@github.com/jpartain89/macos_dotfiles.git "$GIT_DIR/macos_dotfiles"
             source "$GIT_DIR/macos_dotfiles/bootstrap.sh"
+            chown -R jpartain89:jpartain89 "$GIT_DIR/macos_dotfiles"
         fi
     }
 
