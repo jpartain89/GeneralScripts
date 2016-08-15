@@ -17,7 +17,7 @@ allunix_clone ()
             echo ""
             echo "Cloning the 'myfunctions' repo"
             echo ""
-            git clone https://jpartain89@github.com/jpartain89/myfunctions.git "$GIT_DIR/myfunctions"
+            git clone https://jpartain89@github.com/jpartain89/myfunctions.git "$GIT_DIR/myfunctions" && 
             source "$GIT_DIR/myfunctions/allunix"
         else
             echo ""
