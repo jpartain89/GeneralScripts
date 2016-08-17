@@ -21,6 +21,7 @@
       shell:
         'apt-get autoremove --purge -y'
       register: ara
+      changed_when: False
 
     - name: Show Autoremove Output
       debug: var=ara.stdout_lines
