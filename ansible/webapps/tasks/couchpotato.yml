@@ -1,0 +1,66 @@
+---
+# Ansible-Playbook for CouchPotato Installation
+
+- name: Make sure CP group exists
+  group:
+    name: couchpotato
+    state: present
+    system: yes
+
+- name: Make sure CP user exists
+  user:
+    name: couchpotato
+    state: present
+    system: yes
+    groups: vboxsf
+    group: couchpotato
+
+- name: Clone CouchPotato GitHub Repo
+  git:
+    repo: https://github.com/CouchPotato/CouchPotatoServer.git
+    dest: "{{ git_loc }}/couchpotato"
+    update: yes
+
+- name: Update Ownership of CP git Repo
+  file:
+    path: "{{ git_loc }}/couchpotato"
+    owner: couchpotato
+    group: couchpotato
+    recurse: yes
+
+- name: Symlink CP Repo to /opt
+  file:
+    src: "{{ git_loc }}/couchpotato"
+    dest: /opt/couchpotato
+    state: link
+    owner: couchpotato
+    group: couchpotato
+
+- name: Copy the default config
+  copy:
+    src: cp_default
+    dest: /etc/default/couchpotato
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy the ubuntu init.d file
+  copy:
+    src: /opt/couchpotato/init/ubuntu
+    dest: /etc/init.d/couchpotato
+    remote_src: True
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Add Ubuntu init.d script to Upstart
+  service:
+    name: couchpotato
+    state: started
+    enabled: yes
+
+- name: Add CouchPotato to UFW
+  ufw:
+    state: enabled
+    rule: allow
+    port: 5050

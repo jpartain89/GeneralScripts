@@ -1,0 +1,19 @@
+# COPY THIS FILE TO /etc/default/couchpotato
+# Accepted variables with default values -if any- in parentheses:
+
+# username to run couchpotato under (couchpotato)
+CP_USER=couchpotato
+# directory of CouchPotato.py (/opt/couchpotato)
+CP_HOME=/opt/couchpotato
+
+# directory of couchpotato's db, cache and logs (/var/opt/couchpotato)
+CP_DATA=/var/opt/couchpotato
+# full path of couchpotato.pid (/var/run/couchpotato/couchpotato.pid)
+CP_PIDFILE=/var/run/couchpotato.pid
+# full path of the python binary (/usr/bin/python)
+PYTHON_BIN=/usr/bin/python
+
+# extra cli options for couchpotato, see 'CouchPotato.py --help'
+CP_OPTS=
+# extra options for start-stop-daemon, see 'man start-stop-daemon'
+SSD_OPTS=

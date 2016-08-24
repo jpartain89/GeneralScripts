@@ -1,0 +1,60 @@
+---
+# Ansible-Playbook for PlexPy
+
+- name: Clone PlexPy GitHub Repo
+  git:
+    repo: https://github.com/drzoidberg33/plexpy.git
+    dest: "{{ git_loc }}/plexpy"
+    update: yes
+  notify: restart plexpy
+
+- name: Touch Default PlexPy File
+  file:
+    path: /etc/default/plexpy
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create PlexPy User
+  user:
+    name: plexpy
+    state: present
+    system: yes
+    groups: vboxsf
+    group: nogroup
+
+- name: Update Ownership of PlexPy git Repo
+  file:
+    path: /home/jpartain89/git/plexpy
+    owner: plexpy
+    group: nogroup
+    recurse: yes
+
+- name: Symlink PlexPy Repo to /opt
+  file:
+    src: "{{ git_loc }}/plexpy"
+    dest: /opt/couchpotato
+    state: link
+    owner: plexpy
+    group: nogroup
+
+- name: Copy the ubuntu init.d file
+  copy:
+    src: /opt/plexpy/init-scripts/init.ubuntu
+    dest: /etc/init.d/plexpy
+    remote_src: True
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Add PlexPy init.d Script to Upstart
+  service:
+    name: plexpy
+    state: started
+    enabled: yes
+
+- name: Add PlexPy to UFW
+  ufw:
+    state: enabled
+    rule: allow
+    port: 8181

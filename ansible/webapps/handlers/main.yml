@@ -1,0 +1,16 @@
+---
+# webapps main handlers file
+- name: restart UFW
+  service: name=ufw state=restarted
+
+- name: restart nzbdrone
+  service: name=nzbdrone state=restarted
+
+- name: Restart CouchPotato with Monit
+  shell:
+    'monit restart couchpotato'
+  args:
+    chdir: /etc/monit
+
+- name: restart plexpy
+  service: name=plexpy state=restarted

@@ -1,0 +1,67 @@
+---
+# common installs
+
+- hosts: linux
+  vars_files:
+    - main_vars.yml
+
+  tasks:
+    - name: Clone Standard Github Repos
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ item.dest }}"
+        update: yes
+        force: yes
+      with_items:
+          -
+            repo: "{{ jp_git }}/conffiles.git"
+            dest: "{{ git_loc }}/conffiles"
+          -
+            repo: "{{ jp_git }}/generalscripts.git"
+            dest: "{{ git_loc }}/generalscripts"
+          -
+            repo: https://github.com/icefox/git-map.git
+            dest: "{{ git_loc }}/git-map"
+          -
+            repo: "{{ jp_git }}/myfunctions.git"
+            dest: "{{ git_loc }}/myfunctions"
+          -
+            repo: "{{ jp_git }}/linux_dotfiles.git"
+            dest: "{{ git_loc }}/linux_dotfiles"
+
+    - name: Run bootstrap.sh from linux_dotfiles
+      shell: 'bash "{{ git_loc }}/linux_dotfiles/bootstrap.sh"'
+
+    - name: Install apt-get Universal Requirements
+      become: yes
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+        cache_valid_time: 7200
+      with_items:
+        - git-core
+        - libffi-dev
+        - libssl-dev
+        - zlib1g-dev
+        - libxslt1-dev
+        - libxml2-dev
+        - python
+        - python-pip
+        - python-dev
+        - build-essential
+        - python2.7
+        - apt-transport-https
+        - monit
+
+    - name: Install Pip Requirements
+      become: yes
+      pip:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - lxml
+        - cryptography
+        - pyopenssl
+        - pip
+        - cffi

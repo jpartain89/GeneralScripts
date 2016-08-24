@@ -1,0 +1,7 @@
+---
+# webapps.yml
+
+- hosts: web
+  become: yes
+  roles:
+    - webapps
