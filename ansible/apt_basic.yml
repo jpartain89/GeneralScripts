@@ -1,6 +1,6 @@
 # Ansible Play to update, upgrade, dist-upgrade, and autoremove --purge
 
-- hosts: all
+- hosts: linux
   become: yes
 
   tasks:
