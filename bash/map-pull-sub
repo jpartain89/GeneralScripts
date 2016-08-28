@@ -2,8 +2,6 @@
 
 # Default git script to pull both repo and submodule repo
 
-#git map submodule foreach git pull origin master &&
-# Testing a different approach
-git map submodule update --init --recursive && 
 git map pull &&
-git map fetch --all
+git map fetch --all && 
+git map submodule update --init --recursive
