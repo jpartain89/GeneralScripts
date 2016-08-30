@@ -31,12 +31,17 @@
 
 - name: Synchronize nginx_conf to /etc/nginx
   synchronize:
-    src: "{{ git_loc }}/nginx-deployment/nginx_conf/"
-    dest: /etc/nginx/
+    src: ~/git/nginx-deployment/nginx_conf/
+    dest: /etc/nginx
     delete: yes
     recursive: yes
-  delegate_to: "{{ inventory_hostname }}"
-  notify: restart nginx
+    perms: yes
+    checksum: yes
+  changed_when: False
+  register: nginx_sync
+
+- name: Show output of rsync
+  debug: var=nginx_sync.stdout_lines
 
 - name: Update Ownership of /etc/nginx
   file:
@@ -47,11 +52,11 @@
     state: directory
 
 - name: Test NGINX Config
-  shell: nginx -t
+  shell: 'nginx -t'
   args:
     executable: /bin/bash
-  register: nginx_test
   changed_when: False
+  register: nginx_test
 
 - name: Show Output from testing NGINX Config
   debug: var=nginx_test.stdout_lines
