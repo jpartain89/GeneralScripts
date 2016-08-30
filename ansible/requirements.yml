@@ -50,6 +50,8 @@
         - python-pip
         - python-dev
         - python-pycurl
+        - python-setuptools
+        - python-imaging
         - build-essential
         - python2.7
         - apt-transport-https

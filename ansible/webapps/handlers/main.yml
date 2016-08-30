@@ -1,16 +1,32 @@
 ---
 # webapps main handlers file
-- name: restart UFW
-  service: name=ufw state=restarted
+
+- name: start nzbdrone
+  service: name=nzbdrone state=started
 
 - name: restart nzbdrone
   service: name=nzbdrone state=restarted
 
-- name: Restart CouchPotato with Monit
-  shell:
-    'monit restart couchpotato'
-  args:
-    chdir: /etc/monit
+- name: start couchpotato
+  service: name=couchpotato state=started
+
+- name: restart couchpotato
+  service: name=couchpotato state=restarted
+
+- name: start headphones
+  service: name=headphones state=started
+
+- name: restart headphones
+  service: name=headphones state=restarted
+
+- name: start plexpy
+  service: name=plexpy state= started
 
 - name: restart plexpy
   service: name=plexpy state=restarted
+
+- name: start htpcmanager
+  service: name=htpcmanager state=started
+
+- name: restart htpcmanager
+  service: name=htpcmanager state=restarted

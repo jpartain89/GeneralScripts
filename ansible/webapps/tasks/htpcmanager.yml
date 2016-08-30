@@ -1,0 +1,50 @@
+---
+# HTPC-Manager ansible-playbook
+# file: webapps/tasks/htpcmanager.yml
+
+- name: HTPC Manager pip requirements
+  become: yes
+  pip:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - cherrypy
+    - psutil
+
+- name: Clone HTPC-Manager repo
+  git:
+    repo: https://github.com/Hellowlol/HTPC-Manager.git
+    dest: "{{ git_loc }}/htpcmanager"
+    update: yes
+  notify: restart htpcmanager
+
+- name: Update ownership of HTPCManager git repo
+  file:
+    path: "{{ git_loc }}/htpcmanager"
+    owner: jpartain89
+    owner: jpartain89
+    recurse: yes
+    state: directory
+
+- name: Symlink HTPCManager Repo to /opt
+  file:
+    src: "{{ git_loc }}/htpcmanager"
+    dest: /opt/htpcmanager
+    state: link
+    owner: jpartain89
+    group: jpartain89
+
+- name: Copy my custom Ubuntu init.d file
+  copy:
+    src: htpcmanager_init
+    dest: /etc/init.d/htpcmanager
+    owner: root
+    group: root
+    mode: 0644
+  notify: start htpcmanager
+
+- name: Add HTPCManager to ufw
+  ufw:
+    state: enabled
+    rule: allow
+    port: 8085

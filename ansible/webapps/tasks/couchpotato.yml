@@ -20,6 +20,7 @@
     repo: https://github.com/CouchPotato/CouchPotatoServer.git
     dest: "{{ git_loc }}/couchpotato"
     update: yes
+  notify: restart couchpotato
 
 - name: Update Ownership of CP git Repo
   file:
@@ -27,6 +28,7 @@
     owner: couchpotato
     group: couchpotato
     recurse: yes
+    state: directory
 
 - name: Symlink CP Repo to /opt
   file:
@@ -44,20 +46,15 @@
     group: root
     mode: 0644
 
-- name: Copy the ubuntu init.d file
-  copy:
+- name: Link the ubuntu init.d file
+  file:
     src: /opt/couchpotato/init/ubuntu
     dest: /etc/init.d/couchpotato
-    remote_src: True
+    state: link
     mode: 0755
     owner: root
     group: root
-
-- name: Add Ubuntu init.d script to Upstart
-  service:
-    name: couchpotato
-    state: started
-    enabled: yes
+  notify: start couchpotato
 
 - name: Add CouchPotato to UFW
   ufw:

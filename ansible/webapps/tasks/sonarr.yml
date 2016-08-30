@@ -27,17 +27,10 @@
     group: root
     owner: root
     mode: 0755
-  notify: restart nzbdrone
-
-- name: Add NzbDrone init.d to Upstart
-  service:
-    name: nzbdrone
-    state: started
-    enabled: yes
+  notify: start nzbdrone
 
 - name: Add NzbDrone to UFW
   ufw:
     state: enabled
     rule: allow
     port: 8989
-  notify: restart UFW
