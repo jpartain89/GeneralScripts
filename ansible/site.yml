@@ -1,0 +1,7 @@
+---
+# Ansible Playbook to start off all Plays, includes basic github stuff
+# File: site.yml
+
+  - include: requirements.yml
+  - include: webapps.yml
+  - include: nginx.yml

@@ -1,5 +1,6 @@
 ---
-# ansible vars_file
+# file: group_vars/linux
 
 jp_git: https://jpartain89@github.com/jpartain89
 git_loc: /home/jpartain89/git
+dotfiles_c: linux_dotfiles

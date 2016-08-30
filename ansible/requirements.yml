@@ -1,9 +1,7 @@
 ---
 # common installs
 
-- hosts: linux
-  vars_files:
-    - main_vars.yml
+- hosts: all
 
   tasks:
     - name: Clone Standard Github Repos
@@ -11,7 +9,6 @@
         repo: "{{ item.repo }}"
         dest: "{{ item.dest }}"
         update: yes
-        force: yes
       with_items:
           -
             repo: "{{ jp_git }}/conffiles.git"
@@ -26,11 +23,13 @@
             repo: "{{ jp_git }}/myfunctions.git"
             dest: "{{ git_loc }}/myfunctions"
           -
-            repo: "{{ jp_git }}/linux_dotfiles.git"
-            dest: "{{ git_loc }}/linux_dotfiles"
+            repo: "{{ jp_git }}/{{ dotfiles_c }}.git"
+            dest: "{{ git_loc }}/{{  dotfiles_c }}"
 
-    - name: Run bootstrap.sh from linux_dotfiles
-      shell: 'bash "{{ git_loc }}/linux_dotfiles/bootstrap.sh"'
+    - name: Run bootstrap.sh from dotfiles.
+      shell: 'source "{{ git_loc }}/{{ dotfiles_c }}/bootstrap.sh"'
+      args:
+        executable: /bin/bash
 
     - name: Install apt-get Universal Requirements
       become: yes
@@ -39,6 +38,7 @@
         state: latest
         update_cache: yes
         cache_valid_time: 7200
+      when: ansible_os_family == "Debian"
       with_items:
         - git-core
         - libffi-dev
@@ -49,6 +49,7 @@
         - python
         - python-pip
         - python-dev
+        - python-pycurl
         - build-essential
         - python2.7
         - apt-transport-https
@@ -65,3 +66,6 @@
         - pyopenssl
         - pip
         - cffi
+        - ndg-httpsclient
+        - urllib3
+        - speedtest-cli
