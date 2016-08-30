@@ -1,0 +1,5 @@
+---
+# nginx/defaults/main.yml
+
+certbot_source: /home/jpartain89
+certbot_certificate_path: /etc/letsencrypt/

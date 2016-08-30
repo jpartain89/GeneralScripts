@@ -1,0 +1,57 @@
+---
+# nginx/tasks/main.yml
+
+- name: Configure NGINX Repos on Ubuntu
+  apt_repository:
+    repo: 'ppa:nginx/development'
+    state: present
+  register: nginx_ppa_added
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+  notify: restart nginx
+
+- name: Clone/Update nginx-deployment git repo
+  git:
+    repo: "{{ jp_git }}/nginx-deployment.git"
+    dest: "{{ git_loc }}/nginx-deployment"
+    update: yes
+
+- name: Update Ownership of NGINX repo
+  file:
+    path: "{{ git_loc }}/nginx-deployment"
+    owner: jpartain89
+    group: jpartain89
+    recurse: yes
+    state: directory
+
+- name: Synchronize nginx_conf to /etc/nginx
+  synchronize:
+    src: "{{ git_loc }}/nginx-deployment/nginx_conf/"
+    dest: /etc/nginx/
+    delete: yes
+    recursive: yes
+  delegate_to: "{{ inventory_hostname }}"
+  notify: restart nginx
+
+- name: Update Ownership of /etc/nginx
+  file:
+    path: /etc/nginx
+    recurse: yes
+    owner: jpartain89
+    group: jpartain89
+    state: directory
+
+- name: Test NGINX Config
+  shell: nginx -t
+  args:
+    executable: /bin/bash
+  register: nginx_test
+  changed_when: False
+
+- name: Show Output from testing NGINX Config
+  debug: var=nginx_test.stdout_lines
