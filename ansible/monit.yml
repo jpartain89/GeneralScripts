@@ -1,0 +1,7 @@
+---
+# monit.yml
+
+- hosts: linux
+  become: yes
+  roles:
+    - monit

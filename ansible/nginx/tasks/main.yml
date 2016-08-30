@@ -2,3 +2,4 @@
 # nginx/tasks/main.yml
 
   - include: nginx.yml
+  - include: mmonit.yml

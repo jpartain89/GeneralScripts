@@ -1,0 +1,32 @@
+---
+# monit/tasks/main.yml
+
+- name: Download and Decompress monit files
+  unarchive:
+    src: "{{ monit_download }}"
+    dest: "{{ jp_home }}/monit"
+    remote_src: yes
+  when: monit_updated == 'no'
+
+- name: Run Configure
+  shell:
+    './configure --enable-optimized'
+  args:
+    chdir: "{{ jp_home }}/monit/"
+  when: monit_updated == 'no'
+  register: monit_config
+
+- name: Show ./configure output
+  debug: var=monit_config.stdout_lines
+
+- name: Run Make
+  make:
+    chdir: "{{ jp_home }}/monit/"
+  when: monit_updated == 'no'
+
+- name: Run Make --install
+  become: yes
+  make:
+    chdir: "{{ jp_home }}/monit/"
+    target: install
+  when: monit_updated == 'no'

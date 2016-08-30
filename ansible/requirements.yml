@@ -55,7 +55,6 @@
         - build-essential
         - python2.7
         - apt-transport-https
-        - monit
 
     - name: Install Pip Requirements
       become: yes

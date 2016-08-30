@@ -1,0 +1,25 @@
+---
+# nginx/tasks/mmonit.yml
+
+- name: Download and unpack mmonit file
+  unarchive:
+    src: "{{ mmonit_download }}"
+    dest: /opt/mmonit
+    remote_src: yes
+
+- name: Copy over the /conf directory from local to server
+  synchronize:
+    src: "{{ conffiles_mac_dir }}/mmonit/conf"
+    dest: /opt/mmonit/conf
+
+- name: Confirm /opt/mmonit has correct ownership
+  file:
+    path: /opt/mmonit
+    owner: jpartain89
+    group: jpartain89
+    recurse: yes
+    state: directory
+
+- name: Have monit restart mmonit
+  shell: 'sudo monit restart mmonit'
+  

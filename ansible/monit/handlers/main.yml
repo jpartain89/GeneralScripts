@@ -1,0 +1,7 @@
+---
+# monit/handlers/main
+
+- name: create monit_file
+  file:
+    path: "{{ jp_home }}/monit/ansible_run"
+    state: touch
