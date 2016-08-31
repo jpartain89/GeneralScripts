@@ -5,10 +5,10 @@ set -e
 # Splits off between Linux/macOS to start
 
 if [[ $(uname -s) == 'Darwin' ]]; then
-    GIT_DIR=/Users/jpartain89/git
+    GIT_DIR=/Users/$USER/git
     OWNER=jpartain89:staff
 else
-    GIT_DIR=/home/jpartain89/git
+    GIT_DIR=/home/$USER/git
     OWNER=jpartain89:jpartain89
 fi
 
