@@ -1,0 +1,45 @@
+#!/bin/bash
+#set -e
+
+# Shell Script that will auto-call ansible-playbook for me!
+
+GIT_DIR=/Users/$USER/git
+
+        case "$1" in
+            -ul | --update-linux )
+                echo "Updating Linux apt-get";
+                ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
+                ;;
+            -rl | --reboot-linux )
+                echo "Rebooting all Linux Machines";
+                ansible linux -s -m shell -a 'reboot'
+                ;;
+            -rv | --reboot-virtual )
+                echo "Rebooting only Virtual Machines";
+                ansible virtual -s -m shell -a 'reboot'
+                ;;
+            -m | --monit-reload )
+                echo "Reloads monit on all linux machines";
+                ansible linux -s -m service -a 'name=monit state=restarted'
+                ;;
+            -h | --help )
+                help_text &&
+                exit 0;;
+            * )
+                help_text &&
+                exit 0;;
+        esac
+
+
+function help_text ()
+    {
+        echo "My personal shortcutting ansible stuffs!"
+        echo ""
+        echo "Usage: ans-apt [-ul --update-linux] [-rl --reboot-linux] [-rv --reboot-virtual] [-h --help]"
+        echo ""
+        echo "Options:"
+        echo "    -ul, --update-linux     : Updates all linux machines"
+        echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
+        echo "    -rv, --reboot-virtual   : Reboots all Virtual Linux machines"
+        echo "    -h,  --help             : this help"
+    }
