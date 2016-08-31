@@ -1,9 +1,32 @@
 #!/bin/bash
-#set -e
+set -e
 
 # Shell Script that will auto-call ansible-playbook for me!
 
+if [[ $EUID == 0 ]]; then
+    echo ""
+    echo "Sorry, can't use sudo."
+    exit 2
+    press_enter
+    exit 1
+fi
+
+if [[ yes_sudo ]]; then exit 1; fi
+
 GIT_DIR=/Users/$USER/git
+
+function help_text ()
+    {
+        echo "My personal shortcutting ansible stuffs!"
+        echo ""
+        echo "Usage: ans-apt [-ul --update-linux] [-rl --reboot-linux] [-rv --reboot-virtual] [-h --help]"
+        echo ""
+        echo "Options:"
+        echo "    -ul, --update-linux     : Updates all linux machines"
+        echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
+        echo "    -rv, --reboot-virtual   : Reboots all Virtual Linux machines"
+        echo "    -h,  --help             : this help"
+    }
 
         case "$1" in
             -ul | --update-linux )
@@ -29,17 +52,6 @@ GIT_DIR=/Users/$USER/git
                 help_text &&
                 exit 0;;
         esac
-
-
-function help_text ()
-    {
-        echo "My personal shortcutting ansible stuffs!"
-        echo ""
-        echo "Usage: ans-apt [-ul --update-linux] [-rl --reboot-linux] [-rv --reboot-virtual] [-h --help]"
-        echo ""
-        echo "Options:"
-        echo "    -ul, --update-linux     : Updates all linux machines"
-        echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
-        echo "    -rv, --reboot-virtual   : Reboots all Virtual Linux machines"
-        echo "    -h,  --help             : this help"
     }
+
+no_sudo && main
