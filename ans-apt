@@ -11,8 +11,6 @@ if [[ $EUID == 0 ]]; then
     exit 1
 fi
 
-if [[ yes_sudo ]]; then exit 1; fi
-
 GIT_DIR=/Users/$USER/git
 
 function help_text ()
@@ -52,6 +50,5 @@ function help_text ()
                 help_text &&
                 exit 0;;
         esac
-    }
 
 no_sudo && main
