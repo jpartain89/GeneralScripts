@@ -26,29 +26,27 @@ function help_text ()
         echo "    -h,  --help             : this help"
     }
 
-        case "$1" in
-            -ul | --update-linux )
-                echo "Updating Linux apt-get";
-                ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
-                ;;
-            -rl | --reboot-linux )
-                echo "Rebooting all Linux Machines";
-                ansible linux -s -m shell -a 'reboot'
-                ;;
-            -rv | --reboot-virtual )
-                echo "Rebooting only Virtual Machines";
-                ansible virtual -s -m shell -a 'reboot'
-                ;;
-            -m | --monit-reload )
-                echo "Reloads monit on all linux machines";
-                ansible linux -s -m service -a 'name=monit state=restarted'
-                ;;
-            -h | --help )
-                help_text &&
-                exit 0;;
-            * )
-                help_text &&
-                exit 0;;
-        esac
-
-no_sudo && main
+case "$1" in
+    -ul | --update-linux )
+        echo "Updating Linux apt-get";
+        ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
+        ;;
+    -rl | --reboot-linux )
+        echo "Rebooting all Linux Machines";
+        ansible linux -s -m shell -a 'reboot'
+        ;;
+    -rv | --reboot-virtual )
+        echo "Rebooting only Virtual Machines";
+        ansible virtual -s -m shell -a 'reboot'
+        ;;
+    -m | --monit-reload )
+        echo "Reloads monit on all linux machines";
+        ansible linux -s -m service -a 'name=monit state=restarted'
+        ;;
+    -h | --help )
+        help_text &&
+        exit 0;;
+    * )
+        help_text &&
+        exit 0;;
+esac
