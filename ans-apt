@@ -21,8 +21,13 @@ function help_text ()
         echo ""
         echo "Options:"
         echo "    -ul, --update-linux     : Updates all linux machines"
+        echo ""
         echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
         echo "    -rv, --reboot-virtual   : Reboots all Virtual Linux machines"
+        echo ""
+        echo "    -sl, --shutdown-linux   : Shutsdown all Linux Machines"
+        echo "    -sv, --shutdown-virtual : Shutsdown all Virtual Machines"
+        echo ""
         echo "    -h,  --help             : this help"
     }
 
@@ -42,6 +47,14 @@ case "$1" in
     -m | --monit-reload )
         echo "Reloads monit on all linux machines";
         ansible linux -s -m service -a 'name=monit state=restarted'
+        ;;
+    -sl | --shutdown-linux )
+        echo "Shutting down all linux devices";
+        ansible linux -s -a 'shutdown -h now'
+        ;;
+    -sv | --shutdown-virtual )
+        echo "Shutting down all Virtual Machines";
+        ansible virtual -s -a 'shutdown -h now'
         ;;
     -h | --help )
         help_text &&
