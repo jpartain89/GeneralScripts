@@ -4,6 +4,4 @@
 certbot_source: /home/jpartain89
 certbot_certificate_path: /etc/letsencrypt/
 
-mmonit_download: https://mmonit.com/dist/mmonit-3.5.1-linux-x64.tar.gz
-
 conffiles_mac_dir: /Users/jpartain89/git/conffiles
