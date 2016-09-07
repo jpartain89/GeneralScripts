@@ -1,0 +1,23 @@
+---
+# tasks/requirements.yml
+
+- name: Install Defaults/Requirements through apt
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - python
+    - python-pip
+    - apt-transport-https
+    - build-essential
+
+- name: Install pip requirements
+  pip:
+    name: "{{ item }}"
+    state: latest
+    umask: 0077
+  with_items:
+    - Sphinx
+    - sphinx-rtd-theme
+    - mkdocs

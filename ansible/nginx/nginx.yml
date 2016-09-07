@@ -10,6 +10,7 @@
     nginx_repo_location: /home/jpartain89/git/nginx-deployment
 
   tasks:
+    - include: tasks/requirements.yml
     - name: Make sure 'staff' group exists
       group:
         name: staff
