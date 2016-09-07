@@ -22,7 +22,7 @@
   file:
     path: "{{ git_loc }}/htpcmanager"
     owner: jpartain89
-    owner: jpartain89
+    group: jpartain89
     recurse: yes
     state: directory
 

@@ -48,6 +48,7 @@
     mode: 0755
     owner: root
     group: root
+  failed_when: False
   notify: start plexpy
 
 - name: Add PlexPy to UFW

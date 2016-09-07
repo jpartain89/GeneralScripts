@@ -20,7 +20,7 @@
   service: name=headphones state=restarted
 
 - name: start plexpy
-  service: name=plexpy state= started
+  service: name=plexpy state=started
 
 - name: restart plexpy
   service: name=plexpy state=restarted

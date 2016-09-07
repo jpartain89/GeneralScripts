@@ -26,8 +26,12 @@
       - ndg-httpsclient
 
   tasks:
+    - include: tasks/requirements.yml
     - include: tasks/couchpotato.yml
     - include: tasks/headphones.yml
     - include: tasks/htpcmanager.yml
     - include: tasks/plexpy.yml
     - include: tasks/sonarr.yml
+
+  handlers:
+    - include: handlers/handlers.yml

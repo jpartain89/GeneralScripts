@@ -6,3 +6,9 @@
     name: "{{ apt_requirements }}"
     state: latest
     update_cache: yes
+
+- name: Install Required pip stuff
+  pip:
+    name: "{{ pip_requirements }}"
+    state: latest
+    umask: 0077
