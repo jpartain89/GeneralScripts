@@ -1,7 +1,7 @@
 ---
 # common installs
 
-- hosts: linux
+- hosts: all
 
   tasks:
     - name: Clone Standard Github Repos
