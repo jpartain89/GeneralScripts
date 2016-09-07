@@ -20,6 +20,7 @@
     repo: "{{ jp_git }}/nginx-deployment.git"
     dest: "{{ git_loc }}/nginx-deployment"
     update: yes
+    force: yes
 
 - name: Update Ownership of NGINX repo
   file:
@@ -29,34 +30,42 @@
     recurse: yes
     state: directory
 
-- name: Synchronize nginx_conf to /etc/nginx
-  synchronize:
-    src: ~/git/nginx-deployment/nginx_conf/
-    dest: /etc/nginx
-    delete: yes
-    recursive: yes
-    perms: yes
-    checksum: yes
-  changed_when: False
-  register: nginx_sync
-
-- name: Show output of rsync
-  debug: var=nginx_sync.stdout_lines
-
-- name: Update Ownership of /etc/nginx
-  file:
-    path: /etc/nginx
-    recurse: yes
-    owner: jpartain89
-    group: jpartain89
-    state: directory
-
-- name: Test NGINX Config
-  shell: 'nginx -t'
+- name: Synchronize nginx
+  shell:
+    ./nginx_rsync
   args:
     executable: /bin/bash
-  changed_when: False
-  register: nginx_test
+    chdir: "{{ git_loc }}/nginx-deployment/"
 
-- name: Show Output from testing NGINX Config
-  debug: var=nginx_test.stdout_lines
+#- name: Synchronize nginx_conf to /etc/nginx
+#  synchronize:
+#    src: ~/git/nginx-deployment/nginx_conf/
+#    dest: /etc/nginx
+#    delete: yes
+#    recursive: yes
+#    perms: yes
+#    checksum: yes
+#  changed_when: False
+#  register: nginx_sync
+#
+#- name: Show output of rsync
+#  debug: var=nginx_sync.stdout_lines
+#
+#- name: Update Ownership of /etc/nginx
+#  file:
+#    path: /etc/nginx
+#    recurse: yes
+#    owner: jpartain89
+#    group: jpartain89
+#    state: directory
+#
+#- name: Test NGINX Config
+#  shell: 'nginx -t'
+#  args:
+#    executable: /bin/bash
+#  changed_when: False
+#  register: nginx_test
+#
+#- name: Show Output from testing NGINX Config
+#  debug: var=nginx_test.stdout_lines
+#

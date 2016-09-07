@@ -22,4 +22,3 @@
 
 - name: Have monit restart mmonit
   shell: 'sudo monit restart mmonit'
-  
