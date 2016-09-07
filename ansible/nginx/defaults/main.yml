@@ -1,7 +1,0 @@
----
-# nginx/defaults/main.yml
-
-certbot_source: /home/jpartain89
-certbot_certificate_path: /etc/letsencrypt/
-
-conffiles_mac_dir: /Users/jpartain89/git/conffiles

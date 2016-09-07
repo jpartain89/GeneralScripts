@@ -5,7 +5,6 @@
   apt_repository:
     repo: 'ppa:nginx/development'
     state: present
-  register: nginx_ppa_added
   when: ansible_distribution == 'Ubuntu'
 
 - name: Install NGINX
@@ -13,51 +12,26 @@
     name: nginx
     state: latest
     update_cache: yes
-  notify: restart nginx
+  notify:
+    - restart nginx
 
-- name: Clone/Update nginx-deployment git repo
-  git:
-    repo: "{{ jp_git }}/nginx-deployment.git"
-    dest: "{{ git_loc }}/nginx-deployment"
-    update: yes
-    force: yes
-
-- name: Update Ownership of NGINX repo
-  file:
-    path: "{{ git_loc }}/nginx-deployment"
-    owner: jpartain89
-    group: jpartain89
-    recurse: yes
-    state: directory
-
-- name: Synchronize nginx_conf to /etc/nginx
+- name: Sync to /etc/nginx
   synchronize:
-    src: ~/git/nginx-deployment/nginx_conf/
+    src: "{{ nginx_source_location }}/nginx_conf/"
     dest: /etc/nginx
-    delete: yes
-    recursive: yes
-    perms: yes
-    checksum: yes
-  changed_when: False
-  register: nginx_sync
+  notify:
+    - restart nginx
 
-- name: Show output of rsync
-  debug: var=nginx_sync.stdout_lines
-
-- name: Update Ownership of /etc/nginx
-  file:
-    path: /etc/nginx
-    recurse: yes
-    owner: jpartain89
-    group: jpartain89
-    state: directory
+- name: Sync html Files
+  synchronize:
+    src: "{{ nginx_source_location }}/html"
+    dest: /var/www/
+  notify:
+    - restart nginx
 
 - name: Test NGINX Config
   shell: 'nginx -t'
   args:
     executable: /bin/bash
-  changed_when: False
+  #changed_when: False
   register: nginx_test
-
-- name: Show Output from testing NGINX Config
-  debug: var=nginx_test.stdout_lines

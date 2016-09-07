@@ -4,4 +4,4 @@
 
   - include: requirements.yml
   - include: webapps.yml
-  - include: nginx.yml
+  - include: nginx/nginx.yml
