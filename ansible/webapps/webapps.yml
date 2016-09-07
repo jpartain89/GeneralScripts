@@ -3,5 +3,31 @@
 
 - hosts: web
   become: yes
-  roles:
-    - webapps
+
+  vars:
+    git_loc: /home/jpartain89/git
+    apt_requirements:
+      - apt-transport-https
+      - git-core
+      - libffi-dev
+      - libssl-dev
+      - zlib1g-dev
+      - libxslt1-dev
+      - libxml2-dev
+      - python
+      - python-pip
+      - python-dev
+      - build-essential
+      - python2.7
+    pip_requirements:
+      - lxml
+      - cryptography
+      - pyopenssl
+      - ndg-httpsclient
+
+  tasks:
+    - include: tasks/couchpotato.yml
+    - include: tasks/headphones.yml
+    - include: tasks/htpcmanager.yml
+    - include: tasks/plexpy.yml
+    - include: tasks/sonarr.yml

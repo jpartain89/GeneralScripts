@@ -1,8 +1,0 @@
----
-# Ansible playbook for all webapps stuff
-
-  - include: couchpotato.yml
-  - include: plexpy.yml
-  - include: sonarr.yml
-  - include: headphones.yml
-  - include: htpcmanager.yml

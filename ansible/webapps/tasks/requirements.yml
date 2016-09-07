@@ -1,0 +1,8 @@
+---
+# tasks/requirements.yml
+
+- name: Install Required apt Stuff
+  apt:
+    name: "{{ apt_requirements }}"
+    state: latest
+    update_cache: yes

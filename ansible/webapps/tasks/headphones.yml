@@ -27,7 +27,7 @@
 - name: Copy the default HP /etc/default file
   copy:
     src: hp_default
-    dest: /etc/default/headphones
+    dest: /etc/default/headphonesw
     owner: root
     group: root
     mode: 0644
