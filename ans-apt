@@ -36,6 +36,9 @@ case "$1" in
         echo "Updating Linux apt-get";
         ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
         ;;
+    -uv | --update-virtual )
+        echo "Updating only Virtual Machines";
+        ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"  --limit=virtual;;
     -rl | --reboot-linux )
         echo "Rebooting all Linux Machines";
         ansible linux -s -m shell -a 'reboot'
