@@ -1,0 +1,30 @@
+[imac]
+imac ansible_host=192.168.1.15
+
+[macbook]
+macbook ansible_host=192.168.1.10
+
+[macos:children]
+imac
+macbook
+
+[nginx]
+nginx ansible_host=jpcdi.com ansible_port=22230
+
+[web]
+web ansible_host=jpcdi.com ansible_port=22240
+
+[downloader]
+downloader ansible_host=jpcdi.com ansible_port=22245
+
+[rpi]
+rpi ansible_host=jpcdi.com ansible_port=22234
+
+[virtual:children]
+nginx
+web
+downloader
+
+[linux:children]
+virtual
+rpi

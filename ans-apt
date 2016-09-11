@@ -1,7 +1,6 @@
-#!/bin/bash
-set -e
+#!/bin/bash -e
 
-# Shell Script that will auto-call ansible-playbook for me!
+# Shell Script that will auto-call ansible-playbook for me
 
 if [[ $EUID == 0 ]]; then
     echo ""
@@ -20,10 +19,11 @@ function help_text ()
         echo "Usage: ans-apt [-ul --update-linux] [-rl --reboot-linux] [-rv --reboot-virtual] [-h --help]"
         echo ""
         echo "Options:"
-        echo "    -ul, --update-linux     : Updates all linux machines"
+        echo "    -ul, --update-linux     : Updates all Linux Machines"
+	echo "	  -uv, --update-virtual   : Updates all Virtual Machines"
         echo ""
         echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
-        echo "    -rv, --reboot-virtual   : Reboots all Virtual Linux machines"
+        echo "    -rv, --reboot-virtual   : Reboots all Virtual Machines"
         echo ""
         echo "    -sl, --shutdown-linux   : Shutsdown all Linux Machines"
         echo "    -sv, --shutdown-virtual : Shutsdown all Virtual Machines"
@@ -34,30 +34,30 @@ function help_text ()
 case "$1" in
     -ul | --update-linux )
         echo "Updating Linux apt-get";
-        ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
+        ansible-playbook -i ./hosts  "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
         ;;
     -uv | --update-virtual )
         echo "Updating only Virtual Machines";
-        ansible-playbook "$GIT_DIR/generalscripts/ansible/apt_basic.yml"  --limit=virtual;;
+        ansible-playbook -i ./hosts "$GIT_DIR/generalscripts/ansible/apt_basic.yml"  --limit=virtual;;
     -rl | --reboot-linux )
         echo "Rebooting all Linux Machines";
-        ansible linux -s -m shell -a 'reboot'
+        ansible -i ./hosts linux -s -m shell -a 'reboot'
         ;;
     -rv | --reboot-virtual )
         echo "Rebooting only Virtual Machines";
-        ansible virtual -s -m shell -a 'reboot'
+        ansible -i ./hosts virtual -s -m shell -a 'reboot'
         ;;
     -m | --monit-reload )
         echo "Reloads monit on all linux machines";
-        ansible linux -s -m service -a 'name=monit state=restarted'
+        ansible -i ./hosts linux -s -m service -a 'name=monit state=restarted'
         ;;
     -sl | --shutdown-linux )
         echo "Shutting down all linux devices";
-        ansible linux -s -a 'shutdown -h now'
+        ansible -i ./hosts linux -s -a 'shutdown -h now'
         ;;
     -sv | --shutdown-virtual )
         echo "Shutting down all Virtual Machines";
-        ansible virtual -s -a 'shutdown -h now'
+        ansible -i ./hosts virtual -s -a 'shutdown -h now'
         ;;
     -h | --help )
         help_text &&
