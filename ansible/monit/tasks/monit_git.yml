@@ -1,0 +1,56 @@
+---
+# monit/tasks/main.yml
+
+- name: Prerequisites
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - libtool
+    - gcc
+    - gcc-4.9
+    - gcc-4.9-base
+    - gcc-4.9-source
+    - bison
+    - libbison-dev
+    - flex
+    - libfl-dev
+
+- name: Clone Git Repo/Force Clone if current exists
+  git:
+    repo: https://tildeslash@bitbucket.org/tildeslash/monit.git
+    dest: "{{ jp_home }}/git/monit"
+    bare: yes
+    force: yes
+
+- name: Bootstrap
+  shell: ./bootstrap
+  args:
+    chdir: "{{ jp_home }}/git/monit"
+    creates: configure
+
+- name: Configure
+  shell: './configure --enable-optimized --enable-profiling'
+  args:
+    chdir: "{{ jp_home }}/monit"
+    creates: Makefile
+
+- name: Make
+  make:
+    chdir: "{{ jp_home }}/monit"
+
+- name: Make Install
+  become: yes
+  make:
+    chdir: "{{ jp_home }}/monit"
+    target: install
+
+- name: Stop Monit
+  become: yes
+  shell: killall monit
+
+- name: Start Monit
+  become: yes
+  command: /usr/local/bin/monit
