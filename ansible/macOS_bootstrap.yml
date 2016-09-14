@@ -1,3 +1,4 @@
+---
 # My Attempt at an Ansible-Playbook macOS  bootstrapper
 # This assumes that homebrew is already installed, as ansible and pip are
 # installed through brew

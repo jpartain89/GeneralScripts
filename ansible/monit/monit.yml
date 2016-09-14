@@ -1,5 +1,8 @@
 ---
 # monit.yml
 
-- hosts: linux
-  include: tasks/monit_git.yml
+- hosts: mdusa
+
+
+  tasks:
+    - include: tasks/monit_git.yml

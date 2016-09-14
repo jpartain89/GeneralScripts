@@ -10,9 +10,9 @@
   with_items:
     - libtool
     - gcc
-    - gcc-4.9
+    #- gcc-4.9
     - gcc-4.9-base
-    - gcc-4.9-source
+    #- gcc-4.9-source
     - bison
     - libbison-dev
     - flex
@@ -21,36 +21,34 @@
 - name: Clone Git Repo/Force Clone if current exists
   git:
     repo: https://tildeslash@bitbucket.org/tildeslash/monit.git
-    dest: "{{ jp_home }}/git/monit"
-    bare: yes
+    dest: ~/git/monit
     force: yes
 
 - name: Bootstrap
-  shell: ./bootstrap
+  shell: './bootstrap'
   args:
-    chdir: "{{ jp_home }}/git/monit"
-    creates: configure
+    chdir: ~/git/monit
 
 - name: Configure
   shell: './configure --enable-optimized --enable-profiling'
   args:
-    chdir: "{{ jp_home }}/monit"
-    creates: Makefile
+    chdir: ~/git/monit
 
 - name: Make
-  make:
-    chdir: "{{ jp_home }}/monit"
+  shell: 'make'
+  args:
+    chdir: ~/git/monit
 
 - name: Make Install
   become: yes
-  make:
-    chdir: "{{ jp_home }}/monit"
-    target: install
+  shell: 'make install'
+  args:
+    chdir: ~/git/monit
 
 - name: Stop Monit
   become: yes
-  shell: killall monit
+  shell: 'killall monit'
 
 - name: Start Monit
   become: yes
-  command: /usr/local/bin/monit
+  command: '/usr/local/bin/monit'
