@@ -10,7 +10,7 @@ if [[ $EUID == 0 ]]; then
     exit 1
 fi
 
-GIT_DIR=/Users/$USER/git
+gen_scripts=/Users/$USER/git/generalscripts
 
 function help_text ()
     {
@@ -34,22 +34,23 @@ function help_text ()
 case "$1" in
     -ul | --update-linux )
         echo "Updating Linux apt-get";
-        ansible-playbook -i ./hosts  "$GIT_DIR/generalscripts/ansible/apt_basic.yml"
+        ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml"
         ;;
     -uv | --update-virtual )
         echo "Updating only Virtual Machines";
-        ansible-playbook -i ./hosts "$GIT_DIR/generalscripts/ansible/apt_basic.yml"  --limit=virtual;;
+        ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
+        ;;
     -rl | --reboot-linux )
         echo "Rebooting all Linux Machines";
-        ansible -i ./hosts linux -s -m shell -a 'reboot'
+        ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml"
         ;;
     -rv | --reboot-virtual )
         echo "Rebooting only Virtual Machines";
-        ansible -i ./hosts virtual -s -m shell -a 'reboot'
+        ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
         ;;
     -m | --monit-reload )
         echo "Reloads monit on all linux machines";
-        ansible -i ./hosts linux -s -m service -a 'name=monit state=restarted'
+        ansible -i ./hosts linux -s -m service -a 'name=monit state=reloaded'
         ;;
     -sl | --shutdown-linux )
         echo "Shutting down all linux devices";
@@ -61,8 +62,10 @@ case "$1" in
         ;;
     -h | --help )
         help_text &&
-        exit 0;;
+        exit 0
+        ;;
     * )
         help_text &&
-        exit 0;;
+        exit 0
+
 esac
