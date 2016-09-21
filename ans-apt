@@ -50,15 +50,15 @@ case "$1" in
         ;;
     -m | --monit-reload )
         echo "Reloads monit on all linux machines";
-        ansible -i ./hosts linux -s -m service -a 'name=monit state=reloaded'
+        ansible -i "$gen_scripts/hosts" linux -s -m service -a 'name=monit state=reloaded'
         ;;
     -sl | --shutdown-linux )
         echo "Shutting down all linux devices";
-        ansible -i ./hosts linux -s -a 'shutdown -h now'
+        ansible -i "$gen_scripts/hosts" linux -s -a 'shutdown -h now'
         ;;
     -sv | --shutdown-virtual )
         echo "Shutting down all Virtual Machines";
-        ansible -i ./hosts virtual -s -a 'shutdown -h now'
+        ansible -i "$gen_scripts/hosts" virtual -s -a 'shutdown -h now'
         ;;
     -h | --help )
         help_text &&
