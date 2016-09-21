@@ -20,7 +20,7 @@ function help_text ()
         echo ""
         echo "Options:"
         echo "    -ul, --update-linux     : Updates all Linux Machines"
-	echo "	  -uv, --update-virtual   : Updates all Virtual Machines"
+	    echo "	  -uv, --update-virtual   : Updates all Virtual Machines"
         echo ""
         echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
         echo "    -rv, --reboot-virtual   : Reboots all Virtual Machines"
