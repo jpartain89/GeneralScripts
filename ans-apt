@@ -12,27 +12,27 @@ fi
 gen_scripts=/Users/$USER/git/generalscripts
 
 function help_text ()
-    {
-        cat <<- EOF
-        echo "My personal shortcutting ansible stuffs!"
-        echo ""
-        echo "Options:"
-        echo "    -ua, --update-all       : Updates all Managed Machines"
-        echo "	  -uv, --update-virtual   : Updates all Virtual Machines"
-        echo "    -ul, --update-local     : Updates all Local Linux Machines"
-        echo ""
-        echo "    -rl, --reboot-linux     : Reboots all Linux Machines"
-        echo "    -rv, --reboot-virtual   : Reboots all Virtual Machines"
-        echo "    -ul, --reboot-local     : Reboots all Local Linux Machines"
-        echo ""
-        echo "    -sl, --shutdown-local   : Shutdown Local Linux Machines"
-        echo "    -sv, --shutdown-virtual : Shutdown Virtual Machines"
-        echo ""
-        echo "There is not currently an option to shutdown all Managed Linux Machines"
-        echo ""
-        echo "    -h,  --help             : this help"
-        EOF
-    }
+{
+cat <<- EOF
+My personal shortcutting ansible stuffs!
+
+Options:
+    -ua, --update-all       : Updates all Managed Machines
+    -uv, --update-virtual   : Updates all Virtual Machines
+    -ul, --update-local     : Updates all Local Linux Machines
+
+    -rl, --reboot-linux     : Reboots all Linux Machines
+    -rv, --reboot-virtual   : Reboots all Virtual Machines
+    -ul, --reboot-local     : Reboots all Local Linux Machines
+
+    -sl, --shutdown-local   : Shutdown Local Linux Machines
+    -sv, --shutdown-virtual : Shutdown Virtual Machines
+
+There is not currently an option to shutdown all Managed Linux Machines
+
+    -h,  --help             : this help
+EOF
+}
 
 case "$1" in
     -ua | --update-all )
