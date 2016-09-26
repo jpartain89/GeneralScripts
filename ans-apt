@@ -13,6 +13,7 @@ gen_scripts=/Users/$USER/git/generalscripts
 
 function help_text ()
     {
+        cat <<- EOF
         echo "My personal shortcutting ansible stuffs!"
         echo ""
         echo "Options:"
@@ -30,6 +31,7 @@ function help_text ()
         echo "There is not currently an option to shutdown all Managed Linux Machines"
         echo ""
         echo "    -h,  --help             : this help"
+        EOF
     }
 
 case "$1" in
