@@ -1,13 +1,3 @@
-[imac]
-imac ansible_host=192.168.1.15
-
-[macbook]
-macbook ansible_host=192.168.1.10
-
-[macos:children]
-imac
-macbook
-
 [nginx]
 nginx ansible_host=jpcdi.com ansible_port=22230
 
