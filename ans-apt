@@ -5,8 +5,7 @@
 if [[ $EUID == 0 ]]; then
     echo ""
     echo "Sorry, can't use sudo."
-    exit 2
-    press_enter
+    echo ""
     exit 1
 fi
 
