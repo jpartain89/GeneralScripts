@@ -17,6 +17,9 @@ web ansible_host=jpcdi.com ansible_port=22240
 [downloader]
 downloader ansible_host=jpcdi.com ansible_port=22245
 
+[mark]
+mark ansible_host=mark.jpcdi.com ansible_port=22
+
 [rpi]
 rpi ansible_host=jpcdi.com ansible_port=22234
 
@@ -25,6 +28,10 @@ nginx
 web
 downloader
 
-[linux:children]
+[local-linux:children]
 virtual
 rpi
+
+[linux:children]
+local-linux
+mark
