@@ -21,9 +21,11 @@ Options:
     -uv, --update-virtual   : Updates all Virtual Machines
     -ul, --update-local     : Updates all Local Linux Machines
 
-    -rl, --reboot-linux     : Reboots all Linux Machines
+    -ra, --reboot-all       : Reboots all Managed Machines
     -rv, --reboot-virtual   : Reboots all Virtual Machines
-    -ul, --reboot-local     : Reboots all Local Linux Machines
+    -rl, --reboot-local     : Reboots all Local Linux Machines
+
+    -m,  --monit             : Reloads monit on all Managed Machines
 
     -sl, --shutdown-local   : Shutdown Local Linux Machines
     -sv, --shutdown-virtual : Shutdown Virtual Machines
@@ -42,28 +44,46 @@ case "$1" in
         ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml"
         ;;
     -uv | --update-virtual )
-        echo "Updating only Virtual Machines";
+        echo ""
+        echo "Updating only Virtual Machines"
+        echo ""
         ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
         ;;
     -ul | --update-local )
-        echo "Updating only Local Linux Machines";
+        echo ""
+        echo "Updating only Local Linux Machines"
+        echo ""
         ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
         ;;
-    -rl | --reboot-linux )
-        echo "Rebooting all Linux Machines";
+    -ra | --reboot-all )
+        echo ""
+        echo "Rebooting all Managed Machines"
+        echo ""
         ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml"
         ;;
     -rv | --reboot-virtual )
-        echo "Rebooting only Virtual Machines";
+        echo ""
+        echo "Rebooting only Virtual Machines"
+        echo ""
         ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
         ;;
-    -m | --monit-reload )
-        echo "Reloads monit on all linux machines";
+    -rl | --reboot-local )
+        echo ""
+        echo "Rebooting only Local Machines"
+        echo ""
+        ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=local-linux
+        ;;
+    -m | --monit )
+        echo ""
+        echo "Reloads monit on all linux machines"
+        echo ""
         ansible -i "$gen_scripts/hosts" linux -s -m service -a 'name=monit state=reloaded'
         ;;
-    -sl | --shutdown-linux )
-        echo "Shutting down all linux devices";
-        ansible -i "$gen_scripts/hosts" linux -s -a 'shutdown -h now'
+    -sl | --shutdown-local )
+        echo ""
+        echo "Shutting down only Local Machines"
+        echo ""
+        ansible -i "$gen_scripts/hosts" local-linux -s -a 'shutdown -h now'
         ;;
     -sv | --shutdown-virtual )
         echo "Shutting down all Virtual Machines";
@@ -75,6 +95,5 @@ case "$1" in
         ;;
     * )
         help_text &&
-        exit 0
-
+        exit 1
 esac
