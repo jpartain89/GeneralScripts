@@ -5,5 +5,5 @@
 if ping -oc 1000 8.8.8.8 > /dev/null; then \
     curl -X POST http://textbelt.com/text \
     -d number=2149239252 \
-    -d "message=Mark's Server is Down.... This is to annoy you!" \
+    -d "message=Mark's Server is Down.... This is to annoy you!"
 fi
