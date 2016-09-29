@@ -5,24 +5,52 @@
   become: yes
 
   tasks:
-    - name: Update Apt
+    - name: sudo apt-get update
       apt:
         update_cache: yes
         cache_valid_time: 7200
+      register: update_apt
 
-    - name: Upgrade Apt
+    - name: Show apt-get update Output
+      debug: var=update_apt.stdout_lines
+
+    - name: sudo apt-get upgrade
       apt:
         upgrade: full
+      register: upgrade_apt
 
-    - name: Dist-Upgrade Apt
+    - name: Show apt-get upgrade Output
+      debug: var=upgrade_apt.stdout_lines
+
+    - name: sudo apt-get dist-upgrade
       apt:
         upgrade: dist
+      register: dist_apt
+
+    - name: Show apt-get dist-upgrade Output
+      debug: var=dist_apt.stdout_lines
+
+    - name: sudo apt-get autoclean
+      shell:
+        'apt-get autoclean'
+      register: autoclean_apt
+
+    - name: Show apt-get autoclean Output
+      debug: var=autoclean_apt.stdout_lines
 
     - name: AutoRemove Apt Packages
       shell:
-        'apt-get autoremove --purge -y'
+        'apt-get autoremove'
       register: ara
       changed_when: False
 
     - name: Show Autoremove Output
       debug: var=ara.stdout_lines
+
+    - name: Autoremove "rc" labeled apps
+      shell:
+        'apt-get autoremove --purge $(dpkg --list | grep `^rc` | awk `{print $2}`)'
+      register: autoremove_rc_apt
+
+    - name: Show autoremove rc apps
+      debug: var=autoremove_rc_apt.stdout_lines
