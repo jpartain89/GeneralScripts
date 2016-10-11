@@ -2,6 +2,16 @@
 
 # This builds monit with the --enable-optimized flag set.
 
+function no_sudo ()
+    {
+        if [[ $EUID == 0 ]]; then
+            echo ""
+            echo "Sorry, but you can't run as sudo."
+            echo ""
+            exit 1
+        fi
+    }
+
 monit_dir=/home/$USER/git/monit
 
 if [[ ! -e "$monit_dir" ]]; then
