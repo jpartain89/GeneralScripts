@@ -11,6 +11,9 @@ if [[ ! -e "$monit_dir" ]]; then
     echo ""
     git clone https://tildeslash@bitbucket.org/tildeslash/monit.git "$monit_dir"
 fi
+if [ ! -e /usr/bin/libtoolize ]; then
+    sudo apt-get install libtool -y
+fi
 
 cd "$monit_dir" &&
 git pull &&
