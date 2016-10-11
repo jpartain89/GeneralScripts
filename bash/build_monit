@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# This builds monit with the --enable-optimized flag set.
+
+monit_dir=/home/$USER/git/monit
+
+if [[ ! -e "$monit_dir" ]]; then
+    echo ""
+    echo "Monit's git directory missing."
+    echo "Cloning"
+    echo ""
+    git clone https://tildeslash@bitbucket.org/tildeslash/monit.git "$monit_dir"
+fi
+
+cd "$monit_dir" &&
+git pull &&
+./bootstrap &&
+./configure --enable-optimized &&
+make &&
+sudo make install &&
+unset monit_dir
