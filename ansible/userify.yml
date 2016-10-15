@@ -1,0 +1,37 @@
+---
+
+- hosts: local-linux
+  become: yes
+
+  tasks:
+  - name: get userify shim
+    get_url:
+      url: https://shim.userify.com/installer.sh
+      dest: /tmp
+      mode: 0777
+
+  - name: install userify
+    shell: './installer.sh'
+    args:
+      chdir: /tmp
+      creates: /opt/userify
+    environment:
+          api_id: "{{ userify_api_id }}"
+          api_key: "{{ userify_api_key }}"
+    become: yes
+
+  - name: wrap shim in init script
+    copy:
+      src: userify
+      dest: /etc/init.d/userify
+      owner: root
+      group: root
+      mode: 0755
+    become: yes
+
+  - name: start userify service
+    service:
+      name: userify
+      state: restarted
+      enabled: yes
+    become: yes

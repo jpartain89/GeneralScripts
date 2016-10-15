@@ -3,6 +3,5 @@
 
 - hosts: mdusa
 
-
   tasks:
     - include: tasks/monit_git.yml

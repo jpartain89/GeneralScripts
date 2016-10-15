@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/bash -e
 
 # First Step Script.
 # Splits off between Linux/macOS to start

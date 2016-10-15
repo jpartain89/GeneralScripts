@@ -1,7 +1,10 @@
 ---
 # file: group_vars/linux
 
+linux_user: jpartain89
 jp_git: https://jpartain89@github.com/jpartain89
-git_loc: /home/jpartain89/git
+git_loc: /home/{{ linux_user }}/git
 dotfiles_c: linux_dotfiles
-jp_home: /home/jpartain89
+jp_home: /home/{{ linux_user }}
+userify_api_id: g7yv6n2clnwdmkffvrt6kc_user
+userify_api_key: p7Vnoes7nsjtG39sb5V9c6gpLncySsFEr88esTDPdeuVV8vA3a

@@ -1,0 +1,49 @@
+---
+# rpi/tasks/monit.yml
+
+- name: Install requirements to build monit
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  items:
+    - gcc
+    - libtool
+    - htop
+    - automake
+    - bison
+    - flex
+    - zlibc
+    - gcc-4.9-base
+    - gcc-4.9
+    - gcc-4.9-locales
+    - gcc-4.9-plugin-dev
+    - gcc-4.9-source
+    - libpam-ocaml
+    - libpam-modules
+    - python-pam
+    - ssl-cert
+    - python-openssl
+    - libssl-dev
+    - libssl-ocaml
+    - libssl-ocaml-dev
+
+- name: Run build_monit shell script
+  script: "{{ git_loc_mac }}/generalscripts/bash/build_monit"
+
+- name: copy monitrc file
+  copy:
+    src: "{{ git_loc_mac }}/conffiles/monit/monitrc"
+    dest: /etc/monitrc
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Create monit directories
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    state: directory
+    recurse: yes
+    

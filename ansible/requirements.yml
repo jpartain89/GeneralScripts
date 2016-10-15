@@ -1,7 +1,7 @@
 ---
 # common installs
 
-- hosts: all
+- hosts: linux
 
   tasks:
     - name: Clone Standard Github Repos
@@ -9,6 +9,7 @@
         repo: "{{ item.repo }}"
         dest: "{{ item.dest }}"
         update: yes
+        force: yes
       with_items:
           -
             repo: "{{ jp_git }}/conffiles.git"
@@ -30,6 +31,10 @@
       shell: 'source "{{ git_loc }}/{{ dotfiles_c }}/bootstrap.sh"'
       args:
         executable: /bin/bash
+      register: bootstrap_out
+
+    - name: Show bootstrap source output
+      debug: var=bootstrap_out.stdout_lines
 
     - name: Install apt-get Universal Requirements
       become: yes
@@ -55,18 +60,16 @@
         - build-essential
         - python2.7
         - apt-transport-https
+        - libjpeg8-dev
+        - libjpeg8
 
     - name: Install Pip Requirements
-      become: yes
-      pip:
-        name: "{{ item }}"
-        state: latest
-      with_items:
-        - lxml
-        - cryptography
-        - pyopenssl
-        - pip
-        - cffi
-        - ndg-httpsclient
-        - urllib3
-        - speedtest-cli
+      shell: 'sudo -H pip install --upgrade -r {{ git_loc }}/{{ dotfiles_c }}/requirements-linux.txt'
+      args:
+        executable: /bin/bash
+      register: pip_requirements_file
+
+    - name: show pip install output
+      debug: var=pip_requirements_file.stdout_lines
+
+    - include: userify.yml
