@@ -1,0 +1,22 @@
+---
+# Updating DotFile repos
+# github/tasks/git_pull_macos.yml
+
+- name: Pulling macos_dotfiles Repo for Update
+  git:
+    repo: https://jpartain89@github.com/jpartain89/macos_dotfiles.git
+    dest: /Users/jpartain89/git/macos_dotfiles
+    update: yes
+    force: yes
+    accept_hostkey: yes
+
+- name: source bootstrap.sh
+  shell:
+    './bootstrap.sh'
+  args:
+    chdir: /Users/jpartain89/git/macos_dotfiles
+  register: bootstrap_macos
+  ignore_errors: True
+
+- name: Show bootstrap.sh Output
+  debug: var=bootstrap_macos.stdout_lines

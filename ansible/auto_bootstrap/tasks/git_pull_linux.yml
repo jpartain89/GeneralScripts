@@ -1,0 +1,22 @@
+---
+# Updating DotFile repos
+# github/tasks/git_pull_linux.yml
+
+- name: Pulling linux_dotfile Repo for Update
+  git:
+    repo: https://jpartain89@github.com/jpartain89/linux_dotfiles.git
+    dest: /home/jpartain89/git/linux_dotfiles
+    update: yes
+    force: yes
+    accept_hostkey: yes
+
+- name: source bootstrap.sh
+  shell:
+    './bootstrap.sh'
+  args:
+    chdir: /home/jpartain89/git/linux_dotfiles
+  register: bootstrap_linux
+  ignore_errors: True
+
+- name: Show bootstrap.sh Output
+  debug: var=bootstrap_linux.stdout_lines

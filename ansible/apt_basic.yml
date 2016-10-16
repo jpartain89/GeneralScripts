@@ -10,10 +10,10 @@
         update_cache: yes
         cache_valid_time: 7200
       register: updating_apt
+      changed_when: False
 
     - name: Show apt-get update Output
       debug: var=updating_apt.stdout
-
     - name: sudo apt-get upgrade
       apt:
         upgrade: full
