@@ -25,7 +25,7 @@ Options:
     -rv, --reboot-virtual   : Reboots all Virtual Machines
     -rl, --reboot-local     : Reboots all Local Linux Machines
 
-    -m,  --monit             : Reloads monit on all Managed Machines
+    -m,  --monit            : Reloads monit on all Managed Machines
 
     -sl, --shutdown-local   : Shutdown Local Linux Machines
     -sv, --shutdown-virtual : Shutdown Virtual Machines

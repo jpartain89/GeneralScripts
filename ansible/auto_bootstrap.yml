@@ -1,0 +1,25 @@
+---
+# Auto Bootstraping after git updating
+# auto_bootstrap.yml
+
+- hosts: all
+
+  tasks:
+    - name: Pulling linux_dotfile Repo for Update
+      git:
+        repo: "{{ jp_git }}/{{ dotfiles_c }}.git"
+        dest: "{{ git_loc }}/{{ dotfiles_c }}"
+        update: yes
+        force: yes
+        accept_hostkey: yes
+
+    - name: source bootstrap.sh
+      shell:
+        './bootstrap.sh'
+      args:
+        chdir: "{{ git_loc }}/{{ dotfiles_c }}"
+      register: bootstrap_linux
+      failed_when: False
+
+    - name: Show bootstrap.sh Output
+      debug: var=bootstrap_linux.stdout_lines
