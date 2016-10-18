@@ -1,8 +1,8 @@
 ---
 # file: group_vars/linux
 
-linux_user: jpartain89
-jp_git: https://jpartain89@github.com/jpartain89
-git_loc: /home/{{ linux_user }}/git
-dotfiles_c: linux_dotfiles
-jp_home: /home/{{ linux_user }}
+username: jpartain89
+jp_git_http: https://jpartain89@github.com/jpartain89
+user_home: /home/{{ username }}
+git_file_loc: "{{ user_home }}/git"
+dot_dir_name: linux_dotfiles

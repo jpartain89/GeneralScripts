@@ -7,8 +7,8 @@
   tasks:
     - name: Pulling linux_dotfile Repo for Update
       git:
-        repo: "{{ jp_git }}/{{ dotfiles_c }}.git"
-        dest: "{{ git_loc }}/{{ dotfiles_c }}"
+        repo: "{{ jp_git_http }}/{{ dot_dir_name }}.git"
+        dest: "{{ git_file_loc }}/{{ dot_dir_name }}"
         update: yes
         force: yes
         accept_hostkey: yes
@@ -17,7 +17,7 @@
       shell:
         './bootstrap.sh'
       args:
-        chdir: "{{ git_loc }}/{{ dotfiles_c }}"
+        chdir: "{{ git_file_loc }}/{{ dot_dir_name }}"
       register: bootstrap_linux
       failed_when: False
 
