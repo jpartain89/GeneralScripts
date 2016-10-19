@@ -35,7 +35,7 @@ fi
 
 for i in "${required_apps[@]}";
 do
-    which "$i" >/dev/null
+    dpgk -l | grep "$i" >/dev/null
     which_out=$?
     if [[ "$which_out" == "1" ]]; then
         sudo apt-get install "$i" -y
