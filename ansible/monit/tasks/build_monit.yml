@@ -1,0 +1,7 @@
+---
+# monit/tasks/build_monit.yml
+
+- name: Bootstrapping
+  shell: './bootstrap'
+  args:
+    chdir: "{{ monit_git_dir }}"

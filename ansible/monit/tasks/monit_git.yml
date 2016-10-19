@@ -1,54 +1,17 @@
 ---
-# monit/tasks/main.yml
+# monit/tasks/monit_git.yml
 
-- name: Prerequisites
-  become: yes
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items:
-    - libtool
-    - gcc
-    #- gcc-4.9
-    - gcc-4.9-base
-    #- gcc-4.9-source
-    - bison
-    - libbison-dev
-    - flex
-    - libfl-dev
-
-- name: Clone Git Repo/Force Clone if current exists
+- name: Clone/Update Monit's git repo
   git:
     repo: https://tildeslash@bitbucket.org/tildeslash/monit.git
-    dest: ~/git/monit
+    dest: "{{ git_file_loc }}/monit"
     force: yes
+    update: yes
+  register: monit_git_update
 
-- name: Bootstrap
-  shell: './bootstrap'
-  args:
-    chdir: ~/git/monit
+- include: build_monit.yml
+  when: monit_git_update|
+
 
 - name: Configure
   shell: './configure --enable-optimized --enable-profiling'
-  args:
-    chdir: ~/git/monit
-
-- name: Make
-  shell: 'make'
-  args:
-    chdir: ~/git/monit
-
-- name: Make Install
-  become: yes
-  shell: 'make install'
-  args:
-    chdir: ~/git/monit
-
-- name: Stop Monit
-  become: yes
-  shell: 'killall monit'
-
-- name: Start Monit
-  become: yes
-  command: '/usr/local/bin/monit'

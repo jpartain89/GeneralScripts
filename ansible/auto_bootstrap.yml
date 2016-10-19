@@ -5,7 +5,7 @@
 - hosts: all
 
   tasks:
-    - name: Pulling linux_dotfile Repo for Update
+    - name: Pulling dotfiles Repo for Update
       git:
         repo: "{{ jp_git_http }}/{{ dot_dir_name }}.git"
         dest: "{{ git_file_loc }}/{{ dot_dir_name }}"

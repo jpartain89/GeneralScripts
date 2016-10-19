@@ -1,0 +1,19 @@
+---
+# monit/tasks/main.yml
+
+- name: Install Required Programs to build Monit
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - libtool
+    - gcc
+    #- gcc-4.9
+    - gcc-4.9-base
+    #- gcc-4.9-source
+    - bison
+    - libbison-dev
+    - flex
+    - libfl-dev

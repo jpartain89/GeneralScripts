@@ -1,7 +1,11 @@
 ---
 # monit.yml
 
-- hosts: mdusa
+- hosts:
+
+  vars:
+    - monit_git_dir: "{{ git_file_loc }}/monit"
 
   tasks:
+    - include: tasks/monit_apt_prereq.yml
     - include: tasks/monit_git.yml

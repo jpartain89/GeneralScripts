@@ -1,7 +1,12 @@
 ---
 # monit/handlers/main
 
-- name: create monit_file
-  file:
-    path: "{{ jp_home }}/monit/ansible_run"
-    state: touch
+- name: Add monit to Autostart
+  service: name=monit state=started enabled=yes
+
+- name: Reload Monit
+  service: name=monit state=reloaded
+
+- name: Stop Monit
+  service: name=monit state=stopped
+i

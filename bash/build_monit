@@ -13,17 +13,31 @@ function no_sudo ()
     }
 
 monit_dir=/home/$USER/git/monit
+required_apps=(
+libtool
+make
+automake
+autoconf
+bison
+build-essential
+gcc-4.9
+gcc-4.9-base
+gcc-4.9-source
+)
 
 if [[ ! -e "$monit_dir" ]]; then
     echo ""
-    echo "Monit's git directory missing."
-    echo "Cloning"
+    echo "Monit's git directory is missing."
+    echo "Now cloning"
     echo ""
     git clone https://tildeslash@bitbucket.org/tildeslash/monit.git "$monit_dir"
 fi
-if [ ! -e /usr/bin/libtoolize ]; then
-    sudo apt-get install libtool -y
-fi
+
+for i in "${required_apps[@]}";
+do
+    sudo apt-get install "$i" -y
+done
+unset i required_apps;
 
 cd "$monit_dir" &&
 git pull &&
