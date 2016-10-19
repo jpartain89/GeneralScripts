@@ -35,9 +35,13 @@ fi
 
 for i in "${required_apps[@]}";
 do
-    sudo apt-get install "$i" -y
+    which "$i" >/dev/null
+    which_out=$?
+    if [[ "$which_out" == "1" ]]; then
+        sudo apt-get install "$i" -y
+    fi
 done
-unset i required_apps;
+unset i required_apps which_out;
 
 cd "$monit_dir" &&
 git pull &&
