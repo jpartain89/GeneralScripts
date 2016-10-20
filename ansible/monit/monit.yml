@@ -1,7 +1,7 @@
 ---
 # monit.yml
 
-- hosts:
+- hosts: all
 
   vars:
     - monit_git_dir: "{{ git_file_loc }}/monit"
