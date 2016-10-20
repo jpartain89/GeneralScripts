@@ -8,10 +8,4 @@
     force: yes
     update: yes
   register: monit_git_update
-
-- include: build_monit.yml
-  when: monit_git_update|
-
-
-- name: Configure
-  shell: './configure --enable-optimized --enable-profiling'
+  notify: Stop Monit

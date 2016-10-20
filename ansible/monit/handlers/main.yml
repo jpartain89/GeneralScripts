@@ -1,7 +1,7 @@
 ---
-# monit/handlers/main
+# monit/handlers/main.yml
 
-- name: Add monit to Autostart
+- name: monit autostart
   service: name=monit state=started enabled=yes
 
 - name: Reload Monit

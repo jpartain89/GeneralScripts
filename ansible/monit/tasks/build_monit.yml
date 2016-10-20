@@ -5,3 +5,35 @@
   shell: './bootstrap'
   args:
     chdir: "{{ monit_git_dir }}"
+  register: bootstrapping
+
+- name: Show Bootstrap Output
+  debug: var=bootstrapping.stdout_lines
+
+- name: Configure --enable-optimized
+  shell: './configure --enable-optimized'
+  args:
+    chdir: "{{ monit_git_dir }}"
+  register: configure
+
+- name: Show Configure Output
+  debug: var=configure.stdout_lines
+
+- name: Make
+  shell: 'make'
+  args:
+    chdir: "{{ monit_git_dir }}"
+  register: make
+
+- name: Show make Output
+  debug: var=make.stdout.lines
+
+- name: Sudo Make Install
+  shell: 'sudo make install'
+  args:
+    chdir: "{{ monit_dit_dir }}"
+  register: sudo_make
+  notify: monit autostart
+
+- name: Show sudo make install output
+  debug: var=sudo_make.stdout_lines

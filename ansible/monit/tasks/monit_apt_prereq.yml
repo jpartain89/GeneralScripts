@@ -10,10 +10,14 @@
   with_items:
     - libtool
     - gcc
-    #- gcc-4.9
+    - gcc-4.9
     - gcc-4.9-base
-    #- gcc-4.9-source
+    - gcc-4.9-source
     - bison
     - libbison-dev
     - flex
     - libfl-dev
+    - make
+    - automake
+    - autoconf
+    - build-essential
