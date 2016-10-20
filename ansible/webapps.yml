@@ -5,7 +5,6 @@
   become: yes
 
   vars:
-    git_loc: /home/jpartain89/git
     apt_requirements:
       - apt-transport-https
       - git-core
@@ -24,6 +23,11 @@
       - cryptography
       - pyopenssl
       - ndg-httpsclient
+
+  roles:
+    - standard-req
+    - monit
+    - webapps
 
   tasks:
     - include: tasks/requirements.yml

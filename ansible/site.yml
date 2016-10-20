@@ -3,5 +3,6 @@
 # File: site.yml
 
   - include: requirements.yml
-  - include: webapps.yml
-  - include: nginx/nginx.yml
+  - include: monit/monit.yml
+  - include: webapps/webapps.yml
+  - include: rpi/rpi.yml

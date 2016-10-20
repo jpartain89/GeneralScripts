@@ -1,12 +1,9 @@
 ---
 # monit.yml
 
-- hosts: all
-
-  vars:
-    - monit_git_dir: "{{ git_file_loc }}/monit"
+- hosts: linux
 
   tasks:
     - include: tasks/monit_apt_prereq.yml
     - include: tasks/monit_git.yml
-    - include: build_monit.yml
+    - include: tasks/build_monit.yml

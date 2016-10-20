@@ -1,75 +1,10 @@
 ---
-# common installs
+# file: requirements.yml
 
 - hosts: linux
 
   tasks:
-    - name: Clone Standard Github Repos
-      git:
-        repo: "{{ item.repo }}"
-        dest: "{{ item.dest }}"
-        update: yes
-        force: yes
-      with_items:
-          -
-            repo: "{{ jp_git }}/conffiles.git"
-            dest: "{{ git_loc }}/conffiles"
-          -
-            repo: "{{ jp_git }}/generalscripts.git"
-            dest: "{{ git_loc }}/generalscripts"
-          -
-            repo: https://github.com/icefox/git-map.git
-            dest: "{{ git_loc }}/git-map"
-          -
-            repo: "{{ jp_git }}/myfunctions.git"
-            dest: "{{ git_loc }}/myfunctions"
-          -
-            repo: "{{ jp_git }}/{{ dotfiles_c }}.git"
-            dest: "{{ git_loc }}/{{  dotfiles_c }}"
-
-    - name: Run bootstrap.sh from dotfiles.
-      shell: 'source "{{ git_loc }}/{{ dotfiles_c }}/bootstrap.sh"'
-      args:
-        executable: /bin/bash
-      register: bootstrap_out
-
-    - name: Show bootstrap source output
-      debug: var=bootstrap_out.stdout_lines
-
-    - name: Install apt-get Universal Requirements
-      become: yes
-      apt:
-        name: "{{ item }}"
-        state: latest
-        update_cache: yes
-        cache_valid_time: 7200
-      when: ansible_os_family == "Debian"
-      with_items:
-        - git-core
-        - libffi-dev
-        - libssl-dev
-        - zlib1g-dev
-        - libxslt1-dev
-        - libxml2-dev
-        - python
-        - python-pip
-        - python-dev
-        - python-pycurl
-        - python-setuptools
-        - python-imaging
-        - build-essential
-        - python2.7
-        - apt-transport-https
-        - libjpeg8-dev
-        - libjpeg8
-
-    - name: Install Pip Requirements
-      shell: 'sudo -H pip install --upgrade -r {{ git_loc }}/{{ dotfiles_c }}/requirements-linux.txt'
-      args:
-        executable: /bin/bash
-      register: pip_requirements_file
-
-    - name: show pip install output
-      debug: var=pip_requirements_file.stdout_lines
-
-    - include: userify.yml
+    - include: tasks/install-apt.yml
+    - include: tasks/git-clone.yml
+    - include: tasks/bootstrap.yml
+    - include: tasks/pip-requirements.yml

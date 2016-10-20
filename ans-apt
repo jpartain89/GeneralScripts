@@ -10,6 +10,7 @@ if [[ $EUID == 0 ]]; then
 fi
 
 gen_scripts=/Users/$USER/git/generalscripts
+ansible_hosts="$gen_scripts/ansible/hosts"
 
 function help_text ()
 {
@@ -41,53 +42,53 @@ case "$1" in
         echo ""
         echo "Updating all Managed Linux Machines."
         echo ""
-        ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml"
+        ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml"
         ;;
     -uv | --update-virtual )
         echo ""
         echo "Updating only Virtual Machines"
         echo ""
-        ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
+        ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
         ;;
     -ul | --update-local )
         echo ""
         echo "Updating only Local Linux Machines"
         echo ""
-        ansible-playbook -i "$gen_scripts/hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
+        ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
         ;;
     -ra | --reboot-all )
         echo ""
         echo "Rebooting all Managed Machines"
         echo ""
-        ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml"
+        ansible-playbook -i "$ansible_hosts" "$gen_scripts/ansible/restart-apt.yml"
         ;;
     -rv | --reboot-virtual )
         echo ""
         echo "Rebooting only Virtual Machines"
         echo ""
-        ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
+        ansible-playbook -i "$ansible_hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
         ;;
     -rl | --reboot-local )
         echo ""
         echo "Rebooting only Local Machines"
         echo ""
-        ansible-playbook -i "$gen_scripts/hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=local-linux
+        ansible-playbook -i "$ansible_hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=local-linux
         ;;
     -m | --monit )
         echo ""
         echo "Reloads monit on all linux machines"
         echo ""
-        ansible -i "$gen_scripts/hosts" linux -s -m service -a 'name=monit state=reloaded'
+        ansible -i "$ansible_hosts" linux -s -m service -a 'name=monit state=reloaded'
         ;;
     -sl | --shutdown-local )
         echo ""
         echo "Shutting down only Local Machines"
         echo ""
-        ansible -i "$gen_scripts/hosts" local-linux -s -a 'shutdown -h now'
+        ansible -i "$ansible_hosts" local-linux -s -a 'shutdown -h now'
         ;;
     -sv | --shutdown-virtual )
         echo "Shutting down all Virtual Machines";
-        ansible -i "$gen_scripts/hosts" virtual -s -a 'shutdown -h now'
+        ansible -i "$ansible_hosts" virtual -s -a 'shutdown -h now'
         ;;
     -h | --help )
         help_text &&
