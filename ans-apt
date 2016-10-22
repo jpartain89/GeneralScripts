@@ -11,6 +11,8 @@ fi
 
 gen_scripts=/Users/$USER/git/generalscripts
 ansible_hosts="$gen_scripts/ansible/hosts"
+linux_pip="$gen_scripts/linux_dotfiles/requirements-linux.txt"
+macos_pip="$gen_scripts/macos_dotfiles/requirements-macos.txt"
 
 function help_text ()
 {
@@ -21,6 +23,10 @@ Options:
     -ua, --update-all       : Updates all Managed Machines
     -uv, --update-virtual   : Updates all Virtual Machines
     -ul, --update-local     : Updates all Local Linux Machines
+
+    -pa, --pip-all	    : Updates Pip on all Machines
+    -pl, --pip-linux	    : Updates Pip on all Linux Machines
+    -pm, --pip-mac	    : Updates Pip on all macOS Machines
 
     -ra, --reboot-all       : Reboots all Managed Machines
     -rv, --reboot-virtual   : Reboots all Virtual Machines
@@ -56,6 +62,11 @@ case "$1" in
         echo ""
         ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
         ;;
+    -pa | --pip-all )
+        echo ""
+        echo "Updating Pip on all Managed Machines"
+        echo ""
+        ansible-playbook -i "$ansible-hosts" "$gen_scripts/ansible/"
     -ra | --reboot-all )
         echo ""
         echo "Rebooting all Managed Machines"

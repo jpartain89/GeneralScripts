@@ -1,9 +1,0 @@
----
-# monit.yml
-
-- hosts: linux
-
-  tasks:
-    - include: tasks/monit_apt_prereq.yml
-    - include: tasks/monit_git.yml
-    - include: tasks/build_monit.yml

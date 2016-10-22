@@ -1,5 +1,0 @@
----
-# monit/vars/main.yml
-
-user_home: /home/{{ username }}
-monit_git_dir: "{{ git_loc }}/monit"
