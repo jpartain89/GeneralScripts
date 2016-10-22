@@ -66,7 +66,20 @@ case "$1" in
         echo ""
         echo "Updating Pip on all Managed Machines"
         echo ""
-        ansible-playbook -i "$ansible-hosts" "$gen_scripts/ansible/"
+        ansible-playbook "$gen_scripts/ansible/pip-playbook.yml"
+        ;;
+    -pm | --pip-mac )
+        echo ""
+        echo "Updating Pip on all macOS Machines"
+        echo ""
+        ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=macos
+        ;;
+    -pl | --pip-linux )
+        echo ""
+        echo "Updating Pip on all Linux Machines"
+        echo ""
+        ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
+        ;;
     -ra | --reboot-all )
         echo ""
         echo "Rebooting all Managed Machines"
