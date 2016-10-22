@@ -2,51 +2,61 @@
 
 # This builds monit with the --enable-optimized flag set.
 
-function no_sudo ()
-    {
-        if [[ $EUID == 0 ]]; then
-            echo ""
-            echo "Sorry, but you can't run as sudo."
-            echo ""
-            exit 1
-        fi
-    }
-
-monit_dir=/home/$USER/git/monit
-required_apps=(
-libtool
-make
-automake
-autoconf
-bison
-build-essential
-gcc-4.9
-gcc-4.9-base
-gcc-4.9-source
-)
-
-if [[ ! -e "$monit_dir" ]]; then
-    echo ""
-    echo "Monit's git directory is missing."
-    echo "Now cloning"
-    echo ""
-    git clone https://tildeslash@bitbucket.org/tildeslash/monit.git "$monit_dir"
+if [[ $(uname -s) == 'Darwin' ]]; then
+    git_dir=/Users/$(logname)/git
+else
+    git_dir=/home/$(logname)/git
 fi
 
-for i in "${required_apps[@]}";
-do
-    dpgk -l | grep "$i" >/dev/null
-    which_out=$?
-    if [[ "$which_out" == "1" ]]; then
-        sudo apt-get install "$i" -y
-    fi
-done
-unset i required_apps which_out;
+if [[ ! -e "$git_dir/myfunctions" ]]; then
+    git clone https://jpartain89@github.com/jpartain89/myfunctions.git "$git_dir/myfunctions"
+fi
+source "$git_dir/myfunctions/allunix"
 
-cd "$monit_dir" &&
-git pull &&
-./bootstrap &&
-./configure --enable-optimized &&
-make &&
-sudo make install &&
-unset monit_dir
+# this is my "no_sudo" function from my allunix file
+no_sudo
+
+monit_dir="$git_dir/monit"
+required_apps=(
+    libtool \
+    make \
+    automake \
+    autoconf \
+    bison \
+    build-essential \
+    gcc-4.9 \
+    gcc-4.9-base \
+    gcc-4.9-source
+)
+
+clean_up () {
+    sudo rm -r "$git_dir";
+    unset required_apps git_dir monit_dir install_apps make_monit;
+    exit "$1"
+}
+
+trap clean_up SIGHUP SIGINT SIGTERM
+
+monit_git () {
+    if [[ ! -e "$monit_dir" ]]; then
+        echo ""
+        echo "Now cloning monit repo"
+        echo ""
+        git clone https://tildeslash@bitbucket.org/tildeslash/monit.git "$monit_dir"
+    fi
+}
+
+install_apps () {
+    sudo apt-get install "${required_apps[@]}" -y
+}
+
+make_monit () {
+    cd "$monit_dir" &&
+    git pull &&
+    ./bootstrap &&
+    ./configure --enable-optimized &&
+    make &&
+    sudo make install
+}
+
+install_apps; monit_git; install_apps; make_monit; clean_up "$@"
