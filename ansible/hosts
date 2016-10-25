@@ -18,7 +18,7 @@ web ansible_host=jpcdi.com ansible_port=22240
 downloader ansible_host=jpcdi.com ansible_port=22245
 
 [mark]
-mark ansible_host=mark.jpcdi.com ansible_port=22
+mark ansible_host=mdusa.jpcdi.com ansible_port=22
 
 [rpi]
 rpi ansible_host=jpcdi.com ansible_port=22234
