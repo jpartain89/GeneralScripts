@@ -4,7 +4,6 @@
 - hosts: all
   become: yes
 
-
   tasks:
     - name: Make sure git repo is updated
       git:

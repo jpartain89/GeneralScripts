@@ -9,8 +9,8 @@ if [[ $EUID == 0 ]]; then
     exit 1
 fi
 
-gen_scripts=/Users/$USER/git/generalscripts
-ansible_hosts="$gen_scripts/ansible/hosts"
+gen_scripts=/Users/$(logname)/git/generalscripts
+ansible_hosts="/usr/local/etc/ansible/hosts"
 linux_pip="$gen_scripts/linux_dotfiles/requirements-linux.txt"
 macos_pip="$gen_scripts/macos_dotfiles/requirements-macos.txt"
 
