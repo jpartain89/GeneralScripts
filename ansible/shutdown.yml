@@ -1,0 +1,10 @@
+---
+# ansible/shutdown-apt.yml
+
+- hosts: linux
+  become: yes
+
+  tasks:
+    - name: Shutdown Machines
+      shell: 'shutdown -h now'
+      ignore_errors: true

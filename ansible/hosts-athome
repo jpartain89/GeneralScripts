@@ -1,8 +1,11 @@
+# This hosts file is specific for when running ansible on my MacBook from
+# within my own network.
+# When outside the network, run with 'hosts.nothome'
 [imac]
 imac ansible_host=192.168.1.15
 
 [macbook]
-macbook ansible_host=192.168.1.10
+macbook ansible_host=localhost
 
 [macos:children]
 imac

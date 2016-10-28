@@ -2,6 +2,7 @@
 # ansible/restart-apt.yml
 
 - hosts: linux
+  become: yes
 
   tasks:
     - name: Restart Machines

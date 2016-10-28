@@ -4,13 +4,13 @@
 
 if [[ $EUID == 0 ]]; then
     echo ""
-    echo "Sorry, can't use sudo."
+    echo "Sorry, but you're not supposed to use sudo."
     echo ""
     exit 1
 fi
 
 gen_scripts=/Users/$(logname)/git/generalscripts
-ansible_hosts="/usr/local/etc/ansible/hosts"
+ansible_hosts="$gen_scripts/ansible/hosts"
 linux_pip="$gen_scripts/linux_dotfiles/requirements-linux.txt"
 macos_pip="$gen_scripts/macos_dotfiles/requirements-macos.txt"
 
@@ -19,22 +19,25 @@ function help_text ()
 cat <<- EOF
 My personal shortcutting ansible stuffs!
 
+ans-apt [-ua | -uv | -ul and etc. [ home | nothome ]
+
+NOTE:: Any macOS specific items are excluded from the home/nothome flags.
+
 Options:
     -ua, --update-all       : Updates all Managed Machines
     -uv, --update-virtual   : Updates all Virtual Machines
-    -ul, --update-local     : Updates all Local Linux Machines
+    -ul, --update-linux     : Updates Linux Machines
 
     -pa, --pip-all	    : Updates Pip on all Machines
-    -pl, --pip-linux	    : Updates Pip on all Linux Machines
+    -pl, --pip-linux	    : Updates Pip on Linux Machines
     -pm, --pip-mac	    : Updates Pip on all macOS Machines
 
-    -ra, --reboot-all       : Reboots all Managed Machines
+    -rl, --reboot-linux     : Reboots the Linux Machines
     -rv, --reboot-virtual   : Reboots all Virtual Machines
-    -rl, --reboot-local     : Reboots all Local Linux Machines
 
     -m,  --monit            : Reloads monit on all Managed Machines
 
-    -sl, --shutdown-local   : Shutdown Local Linux Machines
+    -sl, --shutdown-linux   : Shutdown Linux Machines
     -sv, --shutdown-virtual : Shutdown Virtual Machines
 
 There is not currently an option to shutdown all Managed Linux Machines
@@ -43,82 +46,110 @@ There is not currently an option to shutdown all Managed Linux Machines
 EOF
 }
 
-case "$1" in
-    -ua | --update-all )
+while [[ $# -ge 1 ]]; do
+    if [[ $# -lt 2 ]]; then
         echo ""
-        echo "Updating all Managed Linux Machines."
+        echo " Looks like you forgot your location variable."
+        echo "You have to use 'home' or 'nothome'"
+        echo "Please, run again."
         echo ""
-        ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml"
-        ;;
-    -uv | --update-virtual )
-        echo ""
-        echo "Updating only Virtual Machines"
-        echo ""
-        ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
-        ;;
-    -ul | --update-local )
-        echo ""
-        echo "Updating only Local Linux Machines"
-        echo ""
-        ansible-playbook -i "$ansible_hosts"  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
-        ;;
-    -pa | --pip-all )
-        echo ""
-        echo "Updating Pip on all Managed Machines"
-        echo ""
-        ansible-playbook "$gen_scripts/ansible/pip-playbook.yml"
-        ;;
-    -pm | --pip-mac )
-        echo ""
-        echo "Updating Pip on all macOS Machines"
-        echo ""
-        ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=macos
-        ;;
-    -pl | --pip-linux )
-        echo ""
-        echo "Updating Pip on all Linux Machines"
-        echo ""
-        ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
-        ;;
-    -ra | --reboot-all )
-        echo ""
-        echo "Rebooting all Managed Machines"
-        echo ""
-        ansible-playbook -i "$ansible_hosts" "$gen_scripts/ansible/restart-apt.yml"
-        ;;
-    -rv | --reboot-virtual )
-        echo ""
-        echo "Rebooting only Virtual Machines"
-        echo ""
-        ansible-playbook -i "$ansible_hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
-        ;;
-    -rl | --reboot-local )
-        echo ""
-        echo "Rebooting only Local Machines"
-        echo ""
-        ansible-playbook -i "$ansible_hosts" "$gen_scripts/ansible/restart-apt.yml" --limit=local-linux
-        ;;
-    -m | --monit )
-        echo ""
-        echo "Reloads monit on all linux machines"
-        echo ""
-        ansible -i "$ansible_hosts" linux -s -m service -a 'name=monit state=reloaded'
-        ;;
-    -sl | --shutdown-local )
-        echo ""
-        echo "Shutting down only Local Machines"
-        echo ""
-        ansible -i "$ansible_hosts" local-linux -s -a 'shutdown -h now'
-        ;;
-    -sv | --shutdown-virtual )
-        echo "Shutting down all Virtual Machines";
-        ansible -i "$ansible_hosts" virtual -s -a 'shutdown -h now'
-        ;;
-    -h | --help )
-        help_text &&
-        exit 0
-        ;;
-    * )
-        help_text &&
         exit 1
-esac
+    fi
+    # this is to set the hosts_file variable between home and remote.
+    # Setting this first makes the first parameter work much better.
+    case "$2" in
+        home )
+            hosts_file="-athome"
+            hosts_out="from home."
+            hosts_info="home"
+            ;;
+        nothome )
+            hosts_file="-nothome"
+            hosts_out="from remote."
+            hosts_info="nothome"
+            ;;
+    esac
+
+    case "$1" in
+        -ua | --update-all )
+            echo ""
+            echo "Updating all Managed Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/apt_basic.yml"
+            ;;
+        -uv | --update-virtual )
+            echo ""
+            echo "Updating only Virtual Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
+            ;;
+        -ul | --update-local )
+            echo ""
+            echo "Updating Linux Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/apt_basic.yml"
+            ;;
+        -pa | --pip-all )
+            echo ""
+            echo "Updating Pip on all Managed Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml"
+            ;;
+        -pm | --pip-mac )
+            if [[ "$hosts_info" == "home" ]]; then
+                echo ""
+                echo "Updating Pip on all macOS Machines from home."
+                echo ""
+                ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=macos
+            else
+                echo ""
+                echo "Sorry, you cannot run this when you are not at home."
+                echo "Please, wait until you're at home before re-running."
+                echo ""
+                exit 1
+            fi
+            ;;
+        -pl | --pip-linux )
+            echo ""
+            echo "Updating Pip on Linux Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
+            ;;
+        -rl | --reboot-linux )
+            echo ""
+            echo "Rebooting Linux Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart.yml"
+            ;;
+        -rv | --reboot-virtual )
+            echo ""
+            echo "Rebooting only Virtual Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
+            ;;
+        -m | --monit )
+            echo ""
+            echo "Reloads monit on Linux Machines $hosts_out"
+            echo ""
+            ansible -i "$ansible_hosts$hosts_file"  linux -s -m service -a 'name=monit state=reloaded'
+            ;;
+        -sl | --shutdown-linux )
+            echo ""
+            echo "Shutting down Linux Machines $hosts_out"
+            echo ""
+            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml"
+            ;;
+        -sv | --shutdown-virtual )
+            echo "Shutting down all Virtual Machines";
+            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
+            ;;
+        -h | --help )
+            help_text &&
+            exit 0
+            ;;
+        * )
+            help_text &&
+            exit 1
+            ;;
+    esac
+done
