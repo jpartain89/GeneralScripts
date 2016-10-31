@@ -19,7 +19,7 @@ function help_text ()
 cat <<- EOF
 My personal shortcutting ansible stuffs!
 
-ans-apt [-ua | -uv | -ul and etc. [ home | nothome ]
+ans-apt [-ua | -uv | -ul and etc. ] [ home | nothome ]
 
 NOTE:: Any macOS specific items are excluded from the home/nothome flags.
 
