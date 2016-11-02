@@ -9,6 +9,7 @@ if [[ $EUID == 0 ]]; then
     exit 1
 fi
 
+. /Users/jpartain89/git/myfunctions/allunix
 gen_scripts=/Users/$(logname)/git/generalscripts
 ansible_hosts="$gen_scripts/ansible/hosts"
 linux_pip="$gen_scripts/linux_dotfiles/requirements-linux.txt"
@@ -137,10 +138,24 @@ while [[ $# -ge 1 ]]; do
             echo ""
             echo "Shutting down Linux Machines $hosts_out"
             echo ""
+            clear
+            echo "#####################################################"
+            echo ""
+            echo "ARE YOU SURE YOU WANT EVERY LINUX HOST TO SHUTDOWN??"
+            echo ""
+            echo "#####################################################"
+            confirm
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml"
             ;;
         -sv | --shutdown-virtual )
             echo "Shutting down all Virtual Machines";
+            clear
+            echo "#####################################################"
+            echo ""
+            echo "ARE YOU SURE YOU WANT EVERY LINUX HOST TO RESTART??"
+            echo ""
+            echo "#####################################################"
+            confirm
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
             ;;
         -h | --help )
