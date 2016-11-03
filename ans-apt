@@ -115,24 +115,28 @@ while [[ $# -ge 1 ]]; do
             echo "Updating Pip on Linux Machines $hosts_out"
             echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
+            exit 0
             ;;
         -rl | --reboot-linux )
             echo ""
             echo "Rebooting Linux Machines $hosts_out"
             echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart.yml"
+            exit 0
             ;;
         -rv | --reboot-virtual )
             echo ""
             echo "Rebooting only Virtual Machines $hosts_out"
             echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
+            exit 0
             ;;
         -m | --monit )
             echo ""
             echo "Reloads monit on Linux Machines $hosts_out"
             echo ""
             ansible -i "$ansible_hosts$hosts_file"  linux -s -m service -a 'name=monit state=reloaded'
+            exit 0
             ;;
         -sl | --shutdown-linux )
             echo ""
@@ -146,6 +150,7 @@ while [[ $# -ge 1 ]]; do
             echo "#####################################################"
             confirm
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml"
+	    exit 0
             ;;
         -sv | --shutdown-virtual )
             echo "Shutting down all Virtual Machines";
@@ -157,6 +162,7 @@ while [[ $# -ge 1 ]]; do
             echo "#####################################################"
             confirm
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
+	    exit 0
             ;;
         -h | --help )
             help_text &&
