@@ -157,7 +157,7 @@ while [[ $# -ge 1 ]]; do
             clear
             echo "#####################################################"
             echo ""
-            echo "ARE YOU SURE YOU WANT EVERY LINUX HOST TO RESTART??"
+            echo "ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??"
             echo ""
             echo "#####################################################"
             confirm
@@ -174,3 +174,7 @@ while [[ $# -ge 1 ]]; do
             ;;
     esac
 done
+
+if [[ $1 == "" ]]; then
+    help_text
+fi

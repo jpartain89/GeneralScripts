@@ -12,19 +12,19 @@ imac
 macbook
 
 [nginx]
-nginx ansible_host=jpcdi.com ansible_port=22230
+nginx ansible_host=192.168.1.30 ansible_port=22230
 
 [web]
-web ansible_host=jpcdi.com ansible_port=22240
+web ansible_host=192.168.1.40 ansible_port=22240
 
 [downloader]
-downloader ansible_host=jpcdi.com ansible_port=22245
+downloader ansible_host=192.168.1.45 ansible_port=22245
 
 [mark]
 mark ansible_host=mdusa.jpcdi.com ansible_port=22
 
 [rpi]
-rpi ansible_host=jpcdi.com ansible_port=22234
+rpi ansible_host=192.168.1.34 ansible_port=22234
 
 [virtual:children]
 nginx
