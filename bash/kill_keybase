@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Short script to kill all Keybase Services
+
+. "$HOME/git/myfunctions/allunix"
+
+no_sudo
+
+if [[ -e /usr/local/bin/keybase ]]; then
+    if [[ $(/usr/local/bin/keybase launchd list) == "pid" ]]; then
+        echo "Stopping keybase.service"
+        /usr/local/bin/keybase launchd stop keybase.service
+        echo "Stopping keybase.kbfs"
+        /usr/local/bin/keybase launchd stop keybase.kbfs
+        echo "Stopping keybase.updater"
+        /usr/local/bin/keybase launchd stop keybase.updater
+    else
+        echo "No keybase launchd services are running"
+    fi
+fi
