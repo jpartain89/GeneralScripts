@@ -17,7 +17,7 @@ if [[ ! -e "$git_dir" ]]; then
     echo ""
     echo "Looks like the generic ./git directory doesn't exist."
     echo "Creating now..."
-    press_enter
+    read -r
     mkdir "$git_dir"
 fi
 

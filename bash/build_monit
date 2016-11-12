@@ -31,7 +31,7 @@ required_apps=(
 )
 
 clean_up () {
-    sudo rm -r "$git_dir";
+    sudo rm -r "$git_dir/monit";
     sudo monit reload;
     unset required_apps git_dir monit_dir install_apps monit_make;
     exit "$1"
