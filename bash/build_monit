@@ -54,10 +54,19 @@ install_apps () {
 
 monit_make () {
     cd "$monit_dir" &&
+    echo "Running git pull"
     git pull &&
+    echo "Running bootstrap"
+    press_enter
     ./bootstrap &&
+    echo "Running configure --enable-optimized"
+    press_enter
     ./configure --enable-optimized &&
+    echo "Running make"
+    press_enter
     make &&
+    echo "Run sudo make install"
+    press_enter
     sudo make install
 }
 
