@@ -2,18 +2,13 @@
 
 # Shell Script that will auto-call ansible-playbook for me
 
-if [[ $EUID == 0 ]]; then
-    echo ""
-    echo "Sorry, but you're not supposed to use sudo."
-    echo ""
-    exit 1
-fi
-
 . /Users/jpartain89/git/myfunctions/allunix
 gen_scripts=/Users/$(logname)/git/generalscripts
 ansible_hosts="$gen_scripts/ansible/hosts"
 linux_pip="$gen_scripts/linux_dotfiles/requirements-linux.txt"
 macos_pip="$gen_scripts/macos_dotfiles/requirements-macos.txt"
+
+no_sudo
 
 function help_text ()
 {
@@ -155,11 +150,7 @@ while [[ $# -ge 1 ]]; do
         -sv | --shutdown-virtual )
             echo "Shutting down all Virtual Machines";
             clear
-            echo "#####################################################"
-            echo ""
-            echo "ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??"
-            echo ""
-            echo "#####################################################"
+            vm_sutdown_text
             confirm
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
 	    exit 0
@@ -174,6 +165,26 @@ while [[ $# -ge 1 ]]; do
             ;;
     esac
 done
+
+
+vm_sutdown_text () {
+cat <<- EOF
+###############################################################################
+
+           ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??
+
+###############################################################################
+
+				These machines are:
+
+				    Downloader
+				   NGINX-Server
+				    Web Server
+
+###############################################################################
+EOF
+}
+
 
 if [[ $1 == "" ]]; then
     help_text
