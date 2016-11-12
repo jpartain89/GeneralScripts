@@ -33,7 +33,7 @@ required_apps=(
 clean_up () {
     sudo monit reload;
     sudo rm -r "$git_dir/monit";
-    exit "$1"
+    exit "$?"
 }
 
 trap clean_up SIGHUP SIGINT SIGTERM
