@@ -34,21 +34,21 @@ git_repos ()
         # Git clones my "General Scripts" repo
         if [[ ! -e "$git_dir/generalscripts" ]]; then
             echo "Cloning GeneralScripts repo"
-            read -r
+            press_enter
             git clone "$jp_git/generalscripts.git" "$git_dir/generalscripts"
             echo "Changing ownership of generalscripts directory."
-            read -r
+            press_enter
             chown -R "$owner" "$git_dir/generalscripts"
         else
             echo "General Scripts repo already cloned."
             echo "Moving on."
-            read -r
+            press_enter
         fi
 
         # makes sure my 'map-pull-sub' script is installed
         if [[ ! -f /usr/local/bin/map-pull-sub ]]; then
             echo "Copying map-pull-sub over to /usr/local/bin"
-            read -r
+            press_enter
             sudo ln -s "$git_dir/generalscripts/bash/map-pull-sub" /usr/local/bin/map-pull-sub
             chmod +x /usr/local/bin/map-pull-sub
         fi
@@ -56,27 +56,27 @@ git_repos ()
         # Clones the git-map repo and then copy the program to the right spot
         if [[ ! -f /usr/local/bin/git-map ]] || [[ ! -e "$git_dir/git-map" ]]; then
             echo "Cloning git-map repo"
-            read -r
+            press_enter
             git clone https://github.com/icefox/git-map.git "$git_dir/git-map"
             echo "Changing ownership of git-map repo"
-            read -r
+            press_enter
             chown -R "$owner" "$git_dir/git-map"
             echo "Linking git-map to /usr/local/bin"
-            read -r
+            press_enter
             sudo ln -s "$git_dir/git-map/git-map" "/usr/local/bin/git-map"
             chmod +x /usr/local/bin/git-map
         else
             echo "git-map already cloned. Moving on"
-            read -r
+            press_enter
         fi
 
         # Copys the conffiles directory that all my vm's use
         if [[ ! -e "$git_dir/conffiles" ]]; then
             echo "cloning conffiles. "
-            read -r
+            press_enter
             git clone "$jp_git/conffiles.git" "$git_dir/conffiles"
             echo "Changing ownership of conffiles."
-            read -r
+            press_enter
             chown -R "$owner" "$git_dir/conffiles"
         else
             echo "conffiles already cloned."
@@ -135,4 +135,4 @@ os_type ()
         esac
     }
 
-yes_sudo && git_repos && os_type
+no_sudo && git_repos && os_type
