@@ -58,19 +58,15 @@ monit_make () {
     git pull &&
     echo ""
     echo "Running bootstrap"
-    press_enter
     ./bootstrap &&
     echo ""
     echo "Running configure --enable-optimized"
-    press_enter
     ./configure --enable-optimized &&
     echo ""
     echo "Running make"
-    press_enter
     make &&
     echo ""
     echo "Run sudo make install"
-    press_enter
     sudo make install
 }
 
