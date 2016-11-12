@@ -11,7 +11,6 @@ else
     owner=jpartain89:jpartain89
 fi
 
-source "$git_dir/myfunctions/allunix"
 jp_git=https://jpartain89@github.com/jpartain89
 
 if [[ ! -e "$git_dir" ]]; then
@@ -29,8 +28,8 @@ if [[ ! -e "$git_dir/myfunctions" ]]; then
     git clone "$jp_git/myfunctions.git" "$git_dir/myfunctions"
     chown -R "$owner" "$git_dir/myfunctions"
 fi
-export allunix="$git_dir/myfunctions/allunix" &&
-source "$allunix"
+
+. "$allunix"
 
 git_repos ()
     {
@@ -62,7 +61,7 @@ git_repos ()
             press_enter
         fi
 
-        # Clones the git-map repo and then copys the program to the right spot
+        # Clones the git-map repo and then copy the program to the right spot
         if [[ ! -f /usr/local/bin/git-map ]]; then
             if [[ ! -e "$git_dir/git-map" ]]; then
                 echo ""
@@ -121,7 +120,7 @@ linux_dotfiles ()
             echo "Sourcing bootstrap.sh"
             echo ""
             press_enter
-            source "$git_dir/linux_dotfiles/bootstrap.sh"
+            . "$git_dir/linux_dotfiles/bootstrap.sh"
             exit 0
         fi
     }
@@ -138,7 +137,7 @@ macOS_dotfiles ()
             echo "Now sourcing the bootstrap.sh file"
             echo ""
             press_enter
-            source "$git_dir/macos_dotfiles/bootstrap.sh"
+            . "$git_dir/macos_dotfiles/bootstrap.sh"
             echo ""
             echo "Changing Ownership of macOS Dotfiles."
             echo ""

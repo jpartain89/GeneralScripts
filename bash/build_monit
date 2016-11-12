@@ -11,7 +11,8 @@ fi
 if [[ ! -e "$git_dir/myfunctions" ]]; then
     git clone https://jpartain89@github.com/jpartain89/myfunctions.git "$git_dir/myfunctions"
 fi
-source "$git_dir/myfunctions/allunix"
+
+. "$git_dir/myfunctions/allunix"
 
 # this is my "no_sudo" function from my allunix file
 no_sudo
@@ -50,7 +51,7 @@ install_apps () {
     sudo apt-get install "${required_apps[@]}" -y
 }
 
-make_monit () {
+monit_make () {
     cd "$monit_dir" &&
     git pull &&
     ./bootstrap &&
@@ -59,4 +60,4 @@ make_monit () {
     sudo make install
 }
 
-install_apps; monit_git; install_apps; make_monit; clean_up "$@"
+install_apps; monit_git; monit_make; clean_up "$@"
