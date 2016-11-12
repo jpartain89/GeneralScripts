@@ -54,20 +54,23 @@ git_repos ()
         fi
 
         # Clones the git-map repo and then copy the program to the right spot
-        if [[ ! -f /usr/local/bin/git-map ]] || [[ ! -e "$git_dir/git-map" ]]; then
+        if [[ ! -e "$git_dir/git-map" ]]; then
             echo "Cloning git-map repo"
             press_enter
             git clone https://github.com/icefox/git-map.git "$git_dir/git-map"
             echo "Changing ownership of git-map repo"
             press_enter
             chown -R "$owner" "$git_dir/git-map"
+        else
+            echo "git-map already cloned. Moving on"
+            press_enter
+        fi
+
+        if [[ ! -f /usr/local/bin/git-map ]]; then
             echo "Linking git-map to /usr/local/bin"
             press_enter
             sudo ln -s "$git_dir/git-map/git-map" "/usr/local/bin/git-map"
             chmod +x /usr/local/bin/git-map
-        else
-            echo "git-map already cloned. Moving on"
-            press_enter
         fi
 
         # Copys the conffiles directory that all my vm's use
