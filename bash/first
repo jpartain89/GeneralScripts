@@ -29,7 +29,7 @@ if [[ ! -e "$git_dir/myfunctions" ]]; then
     chown -R "$owner" "$git_dir/myfunctions"
 fi
 
-. "$allunix"
+. "$git_dir/myfunctions/allunix"
 
 git_repos ()
     {
