@@ -172,4 +172,4 @@ os_type ()
         esac
     }
 
-allunix_clone && git_repos && os_type
+git_repos && os_type
