@@ -57,7 +57,7 @@ git_repos ()
         if [[ ! -f /usr/local/bin/git-map ]] || [[ ! -e "$git_dir/git-map" ]]; then
             echo "Cloning git-map repo"
             read -r
-            git clone https://github.com/icefox/git-map.git"$git_dir/git-map"
+            git clone https://github.com/icefox/git-map.git "$git_dir/git-map"
             echo "Changing ownership of git-map repo"
             read -r
             chown -R "$owner" "$git_dir/git-map"
