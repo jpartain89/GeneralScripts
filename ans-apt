@@ -51,8 +51,15 @@ while [[ $# -ge 1 ]]; do
         echo ""
         exit 1
     fi
-    # this is to set the hosts_file variable between home and remote.
-    # Setting this first makes the first parameter work much better.
+
+    ######################################################################
+    # this is to set the hosts_file variable between home and remote.	 #
+    # Setting this first makes the first parameter work much better.	 #
+    # The "hosts_file" is for the "-i" flag for ansible.		 #
+    # The "hosts_out" is for the echoed output to stdout  		 #
+    # The "hosts_info" is specific for running the "pip" upgrade section #
+    ######################################################################
+
     case "$2" in
         home )
             hosts_file="-athome"
@@ -71,7 +78,7 @@ while [[ $# -ge 1 ]]; do
             echo ""
             echo "Updating all Managed Machines $hosts_out"
             echo ""
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/apt_basic.yml"
+            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml"
             ;;
         -uv | --update-virtual )
             echo ""
