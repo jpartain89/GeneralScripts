@@ -4,14 +4,5 @@
 - hosts: all
   become: yes
 
-  tasks:
-    - name: Make sure git repo is updated
-      git:
-        repo: https://jpartain89@github.com/jpartain89/{{ dot_dir_name }}.git
-        dest: "{{ git_loc }}/{{ dot_dir_name }}"
-        force: yes
-        update: yes
-
-    - name: Install/Upgrade Pip
-      pip:
-        requirements: "{{ git_loc }}/{{ dot_dir_name }}/{{ pip_requirements }}"
+  roles:
+    - pip

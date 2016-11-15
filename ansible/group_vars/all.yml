@@ -1,0 +1,24 @@
+---
+# file: group_vars/all
+
+username: jpartain89
+user_email: jpartain89@gmail.com
+jp_git_http:  https://jpartain89@github.com/jpartain89
+git_loc: "{{ user_home }}/git"
+dotfiles_directory: "{{ git_loc }}/{{ dot_dir_name }}"
+
+dotfiles_to_sync:
+  - { src: "{{ dotfiles_directory }}/dotfiles/*", dest: "{{ user_home }}/" }
+  - { src: "{{ dotfiles_directory }}/{{ ssh_dot }}", dest: "{{ user_home }}/.ssh/config" }
+  - { src: "{{ dotfiles_directory }}/apps/*", dest: /usr/local/bin/ }
+
+git_dotfiles:
+  - { repo: "{{ jp_git_http }}/{{ dot_dir_name }}.git", dest: "{{ git_loc }}/{{ dot_dir_name }}" }
+
+# git_vars is used specifically in the first-steps/tasks/git-clone.yml file
+git_vars:
+  - { repo: "{{ jp_git_http }}/conffiles.git", dest: "{{ git_loc }}/conffiles" }
+  - { repo: "{{ jp_git_http }}/generalscripts.git", dest: "{{ git_loc }}/generalscripts" }
+  - { repo: "{{ jp_git_http }}/myfunctions.git", dest: "{{ git_loc }}/myfunctions" }
+  - { repo: "{{ jp_git_http }}/map-pull-sub.git", dest: "{{ git_loc }}/map-pull-sub" }
+  - { repo: "https://github.com/scopatz/nanorc.git", dest: "{{ git_loc }}/nanorc" }

@@ -1,0 +1,11 @@
+---
+# file: group_vars/linux
+
+#ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q rpi"'
+
+user_home: /home/{{ username }}
+dot_dir_name: linux_dotfiles
+pip_requirements: requirements-linux.txt
+
+dotfiles_to_sync:
+  - { src: "{{ dotfiles_directory }}/sudoers", dest: /etc/ }

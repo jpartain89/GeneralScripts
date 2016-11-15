@@ -21,8 +21,11 @@ NOTE:: Any macOS specific items are excluded from the home/nothome flags.
 
 Options:
     -ua, --update-all       : Updates all Managed Machines
+                            :   Apt, Homebrew and Pip
     -uv, --update-virtual   : Updates all Virtual Machines
+                            :   Apt and Pip
     -ul, --update-linux     : Updates Linux Machines
+                            :   Apt and Pip
 
     -pa, --pip-all	    : Updates Pip on all Machines
     -pl, --pip-linux	    : Updates Pip on Linux Machines
