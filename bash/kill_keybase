@@ -7,13 +7,10 @@
 no_sudo
 
 if [[ -e /usr/local/bin/keybase ]]; then
-    if [[ $(/usr/local/bin/keybase launchd list) == "pid" ]]; then
-        echo "Stopping keybase.service"
-        /usr/local/bin/keybase launchd stop keybase.service
-        echo "Stopping keybase.kbfs"
-        /usr/local/bin/keybase launchd stop keybase.kbfs
-        echo "Stopping keybase.updater"
-        /usr/local/bin/keybase launchd stop keybase.updater
+    if [[ $(/usr/local/bin/keybase launchd list | grep pid) != "" ]]; then
+        for i in service kbfs updater; do
+            keybase launchd stop "keybase.${i}"
+        done
     else
         echo "No keybase launchd services are running"
     fi
