@@ -28,7 +28,7 @@ apt-get install git make gcc libavahi-compat-libdnssd-dev -y
 echo ""
 echo "Installing Nodejs"
 echo "Will run a script first"
-read -r "Press Enter to Continue"
+press_enter
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
@@ -38,7 +38,7 @@ sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
     echo " --- or --- " \
     echo "/usr/local/lib/node_modules"
     echo "file system doesn't exist, exiting" \
-    read -r "Press Enter To Continue"; \
+    press_enter; \
     exit 1
 sudo npm install --unsafe-perm bignum
 (cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns || cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns) || \
@@ -46,13 +46,13 @@ sudo npm install --unsafe-perm bignum
     echo " --- or --- "
     echo "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns"
     echo "doesn't exist, exiting"
-    read -r "Press enter to continue"
+    press_enter
     exit 1
 sudo node-gyp BUILDTYPE=Release rebuild
 
 cd "$DIRECTORY" || \
     echo "Couldn't return to prior directory, exiting"
-    read -r "Press Enter to Continue"
+    press_enter
     exit 1
 sudo npm install -g --unsafe-perm homebridge
 
@@ -60,5 +60,5 @@ echo ""
 echo "Make sure to run homebridge after this exits."
 echo "Also, add the monit autostart script to /etc/monit/conf.d"
 echo ""
-read -r "Press enter to continue"
+press_enter
 exit 0
