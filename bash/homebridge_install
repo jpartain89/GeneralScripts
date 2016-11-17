@@ -25,37 +25,39 @@ DIRECTORY=$(pwd)
 
 apt-get install git make gcc libavahi-compat-libdnssd-dev -y
 
-echo ""
-echo "Installing Nodejs"
-echo "Will run a script first"
-press_enter
 if [[ $(dpkg -l | grep nodejs) == "" ]]; then
+    echo ""
+    echo "Installing Nodejs"
+    echo "Will run a script first"
+    press_enter
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     sudo apt-get install -y nodejs
+else
+    echo ""
+    echo "Node is installed, running apt update then moving on"
+    press_enter
+    apt update && apt upgrade -y
 fi
 
 sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
-cd /usr/lib/node_modules/homebridge/ #|| cd /usr/local/lib/node_modules/homebridge/ ||
-    #echo "The /usr/lib/node_modules"
-    #echo " --- or --- "
-    #echo "/usr/local/lib/node_modules"
-    #echo "file system doesn't exist, exiting"
-    #press_enter;
-    #exit 1
-sudo npm install --unsafe-perm bignum
-cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns #|| cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns) ||
-    #gecho "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns"
-    #gecho " --- or --- "
-    #gecho "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns"
-    #gecho "doesn't exist, exiting"
-    #gpress_enter
-    #gexit 1
-sudo node-gyp BUILDTYPE=Release rebuild
-
-cd "$DIRECTORY" ||
-    echo "Couldn't return to prior directory, exiting"
-    press_enter
+(cd /usr/lib/node_modules/homebridge/ || cd /usr/local/lib/node_modules/homebridge/) ||
+    echo "The /usr/lib/node_modules";
+    echo " --- or --- ";
+    echo "/usr/local/lib/node_modules";
+    echo "file system doesn't exist, exiting";
+    press_enter;
     exit 1
+sudo npm install --unsafe-perm bignum
+(cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns || cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns) ||
+    echo "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns";
+    echo " --- or --- ";
+    echo "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns";
+    echo "doesn't exist, exiting";
+    press_enter;
+    exit 1
+node-gyp BUILDTYPE=Release rebuild
+
+cd "$DIRECTORY" || echo "Couldn't return to prior directory, exiting"; press_enter; exit 1
 sudo npm install -g --unsafe-perm homebridge
 
 echo ""
