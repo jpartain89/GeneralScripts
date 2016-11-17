@@ -29,9 +29,10 @@ echo ""
 echo "Installing Nodejs"
 echo "Will run a script first"
 press_enter
-if [[ $(dpkg -l ) ]]
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install -y nodejs
+if [[ $(dpkg -l | grep nodejs) == "" ]]; then
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+fi
 
 sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
 cd /usr/lib/node_modules/homebridge/ #|| cd /usr/local/lib/node_modules/homebridge/ ||
@@ -43,12 +44,12 @@ cd /usr/lib/node_modules/homebridge/ #|| cd /usr/local/lib/node_modules/homebrid
     #exit 1
 sudo npm install --unsafe-perm bignum
 cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns #|| cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns) ||
-    #echo "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns"
-    #echo " --- or --- "
-    #echo "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns"
-    #echo "doesn't exist, exiting"
-    #press_enter
-    #exit 1
+    #gecho "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns"
+    #gecho " --- or --- "
+    #gecho "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns"
+    #gecho "doesn't exist, exiting"
+    #gpress_enter
+    #gexit 1
 sudo node-gyp BUILDTYPE=Release rebuild
 
 cd "$DIRECTORY" ||
