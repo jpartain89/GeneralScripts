@@ -80,32 +80,27 @@ while [[ $# -ge 1 ]]; do
         -ua | --update-all )
             echo ""
             echo "Updating all Managed Machines $hosts_out"
-            echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml"
             ;;
         -uv | --update-virtual )
             echo ""
             echo "Updating only Virtual Machines $hosts_out"
-            echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
             ;;
         -ul | --update-local )
             echo ""
             echo "Updating Linux Machines $hosts_out"
-            echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/apt_basic.yml"
             ;;
         -pa | --pip-all )
             echo ""
             echo "Updating Pip on all Managed Machines $hosts_out"
-            echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml"
             ;;
         -pm | --pip-mac )
             if [[ "$hosts_info" == "home" ]]; then
                 echo ""
                 echo "Updating Pip on all macOS Machines from home."
-                echo ""
                 ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=macos
             else
                 echo ""
@@ -118,35 +113,28 @@ while [[ $# -ge 1 ]]; do
         -pl | --pip-linux )
             echo ""
             echo "Updating Pip on Linux Machines $hosts_out"
-            echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
             exit 0
             ;;
         -rl | --reboot-linux )
             echo ""
             echo "Rebooting Linux Machines $hosts_out"
-            echo ""
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart.yml"
             exit 0
             ;;
         -rv | --reboot-virtual )
             echo ""
             echo "Rebooting only Virtual Machines $hosts_out"
-            echo ""
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart-apt.yml" --limit=virtual
+            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart.yml" --limit=virtual
             exit 0
             ;;
         -m | --monit )
             echo ""
             echo "Reloads monit on Linux Machines $hosts_out"
-            echo ""
             ansible -i "$ansible_hosts$hosts_file"  linux -s -m service -a 'name=monit state=reloaded'
             exit 0
             ;;
         -sl | --shutdown-linux )
-            echo ""
-            echo "Shutting down Linux Machines $hosts_out"
-            echo ""
             clear
             echo "#####################################################"
             echo ""
@@ -158,7 +146,6 @@ while [[ $# -ge 1 ]]; do
 	    exit 0
             ;;
         -sv | --shutdown-virtual )
-            echo "Shutting down all Virtual Machines";
             clear
             vm_sutdown_text
             confirm
