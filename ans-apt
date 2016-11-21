@@ -10,8 +10,25 @@ macos_pip="$gen_scripts/macos_dotfiles/requirements-macos.txt"
 
 no_sudo
 
-function help_text ()
-{
+vm_sutdown_text () {
+cat <<- EOF
+###############################################################################
+
+           ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??
+
+###############################################################################
+
+				These machines are:
+
+				    Downloader
+				   NGINX-Server
+				    Web Server
+
+###############################################################################
+EOF
+}
+
+help_text () {
 cat <<- EOF
 My personal shortcutting ansible stuffs!
 
@@ -162,25 +179,6 @@ while [[ $# -ge 1 ]]; do
             ;;
     esac
 done
-
-
-vm_sutdown_text () {
-cat <<- EOF
-###############################################################################
-
-           ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??
-
-###############################################################################
-
-				These machines are:
-
-				    Downloader
-				   NGINX-Server
-				    Web Server
-
-###############################################################################
-EOF
-}
 
 
 if [[ $1 == "" ]]; then
