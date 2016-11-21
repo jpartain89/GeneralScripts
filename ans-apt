@@ -18,11 +18,11 @@ cat <<- EOF
 
 ###############################################################################
 
-				These machines are:
+                           These machines are:
 
-				    Downloader
-				   NGINX-Server
-				    Web Server
+ 			       Downloader
+ 			      NGINX-Server
+			       Web Server
 
 ###############################################################################
 EOF
@@ -152,22 +152,20 @@ while [[ $# -ge 1 ]]; do
             exit 0
             ;;
         -sl | --shutdown-linux )
-            clear
-            echo "#####################################################"
-            echo ""
-            echo "ARE YOU SURE YOU WANT EVERY LINUX HOST TO SHUTDOWN??"
-            echo ""
-            echo "#####################################################"
-            confirm
-            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml"
-	    exit 0
+            dialog --yesno "Do you want ALL of the Linux Machines to shutdown?" 0 0
+            rc=$?
+            if [[ "${rc}" == "0" ]]; then
+                ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml"
+            fi
+            exit 0
             ;;
         -sv | --shutdown-virtual )
-            clear
-            vm_sutdown_text
-            confirm
-            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
-	    exit 0
+            dialog --yesno "Do you want ALL of the Linux VIRTUAL MACHINES to shutdown?" 0 0
+            rc=$?
+            if [[ "${rc}" == "0" ]]; then
+                ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
+            fi
+            exit 0
             ;;
         -h | --help )
             help_text &&
