@@ -65,7 +65,7 @@ EOF
 while [[ $# -ge 1 ]]; do
     if [[ $# -lt 2 ]]; then
         echo ""
-        echo " Looks like you forgot your location variable."
+        echo "Looks like you forgot your location variable."
         echo "You have to use 'home' or 'nothome'"
         echo "Please, run again."
         echo ""
@@ -98,27 +98,32 @@ while [[ $# -ge 1 ]]; do
             echo ""
             echo "Updating all Managed Machines $hosts_out"
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml"
+	    exit 0
             ;;
         -uv | --update-virtual )
             echo ""
             echo "Updating only Virtual Machines $hosts_out"
             ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
-            ;;
+            exit 0
+	    ;;
         -ul | --update-local )
             echo ""
             echo "Updating Linux Machines $hosts_out"
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/apt_basic.yml"
+ 	    exit 0
             ;;
         -pa | --pip-all )
             echo ""
             echo "Updating Pip on all Managed Machines $hosts_out"
             ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml"
+    	    exit 0
             ;;
         -pm | --pip-mac )
             if [[ "$hosts_info" == "home" ]]; then
                 echo ""
                 echo "Updating Pip on all macOS Machines from home."
                 ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=macos
+		exit 0
             else
                 echo ""
                 echo "Sorry, you cannot run this when you are not at home."
