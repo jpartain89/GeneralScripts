@@ -32,9 +32,7 @@ help_text () {
 cat <<- EOF
 My personal shortcutting ansible stuffs!
 
-ans-apt [-ua | -uv | -ul and etc. ] [ home | nothome ]
-
-NOTE:: Any macOS specific items are excluded from the home/nothome flags.
+ans-apt [-ua | -uv | -ul and etc. ]
 
 Options:
     -ua, --update-all       : Updates all Managed Machines
@@ -63,114 +61,80 @@ EOF
 }
 
 while [[ $# -ge 1 ]]; do
-    if [[ $# -lt 2 ]]; then
-        echo ""
-        echo "Looks like you forgot your location variable."
-        echo "You have to use 'home' or 'nothome'"
-        echo "Please, run again."
-        echo ""
-        exit 1
-    fi
-
-    ######################################################################
-    # this is to set the hosts_file variable between home and remote.	 #
-    # Setting this first makes the first parameter work much better.	 #
-    # The "hosts_file" is for the "-i" flag for ansible.		 #
-    # The "hosts_out" is for the echoed output to stdout  		 #
-    # The "hosts_info" is specific for running the "pip" upgrade section #
-    ######################################################################
-
-    case "$2" in
-        home )
-            hosts_file="-athome"
-            hosts_out="from home."
-            hosts_info="home"
-            ;;
-        nothome )
-            hosts_file="-nothome"
-            hosts_out="from remote."
-            hosts_info="nothome"
-            ;;
-    esac
-
     case "$1" in
         -ua | --update-all )
             echo ""
-            echo "Updating all Managed Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml"
-	    exit 0
-            ;;
-        -uv | --update-virtual )
+            echo "Updating all Managed Machines"
+            ansible-playbook "$gen_scripts/ansible/apt_basic.yml"
+            exit 0
+        ;;
+            -uv | --update-virtual )
             echo ""
-            echo "Updating only Virtual Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
+            echo "Updating only Virtual Machines"
+            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
             exit 0
 	    ;;
         -ul | --update-local )
             echo ""
-            echo "Updating Linux Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/apt_basic.yml"
- 	    exit 0
+            echo "Updating Linux Machines "
+            ansible-playbook  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
+ 	        exit 0
             ;;
         -pa | --pip-all )
             echo ""
-            echo "Updating Pip on all Managed Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml"
+            echo "Updating Pip on all Managed Machines "
+            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml"
     	    exit 0
             ;;
         -pm | --pip-mac )
-            if [[ "$hosts_info" == "home" ]]; then
-                echo ""
-                echo "Updating Pip on all macOS Machines from home."
-                ansible-playbook "$gen_scripts/ansible/pip-playbook.yml" --limit=macos
-		exit 0
-            else
-                echo ""
-                echo "Sorry, you cannot run this when you are not at home."
-                echo "Please, wait until you're at home before re-running."
-                echo ""
-                exit 1
-            fi
-            ;;
+            echo ""
+            echo "Updating Pip on all macOS machines."
+            ansible-playbook "$gen_scripts/ansible/pip-playbook.yml"--limit=macos
+		    exit 0
+        ;;
         -pl | --pip-linux )
             echo ""
-            echo "Updating Pip on Linux Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
+            echo "Updating Pip on Linux Machines "
+            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
             exit 0
             ;;
         -rl | --reboot-linux )
             echo ""
-            echo "Rebooting Linux Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart.yml"
+            echo "Rebooting Linux Machines "
+            ansible-playbook  "$gen_scripts/ansible/restart.yml"
             exit 0
             ;;
         -rv | --reboot-virtual )
             echo ""
-            echo "Rebooting only Virtual Machines $hosts_out"
-            ansible-playbook -i "$ansible_hosts$hosts_file"  "$gen_scripts/ansible/restart.yml" --limit=virtual
+            echo "Rebooting only Virtual Machines "
+            ansible-playbook  "$gen_scripts/ansible/restart.yml" --limit=virtual
             exit 0
             ;;
         -m | --monit )
             echo ""
-            echo "Reloads monit on Linux Machines $hosts_out"
-            ansible -i "$ansible_hosts$hosts_file"  linux -s -m service -a 'name=monit state=reloaded'
+            echo "Reloads monit on Linux Machines "
+            ansible  linux -s -m service -a 'name=monit state=reloaded'
             exit 0
             ;;
         -sl | --shutdown-linux )
             dialog --yesno "Do you want ALL of the Linux Machines to shutdown?" 0 0
             rc=$?
             if [[ "${rc}" == "0" ]]; then
-                ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml"
+                ansible-playbook "$gen_scripts/ansible/shutdown.yml"
+                exit 0
+            else
+                    exit 1
             fi
-            exit 0
             ;;
         -sv | --shutdown-virtual )
-            dialog --yesno "Do you want ALL of the Linux VIRTUAL MACHINES to shutdown?" 0 0
+            dialog --yesno "Do you want ALL of the VIRTUAL MACHINES to shutdown?" 0 0
             rc=$?
             if [[ "${rc}" == "0" ]]; then
-                ansible-playbook -i "$ansible_hosts$hosts_file" "$gen_scripts/ansible/shutdown.yml" --limit=virtual
+                ansible-playbook "$gen_scripts/ansible/shutdown.yml" --limit=virtual
+                exit 0
+            else
+                exit 1
             fi
-            exit 0
             ;;
         -h | --help )
             help_text &&
@@ -186,4 +150,5 @@ done
 
 if [[ $1 == "" ]]; then
     help_text
+    exit 1
 fi
