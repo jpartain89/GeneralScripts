@@ -4,9 +4,6 @@
 
 . /Users/jpartain89/git/myfunctions/allunix
 gen_scripts=/Users/$(logname)/git/generalscripts
-ansible_hosts="$gen_scripts/ansible/hosts"
-linux_pip="$gen_scripts/linux_dotfiles/requirements-linux.txt"
-macos_pip="$gen_scripts/macos_dotfiles/requirements-macos.txt"
 
 no_sudo
 

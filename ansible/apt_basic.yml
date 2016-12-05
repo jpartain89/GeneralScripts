@@ -50,3 +50,10 @@
 
     - name: Show autoremove rc apps
       debug: var=autoremove_rc_apt.stdout_lines
+
+- hosts: macos
+  become: no
+
+  tasks:
+  - name: Running brewdate
+    shell: '/usr/local/bin/brewdate'
