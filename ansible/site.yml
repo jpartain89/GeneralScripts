@@ -1,8 +1,0 @@
----
-# Ansible Playbook to start off all Plays, includes basic github stuff
-# File: site.yml
-
-  - include: requirements.yml
-  - include: monit/monit.yml
-  - include: webapps/webapps.yml
-  - include: rpi/rpi.yml

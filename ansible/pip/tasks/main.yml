@@ -1,7 +1,7 @@
 ---
 # ansible/pip/tasks/main.yml
 
-- name: Make sure git repo is updated
+- name: Make sure dotfiles repo is updated
   git:
     repo: https://jpartain89@github.com/jpartain89/{{ dot_dir_name }}.git
     dest: "{{ git_loc }}/{{ dot_dir_name }}"
@@ -12,7 +12,7 @@
   pip:
     requirements: "{{ git_loc }}/{{ dot_dir_name }}/requirements.txt"
 
-- name: Pip install from Sourced Pip List
+- name: Pip install from Already-Installed Pip List
   shell: "pip install -U $(pip list --format=legacy | awk '{ print $1}')"
   register: pip_install_formatted
   failed_when: False
