@@ -2,18 +2,24 @@
 
 # Shell Script that will auto-call ansible-playbook for me
 
-. /Users/jpartain89/git/myfunctions/allunix
+if [[ -e $(which allunix) ]]; then
+    . $(which allunix)
+else
+    echo "Sorry, looks like you're missing the needed allunix file."
+    echo "For info, please see https://github.com/jpartain89/MyFunctions.git"
+fi
+
 gen_scripts=/Users/$(logname)/git/generalscripts
 
 no_sudo
 
 vm_sutdown_text () {
 cat <<- EOF
-###############################################################################
+################################################################################
 
            ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??
 
-###############################################################################
+################################################################################
 
                            These machines are:
 
@@ -34,6 +40,10 @@ ans-apt [-ua | -uv | -ul and etc. ]
 Options:
     -ua, --update-all       : Updates all Managed Machines
                             :   Apt, Homebrew and Pip
+                            :   (Local and Remote, macOS and Linux)
+    -uL, --update-Local     : Updates all Local Machines
+                            :   Apt, Homebrew and Pip
+                            :   (RPI's, Virtual and macOS)
     -uv, --update-virtual   : Updates all Virtual Machines
                             :   Apt and Pip
     -ul, --update-linux     : Updates Linux Machines
@@ -64,18 +74,19 @@ while [[ $# -ge 1 ]]; do
             echo "Updating all Managed Machines"
             ansible-playbook "$gen_scripts/ansible/apt_basic.yml"
             exit 0
-        ;;
-            -uv | --update-virtual )
+            ;;
+        -uv | --update-virtual )
             echo ""
             echo "Updating only Virtual Machines"
             ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
             exit 0
 	    ;;
-        -ul | --update-local )
+
+        -ul | --update-linux )
             echo ""
             echo "Updating Linux Machines "
-            ansible-playbook  "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
- 	        exit 0
+            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
+ 	    exit 0
             ;;
         -pa | --pip-all )
             echo ""
