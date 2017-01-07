@@ -7,6 +7,7 @@ if [[ -e $(which allunix) ]]; then
 else
     echo "Sorry, looks like you're missing the needed allunix file."
     echo "For info, please see https://github.com/jpartain89/MyFunctions.git"
+    exit 1
 fi
 
 gen_scripts=/Users/$(logname)/git/generalscripts
@@ -35,7 +36,7 @@ help_text () {
 cat <<- EOF
 My personal shortcutting ansible stuffs!
 
-ans-apt [-ua | -uv | -ul and etc. ]
+ans-apt [-ua | -uL | -uv | -ul and etc. ]
 
 Options:
     -ua, --update-all       : Updates all Managed Machines
@@ -43,7 +44,7 @@ Options:
                             :   (Local and Remote, macOS and Linux)
     -uL, --update-Local     : Updates all Local Machines
                             :   Apt, Homebrew and Pip
-                            :   (RPI's, Virtual and macOS)
+                            :   (RPI's, Virtual and macOS)'
     -uv, --update-virtual   : Updates all Virtual Machines
                             :   Apt and Pip
     -ul, --update-linux     : Updates Linux Machines
