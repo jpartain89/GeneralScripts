@@ -1,17 +1,16 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # Shell Script that will auto-call ansible-playbook for me
 
 if [[ -e $(which allunix) ]]; then
-    . $(which allunix)
+    . "$(which allunix)"
 else
     echo "Sorry, looks like you're missing the needed allunix file."
     echo "For info, please see https://github.com/jpartain89/MyFunctions.git"
     exit 1
 fi
 
-gen_scripts=/Users/$(logname)/git/generalscripts
-
+gen_scripts="/Users/$(logname)/git/generalscripts"
 no_sudo
 
 vm_sutdown_text () {
@@ -42,12 +41,10 @@ Options:
     -ua, --update-all       : Updates all Managed Machines
                             :   Apt, Homebrew and Pip
                             :   (Local and Remote, macOS and Linux)
-    -uL, --update-Local     : Updates all Local Machines
+    -ul, --update-local     : Updates all Local Machines
                             :   Apt, Homebrew and Pip
                             :   (RPI's, Virtual and macOS)'
-    -uv, --update-virtual   : Updates all Virtual Machines
-                            :   Apt and Pip
-    -ul, --update-linux     : Updates Linux Machines
+    -u, --update-linux     : Updates Linux Machines
                             :   Apt and Pip
 
     -pa, --pip-all	    : Updates Pip on all Machines
@@ -68,61 +65,62 @@ There is not currently an option to shutdown all Managed Linux Machines
 EOF
 }
 
-while [[ $# -ge 1 ]]; do
+while [ $# -ge 1 ]; do
     case "$1" in
         -ua | --update-all )
-            echo ""
-            echo "Updating all Managed Machines"
-            ansible-playbook "$gen_scripts/ansible/apt_basic.yml"
+            echo "";
+            echo "Updating all Managed Machines";
+            ansible-playbook "$gen_scripts/ansible/apt_basic.yml";
+            ansible-playbook "$gen_scripts/ansible/brew_basic.yml";
             exit 0
             ;;
-        -uv | --update-virtual )
-            echo ""
-            echo "Updating only Virtual Machines"
-            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=virtual
+        -ul | --update-local )
+            echo "";
+            echo "Updating only Local Machines";
+            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux;
+            ansible-playbook "$gen_scripts/ansible/brew_basic.yml";
             exit 0
-	    ;;
-
+            ;;
         -ul | --update-linux )
-            echo ""
-            echo "Updating Linux Machines "
-            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux
- 	    exit 0
+            echo "";
+            echo "Updating Linux Machines ";
+            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux;
+            exit 0
             ;;
         -pa | --pip-all )
-            echo ""
-            echo "Updating Pip on all Managed Machines "
-            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml"
+            echo "";
+            echo "Updating Pip on all Managed Machines ";
+            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml";
     	    exit 0
             ;;
         -pm | --pip-mac )
-            echo ""
-            echo "Updating Pip on all macOS machines."
-            ansible-playbook "$gen_scripts/ansible/pip-playbook.yml"--limit=macos
+            echo "";
+            echo "Updating Pip on all macOS machines.";
+            ansible-playbook "$gen_scripts/ansible/pip-playbook.yml"--limit=macos;
 		    exit 0
         ;;
         -pl | --pip-linux )
-            echo ""
-            echo "Updating Pip on Linux Machines "
-            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux
+            echo "";
+            echo "Updating Pip on Linux Machines ";
+            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux;
             exit 0
             ;;
         -rl | --reboot-linux )
-            echo ""
-            echo "Rebooting Linux Machines "
-            ansible-playbook  "$gen_scripts/ansible/restart.yml"
+            echo "";
+            echo "Rebooting Linux Machines ";
+            ansible-playbook  "$gen_scripts/ansible/restart.yml";
             exit 0
             ;;
         -rv | --reboot-virtual )
-            echo ""
-            echo "Rebooting only Virtual Machines "
-            ansible-playbook  "$gen_scripts/ansible/restart.yml" --limit=virtual
+            echo "";
+            echo "Rebooting only Virtual Machines ";
+            ansible-playbook  "$gen_scripts/ansible/restart.yml" --limit=virtual;
             exit 0
             ;;
         -m | --monit )
-            echo ""
-            echo "Reloads monit on Linux Machines "
-            ansible  linux -s -m service -a 'name=monit state=reloaded'
+            echo "";
+            echo "Reloads monit on Linux Machines ";
+            ansible  linux -s -m service -a 'name=monit state=reloaded';
             exit 0
             ;;
         -sl | --shutdown-linux )

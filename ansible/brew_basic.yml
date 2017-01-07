@@ -1,0 +1,30 @@
+---
+
+- hosts: macos
+  become: no
+
+  vars:
+    - GIT_HOME: /Users/jpartain89/git
+
+  tasks:
+    - name: macOS | Running "brewdate"
+      shell: '/usr/local/bin/brewdate'
+      register: _brewdate
+
+    - name: macOS | Show brewdate Output
+      debug: var=_brewdate.stderr_lines
+      when: _brewdate|failed
+
+    - name: macOS | Run Pip Installer Against Requirements File
+      pip:
+        requirements: "{{ GIT_HOME }}/macOS-First-Steps/requirements.txt"
+        executable: "{{ item }}"
+      with_items:
+        - pip2
+        - pip3
+      register: pip_requirements
+      ignore_errors: True
+
+    - name: macOS | Show pip_requirements Output
+      debug: var=pip_requirements.stderr_lines
+      when: pip_requirements|failed
