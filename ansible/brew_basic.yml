@@ -8,11 +8,14 @@
 
   tasks:
     - name: macOS | Running "brewdate"
-      shell: '/usr/local/bin/brewdate'
+      shell: '~/bin/brewdate'
+      args:
+        executable: /bin/bash
       register: _brewdate
+      ignore_errors: True
 
     - name: macOS | Show brewdate Output
-      debug: var=_brewdate.stderr_lines
+      debug: var=_brewdate
       when: _brewdate|failed
 
     - name: macOS | Run Pip Installer Against Requirements File
@@ -26,5 +29,5 @@
       ignore_errors: True
 
     - name: macOS | Show pip_requirements Output
-      debug: var=pip_requirements.stderr_lines
+      debug: var=pip_requirements
       when: pip_requirements|failed

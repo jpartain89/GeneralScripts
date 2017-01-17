@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+GIT_LOC="/home/jpartain89/git"
+. "$(which allunix)"
+
+if [[ ! -e "$GIT_LOC/ddclient" ]]; then
+    git clone https://github.com/wimpunk/ddclient.git "$GIT_LOC/ddclient"
+fi
+
+sudo apt-get update
+sudo apt-get install libio-socket-ssl-perl perl cpanminus -y
+
+echo ""
+echo "Copying over ddclient executable"
+press_enter
+sudo cp "$GIT_LOC/ddclient/ddclient" /usr/sbin/ddclient
+
+DDCLIENT_MK=(
+"/etc/ddclient "
+"/var/cache/ddclient"
+)
+
+if [[ ! -e "${DDCLIENT_MK[@]}" ]]; then
+    echo ""
+    echo "Creating ddclient directories."
+    sudo mkdir "${DDCLIENT_MK[@]}"
+fi
+
+echo ""
+echo "Copying my default ddclient conf file."
+sudo cp "$GIT_LOC/conffiles/ddclient/ddclient.conf" /etc/ddclient/ddclient.conf
+echo ""
+echo "Copying the init.d script over."
+sudo cp "$GIT_LOC/ddclient/sample-etc_rc.d_init.d_ddclient.ubuntu" /etc/init.d/ddclient
+echo ""
+echo "Making it all executable"
+sudo chmod +x /etc/init.d/ddclient /etc/ddclient/ddclient.conf /usr/sbin/ddclient
+
+echo ""
+echo "Installing the cpan stuff."
+sudo cpan install Data::Validate::IP
+
+echo ""
+echo "Add ddclient to autostart"
+sudo update-rc.d ddclient defaults
+sudo monit reload
+sudo monit monitor ddclient

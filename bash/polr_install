@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# polr script
+
+POLR_FILE="/var/www/html/polr"
+
+if [[ ! -e "$POLR_FILE" ]]; then
+    git clone https://github.com/cydrobolt/polr.git "$POLR_FILE"
+fi
+
+sudo chmod -R 0755 "$POLR_FILE"
+sudo chown -R www-data:www-data "$POLR_FILE"
+
+curl -sS https://getcomposer.org/installer | php
+(cd "$POLR_FILE"; php composer.phar install --no-dev -o) || echo "The cd and php composer install didn't work. Exiting."; exit 1
