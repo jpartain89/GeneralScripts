@@ -3,21 +3,21 @@
 # This builds monit with the --enable-optimized flag set.
 
 if [[ $(uname -s) == 'Darwin' ]]; then
-    git_dir=/Users/$(logname)/git
+    GIT_DIR=/Users/$(logname)/git
 else
-    git_dir=/home/$(logname)/git
+    GIT_DIR=/home/$(logname)/git
 fi
 
-if [[ ! -e "$git_dir/myfunctions" ]]; then
-    git clone https://jpartain89@github.com/jpartain89/myfunctions.git "$git_dir/myfunctions"
+if [[ ! -e "$GIT_DIR/myfunctions" ]]; then
+    http://bit.ly/jp_allunix
+ "$GIT_DIR/myfunctions"
 fi
 
-. "$git_dir/myfunctions/allunix"
-
-# this is my "no_sudo" function from my allunix file
+source allunix
 no_sudo
 
-monit_dir="$git_dir/monit"
+MONIT_GIT="https://tildeslash@bitbucket.org/tildeslash/monit.git"
+MONIT_DIR="$GIT_DIR/monit"
 required_apps=(
     libtool \
     make \
@@ -28,23 +28,36 @@ required_apps=(
     gcc-4.9 \
     gcc-4.9-base \
     gcc-4.9-source \
-    flex
+    flex \
+    libpam0g-dev \
+    libpam0g
 )
 
 clean_up () {
+    # you have to run `sudo monit` once, especially if it successfully installed.
+    sudo monit;
     sudo monit reload;
-    sudo rm -r "$git_dir/monit";
     exit "$?"
 }
 
 trap clean_up SIGHUP SIGINT SIGTERM
 
 monit_git () {
-    if [[ ! -e "$monit_dir" ]]; then
+    if [[ ! -e "$MONIT_DIR" ]]; then
         echo ""
-        echo "Now cloning monit repo"
+        echo "Now cloning monit's git repo."
+        echo "$MONIT_GIT"
+        git clone "$MONIT_GIT" "$MONIT_DIR"
+    else
         echo ""
-        git clone https://tildeslash@bitbucket.org/tildeslash/monit.git "$monit_dir"
+        echo "Monit's git repo looks to be cloned, will try updating."
+        ( git -C "$MONIT_DIR" reset --hard 2>&1 &&
+        git -C "$MONIT_DIR"  pull 2>&1 ) ||
+        echo "For some reason, ${MAGENTA}git reset --hard${NORMAL} and ${MAGENTA}git pull${NORMAL} commands failed
+        to run, failing to update Monit's locally cloned git repo, found at
+        $MONIT_DIR.
+        Now exiting..."
+        exit 1
     fi
 }
 
@@ -53,21 +66,21 @@ install_apps () {
 }
 
 monit_make () {
-    cd "$monit_dir" &&
+    cd "$MONIT_DIR" &&
     echo ""
-    echo "Running git pull"
+    echo "${RED}Running git pull${NORMAL}"
     git pull &&
     echo ""
-    echo "Running bootstrap"
+    echo "${RED}Running bootstrap.${NORMAL}"
     ./bootstrap &&
     echo ""
-    echo "Running configure --enable-optimized"
+    echo "${RED}Running configure --enable-optimized.${NORMAL}"
     ./configure --enable-optimized &&
     echo ""
-    echo "Running make"
+    echo "${RED}Running make.${NORMAL}"
     make &&
     echo ""
-    echo "Run sudo make install"
+    echo "${RED}Run sudo make install.${NORMAL}"
     sudo make install
 }
 
