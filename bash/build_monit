@@ -3,7 +3,10 @@
 # This builds monit with the --enable-optimized flag set.
 
 if [[ $(uname -s) == 'Darwin' ]]; then
-    GIT_DIR=/Users/$(logname)/git
+    echo "Sorry, this is made just for Debian-Based systems."
+    echo "Will be changed in the future."
+    exit 1
+    #GIT_DIR=/Users/$(logname)/git
 else
     GIT_DIR=/home/$(logname)/git
 fi
