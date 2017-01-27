@@ -17,20 +17,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if [[ -e $(which allunix) ]]; then
-    . "$(which allunix)"
+PROGRAM_NAME="ans-apt"
+PROGRAM_AUTHOR="Justin Partain"
+PROGRAM_AUTHOR_CONTACT="${PROGRAM_NAME}_noreply@jpcdi.com"
+PROGRAM_AUTHOR_FULL="JPCDI, JPartain89 and $PROGRAM_AUTHOR"
+VERSION="3.0"
+USERNAME="$(logname)"
+
+if [[ "$(uname)" == "Darwin" ]]; then
+    HOME="/Users/$USERNAME"
 else
-    echo "Sorry, looks like you're missing the needed allunix file."
-    echo "For info, please see https://github.com/jpartain89/MyFunctions.git"
-    exit 1
+    HOME="/home/$USERNAME"
 fi
 
-gen_scripts="/Users/$(logname)/git/generalscripts"
+if [[ ! -e "$(which allunix)" ]]; then
+    echo "AllUnix file is missing."
+    wget -O - http://bit.ly/jp_allunix | bash
+fi
+
+source allunix
+GEN_SCRIPTS="$HOME/git/generalscripts"
+GEN_ANS="$GEN_SCRIPTS/ansible"
+
 no_sudo
 
 vm_sutdown_text () {
 cat <<- EOF
-################################################################################
+${RED}################################################################################
 
            ARE YOU SURE YOU WANT YOUR VIRTUAL MACHINES TO SHUTDOWN??
 
@@ -42,7 +55,7 @@ cat <<- EOF
  			      NGINX-Server
 			       Web Server
 
-###############################################################################
+###############################################################################${NORMAL}
 EOF
 }
 
@@ -53,18 +66,27 @@ My personal shortcutting ansible stuffs!
 ans-apt [-ua | -uL | -uv | -ul and etc. ]
 
 Options:
-    -ua, --update-all       : Updates all Managed Machines
+    -ua, --update-all       : Updates all Managed Machines:
                             :   Apt, Homebrew and Pip
+                            :   Runs map-pull-sub from conffiles outward
                             :   (Local and Remote, macOS and Linux)
     -ul, --update-local     : Updates all Local Machines
                             :   Apt, Homebrew and Pip
-                            :   (RPI's, Virtual and macOS)'
-    -u, --update-linux     : Updates Linux Machines
+                            :   Runs map-pull-sub from conffiles outward
+                            :   (RPI, Virtual and macOS locally)
+    -u, --update-linux      : Updates Linux Machines
                             :   Apt and Pip
+                            :   Runs map-pull-sub from conffiles outward
+                            :   (Local and Remote Linux Machines)
 
-    -pa, --pip-all	    : Updates Pip on all Machines
-    -pl, --pip-linux	    : Updates Pip on Linux Machines
-    -pm, --pip-mac	    : Updates Pip on all macOS Machines
+    -pa, --pip-all          : Updates Pip on all Machines
+    -pl, --pip-local	    : Updates Pip on Local Machines
+    -p, --pip-linux	    : Updates Pip on all Linux Machines
+
+    -ma, --map-all          : Runs map-pull-sub from conffiles outward
+                            :   on all managed machines
+    -ml, --map-local        : Runs map-pull-sub from conffiles outward
+                            :   on all local machines
 
     -rl, --reboot-linux     : Reboots the Linux Machines
     -rv, --reboot-virtual   : Reboots all Virtual Machines
@@ -85,51 +107,64 @@ while [ $# -ge 1 ]; do
         -ua | --update-all )
             echo "";
             echo "Updating all Managed Machines";
-            ansible-playbook "$gen_scripts/ansible/apt_basic.yml";
-            ansible-playbook "$gen_scripts/ansible/brew_basic.yml";
+            ansible-playbook "$GEN_ANS/apt_basic.yml";
+            ansible-playbook "$GEN_ANS/brew_basic.yml";
+            ansible-playbook "$GEN_ANS/map-pull-sub.yml";
             exit 0
             ;;
         -ul | --update-local )
             echo "";
             echo "Updating only Local Machines";
-            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux;
-            ansible-playbook "$gen_scripts/ansible/brew_basic.yml";
+            ansible-playbook "$GEN_ANS/apt_basic.yml" --limit=local-linux;
+            ansible-playbook "$GEN_ANS/brew_basic.yml";
+            ansible-playbook "$GEN_ANS/map-pull-sub.yml" --limit=local-linux;
             exit 0
             ;;
         -ul | --update-linux )
             echo "";
             echo "Updating Linux Machines ";
-            ansible-playbook "$gen_scripts/ansible/apt_basic.yml" --limit=local-linux;
+            ansible-playbook "$GEN_ANS/apt_basic.yml" --limit=linux;
+            ansible-playbook "$GEN_ANS/map-pull-sub.yml" --limit=linux;
             exit 0
             ;;
         -pa | --pip-all )
             echo "";
             echo "Updating Pip on all Managed Machines ";
-            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml";
+            ansible-playbook  "$GEN_ANS/pip-playbook.yml";
     	    exit 0
             ;;
         -pm | --pip-mac )
             echo "";
             echo "Updating Pip on all macOS machines.";
-            ansible-playbook "$gen_scripts/ansible/pip-playbook.yml"--limit=macos;
+            ansible-playbook "$GEN_ANS/pip-playbook.yml"--limit=macos;
 		    exit 0
         ;;
         -pl | --pip-linux )
             echo "";
             echo "Updating Pip on Linux Machines ";
-            ansible-playbook  "$gen_scripts/ansible/pip-playbook.yml" --limit=linux;
+            ansible-playbook  "$GEN_ANS/pip-playbook.yml" --limit=linux;
             exit 0
             ;;
+        -ma | --map-all )
+            echo "";
+            echo "Running map-pull-sub from within conffiles repo";
+            ansible-playbook "$GEN_ANS/map-pull-sub.yml";
+            exit 0;;
+        -ml | --map-local )
+            echo "";
+            echo "Running map-pull-sub from within conffiles repo";
+            ansible-playbook "$GEN_ANS/map-pull-sub.yml" --limit=local-linux;
+            exit 0;;
         -rl | --reboot-linux )
             echo "";
             echo "Rebooting Linux Machines ";
-            ansible-playbook  "$gen_scripts/ansible/restart.yml";
+            ansible-playbook  "$GEN_ANS/restart.yml";
             exit 0
             ;;
         -rv | --reboot-virtual )
             echo "";
             echo "Rebooting only Virtual Machines ";
-            ansible-playbook  "$gen_scripts/ansible/restart.yml" --limit=virtual;
+            ansible-playbook  "$GEN_ANS/restart.yml" --limit=virtual;
             exit 0
             ;;
         -m | --monit )
@@ -142,7 +177,7 @@ while [ $# -ge 1 ]; do
             dialog --yesno "Do you want ALL of the Linux Machines to shutdown?" 0 0
             rc=$?
             if [[ "${rc}" == "0" ]]; then
-                ansible-playbook "$gen_scripts/ansible/shutdown.yml"
+                ansible-playbook "$GEN_ANS/shutdown.yml"
                 exit 0
             else
                     exit 1
@@ -152,7 +187,7 @@ while [ $# -ge 1 ]; do
             dialog --yesno "Do you want ALL of the VIRTUAL MACHINES to shutdown?" 0 0
             rc=$?
             if [[ "${rc}" == "0" ]]; then
-                ansible-playbook "$gen_scripts/ansible/shutdown.yml" --limit=virtual
+                ansible-playbook "$GEN_ANS/shutdown.yml" --limit=virtual
                 exit 0
             else
                 exit 1
@@ -168,7 +203,6 @@ while [ $# -ge 1 ]; do
             ;;
     esac
 done
-
 
 if [[ $1 == "" ]]; then
     help_text

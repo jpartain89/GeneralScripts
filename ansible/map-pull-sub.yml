@@ -1,0 +1,30 @@
+---
+# Ansible Play to run map-pull-sub
+
+- hosts: all
+  remote_user: jpartain89
+
+  vars:
+    - default_git_repo_name: conffiles
+    - default_git_repo_location: "{{ ansible_user_dir }}/git/{{ default_git_repo_name }}"
+
+  tasks:
+    - name: Confirm the {{ default_git_repo_name }} Repo is Downloaded
+      git:
+        repo: "https://github.com/jpartain89/{{ default_git_repo_name }}.git"
+        dest: "{{ default_git_repo_location }}"
+        update: yes
+      ignore_errors: True
+
+    - name: Run map-pull-sub from Within {{ default_git_repo }} Location
+      shell: 'git map {{ item }} {{ default_git_repo_location }}'
+      args:
+        executable: /bin/bash
+      with_items:
+        - pull
+        - 'fetch --all'
+        - 'submodule update --init --recursive'
+      register: map_pull_sub_reg
+
+    - debug: var=map_pull_sub_reg
+      when: map_pull_sub_reg|failed

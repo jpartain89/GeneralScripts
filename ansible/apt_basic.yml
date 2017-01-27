@@ -5,7 +5,7 @@
   become: yes
 
   vars:
-    - GIT_HOME: /home/jpartain89/git
+    - GIT_HOME: "{{ ansible_user_dir }}/git"
 
   tasks:
     - name: Linux | Update the Cache First
