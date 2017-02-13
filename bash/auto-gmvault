@@ -6,11 +6,7 @@ trap 'exit $?' SIGHUP SIGINT SIGTERM
 
 ( mount | grep "on /Volumes/RAID_EXT" >/dev/null) || echo "RAID_EXT is missing. Exiting." exit 1
 
-command -v gmvault >/dev/null 2>&1 || \
-    echo "" \
-    echo "${RED}gmvault is missing, exiitng.${NORMAL}"; \
-    echo ""; \
-    exit 1
+command -v gmvault >/dev/null 2>&1 ||  ( echo ""; echo "${RED}gmvault is missing, exiitng.${NORMAL}"; echo ""; exit 1 )
 
 gmACCOUNTS=(
     jpartain89
