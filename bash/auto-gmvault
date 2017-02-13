@@ -15,14 +15,16 @@ gmACCOUNTS=(
 )
 
 function SYNCING() {
-    ( for i in "${gmACCOUNTS[@]}"; do
-        /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}/" -t "$SYNC_TYPE" -e -m &  echo ""
+    for i in "${gmACCOUNTS[@]}"; do
+        /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}" -t "$SYNC_TYPE" -e -m &  echo ""
         spinner $!
         printf "done!\n";
-    done && exit 0 ) || echo "Received an error. Exiting... " exit 1;
+    done || echo "Received an error. Exiting... " exit 1;
 }
 
-if [ $# -lt 1 ]; then set quick ; fi
+if [ $# -lt 1 ]; then
+    set quick;
+fi
 
 while [ $# -ge 1 ]; do
     case "$1" in
@@ -34,3 +36,5 @@ while [ $# -ge 1 ]; do
         ;;
     esac
 done
+
+exit 0
