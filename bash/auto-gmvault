@@ -34,7 +34,7 @@ while [ $# -ge 1 ]; do
         ;;
         quick )
             SYNC_TYPE=quick;
-            OUTPUT="&>/dev/null";
+            OUTPUT="&> /dev/null";
             SYNCING
         ;;
     esac
