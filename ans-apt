@@ -18,17 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 PROGRAM_NAME="ans-apt"
-PROGRAM_AUTHOR="Justin Partain"
 PROGRAM_AUTHOR_CONTACT="${PROGRAM_NAME}_noreply@jpcdi.com"
 PROGRAM_AUTHOR_FULL="JPCDI, JPartain89 and $PROGRAM_AUTHOR"
 VERSION="3.0"
-USERNAME="$(logname)"
-
-if [[ "$(uname)" == "Darwin" ]]; then
-    HOME="/Users/$USERNAME"
-else
-    HOME="/home/$USERNAME"
-fi
 
 if [[ ! -e "$(which allunix)" ]]; then
     echo "AllUnix file is missing."
@@ -36,6 +28,8 @@ if [[ ! -e "$(which allunix)" ]]; then
 fi
 
 source allunix
+ANSIBLE-SOURCING
+
 GEN_SCRIPTS="$HOME/git/generalscripts"
 GEN_ANS="$GEN_SCRIPTS/ansible"
 

@@ -2,6 +2,16 @@
 
 source allunix
 
+trap 'exit $?' SIGHUP SIGINT SIGTERM
+
+( mount | grep "on /Volumes/RAID_EXT" >/dev/null) || echo "RAID_EXT is missing. Exiting." exit 1
+
+command -v gmvault >/dev/null 2>&1 || \
+    echo "" \
+    echo "${RED}gmvault is missing, exiitng.${NORMAL}"; \
+    echo ""; \
+    exit 1
+
 gmACCOUNTS=(
     jpartain89
     subFFbb89
@@ -9,6 +19,7 @@ gmACCOUNTS=(
 )
 
 for i in "${gmACCOUNTS[@]}"; do
-    /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}/" -e -m &> /dev/null & spinner $!;
-    printf "done!/n";
-done
+    /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}/" -e -m &  echo ""
+    spinner $!
+    printf "done!\n";
+done || echo "Received an error. Exiting... " exit 1;
