@@ -17,7 +17,7 @@ gmACCOUNTS=(
 function SYNCING() {
     for i in "${gmACCOUNTS[@]}"; do
         /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}" -t "$SYNC_TYPE" -e -m &  echo ""
-        spinner $!
+        spinner $! && 
         printf "done!\n";
     done || echo "Received an error. Exiting... " exit 1;
 }
