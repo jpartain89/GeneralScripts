@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+if [[ ! -d ~/RAID_EXT ]]; then mkdir ~/RAID_EXT; fi
+
+if [[ $(mount | grep /Users/jpartain89/RAID_EXT) == "" ]]; then
+    sshfs jpartain89@rpi3:/media/RAID_EXT ~/RAID_EXT -o reconnect -o sshfs_sync -o sync_readdir
+else
+    sudo umount ~/RAID_EXT &&
+    sshfs jpartain89@rpi3:/media/RAID_EXT ~/RAID_EXT -o reconnect -o sshfs_sync -o sync_readdir
+fi

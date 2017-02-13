@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+source allunix
+
+gmACCOUNTS=(
+    jpartain89
+    subFFbb89
+    subkinkyboi89
+)
+
+for i in "${gmACCOUNTS[@]}"; do
+    /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}/" -e -m &> /dev/null & spinner $!;
+    printf "done!/n";
+done
