@@ -22,7 +22,7 @@ function SYNCING() {
     done && exit 0 ) || echo "Received an error. Exiting... " exit 1;
 }
 
-if [ $# -lt 1 ]; then set full ; fi
+if [ $# -lt 1 ]; then set quick ; fi
 
 while [ $# -ge 1 ]; do
     case "$1" in
