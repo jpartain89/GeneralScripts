@@ -1,0 +1,64 @@
+#!/bin/bash -e
+
+# This script is to quickly (and probably a tad dirt-ly) restart my various
+# machines.
+
+# Copyright © 2017 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Program information
+PROGRAM_NAME="restart-wrap"
+PROGRAM_AUTHOR_CONTACT="${PROGRAM_NAME}_noreply@jpcdi.com"
+PROGRAM_AUTHOR_FULL="JPCDI, JPartain89 and $PROGRAM_AUTHOR"
+VERSION="1.0.0"
+
+if [[ ! -e "$(which allunix)" ]]; then
+    echo "AllUnix file is missing."
+    wget -O - http://bit.ly/jp_allunix | bash
+fi
+source allunix
+
+virtual_machines=( Ubuntu20 Downloader-2 )
+
+function shutdown() {
+    ssh imac '
+        while IFS= read -r line; do
+            VBoxManage controlvm "${line}" acpipowerbutton &&
+            echo "${line} is showing as shutdown."
+        done< <(/usr/local/bin/VBoxManage list runningvms) &&
+        exit 0'
+    echo "The VirtualBox Machines have reported as shutdown."
+    echo "Would you like to go ahead and reboot the iMac?"
+    confirm_function
+
+    # shellcheck disable=SC2154
+    if [[ "$true" == 1 ]]; then
+        ssh imac 'sudo reboot &>/dev/null exit 0'
+    elif [[ "$false" == 1 ]]; then
+        echo "You chose to not reboot your iMac."
+        echo "We're gonna exit the script now."
+        exit 1
+    fi
+}
+
+function startup() {
+    ssh imac '
+        for vm in "${virtual_machines[@]}"; do
+            if [[ $(/usr/local/bin/VBoxManage list runningvms | grep "${vm}") == "" ]]; then
+                /usr/local/bin/VBoxManage startvm "${vm}" --type headless
+            fi
+        done
+    '
+}
