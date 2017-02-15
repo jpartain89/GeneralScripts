@@ -1,12 +1,15 @@
 #!/bin/bash -e
 
-source allunix
+#source /Users/jpartain89/bin/allunix
+
+PATH="/Users/jpartain89/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar"
 
 trap 'exit $?' SIGHUP SIGINT SIGTERM
 
-( mount | grep "on /Volumes/RAID_EXT" >/dev/null) || echo "RAID_EXT is missing. Exiting." exit 1
+( /sbin/mount | grep "on /Volumes/RAID_EXT" >/dev/null) || echo "RAID_EXT is missing. 
+Exiting." exit 1
 
-command -v gmvault >/dev/null 2>&1 ||  ( echo ""; echo "${RED}gmvault is missing, exiitng.${NORMAL}"; echo ""; exit 1 )
+command -v gmvault >/dev/null 2>&1 ||  ( echo ""; echo "gmvault is missing, exiitng."; echo ""; exit 1 )
 
 gmACCOUNTS=(
     jpartain89
@@ -16,7 +19,8 @@ gmACCOUNTS=(
 
 function SYNCING() {
     for i in "${gmACCOUNTS[@]}"; do
-        /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}" -t "$SYNC_TYPE" -e -m &> /dev/null & spinner $!;
+        /usr/local/bin/gmvault sync "${i}@gmail.com" -d "/Volumes/RAID_EXT/backup/gmvault/${i}" -t "$SYNC_TYPE" -e -m &> /dev/null;
+        wait;
         printf " ${i} done!\n";
     done && exit 0
 }
