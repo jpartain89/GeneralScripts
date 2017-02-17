@@ -3,7 +3,7 @@
 USERNAME=jpartain89
 source allunix
 
-1>> logfile 2>&1
+exec >> logfile 2>&1
 
 trap 'killall homebridge; exit $?' SIGHUP SIGINT SIGTERM
 
