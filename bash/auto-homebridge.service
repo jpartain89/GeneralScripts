@@ -27,7 +27,7 @@ case $1 in
             sudo "$exec" &&
             read -r homebridge_pid < "$homebridge_pidfile_path" 2>/dev/null
             if [ -s "$homebridge_pid" ]; then
-                if [ "$(kill -0 "$homebridge_pid" 2>/dev/null)" = 0 ]; then
+                if (kill -0 "$homebridge_pid" 2>/dev/null); then
                     echo "Started Homebridge, I think..."
                     exit 0
                 else
@@ -42,7 +42,7 @@ case $1 in
     stop )
         if [ -s "$homebridge_pidfile_path" ]; then
             read -r homebridge_pid < "$homebridge_pidfile_path"
-            if [ "$(kill -0 "$homebridge_pid" 2>/dev/null)" = 0 ]; then
+            if (kill -0 "$homebridge_pid" 2>/dev/null); then
                 sudo kill "$homebridge_pid" &&
                 echo "Killed the process under pid num $homebridge_pid"
                 # Removing the pid file, just in case.
@@ -61,7 +61,7 @@ case $1 in
     restart )
         if [ -e "$homebridge_pidfile_path" ]; then
             read-r homebridge_pid < "$homebridge_pidfile_path"
-            if [ "$(kill -0 "$homebridge_pid" 2>/dev/null)" = 0 ]; then
+            if (kill -0 "$homebridge_pid" 2>/dev/null); then
                 sudo kill "$homebridge_pid"
                 echo "Stopped Homebridge with PID number $homebridge_pid"
             else
@@ -73,7 +73,7 @@ case $1 in
             sudo "$exec" &&
             if [ -e "$homebridge_pidfile_path" ]; then
                 read -r homebridge_pid < "$homebridge_pidfile_path"&&
-                if [ "$(kill -0 "$homebridge_pid" 2>/dev/null)" = 0 ]; then
+                if (kill -0 "$homebridge_pid" 2>/dev/null); then
                     echo "Started Homebridge with PID number $homebridge_pid"
                 else
                     echo "The ${name}'s PID file is found, but not running under $homebridge_pid'"
