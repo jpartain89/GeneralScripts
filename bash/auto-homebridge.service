@@ -24,7 +24,7 @@ case $1 in
             echo "Sorry, $name is already running under PID $homebridge_pid."
             exit 1
         else
-            sudo "$exec" &&
+            ( sudo "$exec" & )
             read -r homebridge_pid < "$homebridge_pidfile_path" 2>/dev/null
             if [ -s "$homebridge_pid" ]; then
                 if (kill -0 "$homebridge_pid" 2>/dev/null); then
