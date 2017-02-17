@@ -1,10 +1,9 @@
 #!/bin/bash -e
 
+source allunix
+
 trap 'killall homebridge; exit $?' SIGHUP SIGINT SIGTERM
 
 cd /usr/local/lib/node_modules/homebridge-wink &&
-/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge | \
-    while IFS= read -r line; do
-    echo "$(date) $line"
-done &>>/var/log/homebridge.log 2>&1 &
+/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge >> logfile &
 echo $! > /var/run/homebridge.pid
