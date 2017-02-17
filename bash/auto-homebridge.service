@@ -94,7 +94,7 @@ case $1 in
                 echo "$name is running under PID number $homebridge_pid"
                 exit 0
             else
-                echo "$name is not running, but $homebridge_pidfile_path file exists"
+                echo "$name is not running, but $homebridge_pidfile_path exists"
                 exit 1
             fi
         else
