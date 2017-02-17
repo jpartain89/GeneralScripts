@@ -90,7 +90,7 @@ case $1 in
     status )
         if [ -s "$homebridge_pidfile_path" ]; then
             read -r homebridge_pid < "$homebridge_pidfile_path"
-            if [ -s "$(sudo kill -0 "$homebridge_pid" 2>/dev/null)" ]; then
+            if [ "$(sudo kill -0 "$homebridge_pid" 2>/dev/null)" ]; then
                 echo "$name is running under PID number $homebridge_pid"
                 exit 0
             else
