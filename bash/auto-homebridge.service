@@ -44,6 +44,7 @@ case $1 in
             read -r homebridge_pid < "$homebridge_pidfile_path"
             if (kill -0 "$homebridge_pid" 2>/dev/null); then
                 sudo kill "$homebridge_pid" &&
+                sudo killall -KILL "$name" "$script_name" 2>&1;
                 echo "Killed the process under pid num $homebridge_pid"
                 # Removing the pid file, just in case.
                 rm "$homebridge_pidfile_path"
@@ -63,6 +64,7 @@ case $1 in
             read-r homebridge_pid < "$homebridge_pidfile_path"
             if (kill -0 "$homebridge_pid" 2>/dev/null); then
                 sudo kill "$homebridge_pid"
+                sudo killall -KILL "$name" "$script_name" 2>&1;
                 echo "Stopped Homebridge with PID number $homebridge_pid"
             else
                 echo "$name wasn't found to be running, removing PID file."
