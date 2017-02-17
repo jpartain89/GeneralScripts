@@ -3,9 +3,12 @@
 USERNAME=jpartain89
 source allunix
 
+lockfilename="/var/lock/$0"
+if [ -z "$FLOCK_SET" ] ; then
+    exec env FLOCK_SET=1 flock -n "${lockfilename}" "$0" "$@"
+fi
+
 trap 'killall homebridge; exit $?' SIGHUP SIGINT SIGTERM
 
 cd /usr/local/lib/node_modules/homebridge-wink &&
 /usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge | timestamp 2>&1 &
-echo $! > /var/run/homebridge.pid &&
-exit 0
