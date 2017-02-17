@@ -3,9 +3,10 @@
 USERNAME=jpartain89
 source allunix
 
+1>> logfile 2>&1
 
 trap 'killall homebridge; exit $?' SIGHUP SIGINT SIGTERM
 
 cd /usr/local/lib/node_modules/homebridge-wink &&
-/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge >> logfile &
+/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge &
 echo $! > /var/run/homebridge.pid
