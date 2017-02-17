@@ -50,7 +50,7 @@ case $1 in
             else
                 echo "$name wasn't running under $homebridge_pid. "
                 echo "Removing the pidfile and exiting."
-                rm "$homebridge_pidfile_path."
+                rm "$homebridge_pidfile_path"
                 exit 1
             fi
         else
