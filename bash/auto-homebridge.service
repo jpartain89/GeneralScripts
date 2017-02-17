@@ -99,6 +99,7 @@ case $1 in
             fi
         else
             echo "$homebridge_pidfile_path pid file couldn't be found."
+            echo "This means $name shouldn't be running."
             exit 1
         fi
     ;;
