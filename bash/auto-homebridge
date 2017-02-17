@@ -3,10 +3,8 @@
 USERNAME=jpartain89
 source allunix
 
-exec >> timestamp 2>&1
-
 trap 'killall homebridge; exit $?' SIGHUP SIGINT SIGTERM
 
 cd /usr/local/lib/node_modules/homebridge-wink &&
-/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge &
+/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge >> timestamp 2>&1 &
 echo $! > /var/run/homebridge.pid
