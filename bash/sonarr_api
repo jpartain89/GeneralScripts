@@ -1,0 +1,43 @@
+#!/bin/bash -e
+
+# Script for calling the API Requests to Sonarr
+
+sonarr_IP="192.168.1.15"
+sonarr_PORT="8989"
+sonarr_PREURL="/sonarr/api"
+sonarr_PREAPI="?apikey="
+sonarr_APIKEY="05c304f19b1946ecb8909fe55b2b420d"
+sonarr_CMDS=
+sonarr_EXTRACMDS=
+sonarr_CTYPE=
+
+sonarr_API_ENDPOINT="${sonarr_IP}:${sonarr_PORT}/${sonarr_PREURL}"
+sonarr_API_ENDING="${sonarr_PRE_API}${sonarr_APIKEY}"
+# IP:Port/sonarr/api/
+# The sonarr_CMDS needs no pre or post backslash
+# sonarr_CMDS : system/status
+# ?apikey=123245asdfads
+sonarr_URL="${sonarr_API_ENDPOINT}/${sonarr_CMDS}${sonarr_API_ENDING}"
+
+function GET_REQUEST() {
+    curl --request GET "${sonarr_URL}"
+}
+
+while [ $? -ge 1 ]; do
+    case $? in
+        calendar )
+            sonarr_CMDS=calendar
+        diskspace )
+        episode )
+        episodefile )
+        history )
+        images )
+        wanted-missing )
+        queue )
+        profile )
+        release )
+        rootfolder )
+        series )
+        series-lookup )
+        system-status )
+            sonarr_CMDS=system/status
