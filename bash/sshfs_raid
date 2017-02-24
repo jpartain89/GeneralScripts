@@ -1,8 +1,13 @@
 #!/bin/bash -e
 
-if [[ ! -d ~/RAID_EXT ]]; then mkdir ~/RAID_EXT; fi
+source allunix
+git_update
 
-if [[ $(mount | grep /Users/jpartain89/RAID_EXT) == "" ]]; then
+EXTERNAL_MOUNT=${1:-RAID_EXT}
+
+[ ! -d "${USER_HOME}/${EXTERNAL_MOUNT}" ] || mkdir "${USER_HOME}/${EXTERNAL_MOUNT}"
+
+( mount | grep "${USER_HOME}/${EXTERNAL_MOUNT}" 2>&1 ) || \
     sshfs jpartain89@rpi3:/media/RAID_EXT ~/RAID_EXT -o reconnect -o sshfs_sync -o sync_readdir
 else
     sudo umount ~/RAID_EXT &&
