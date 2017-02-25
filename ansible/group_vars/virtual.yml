@@ -1,5 +1,0 @@
----
-
-# virtual hosts vars file
-
-ssh_dot: config_home

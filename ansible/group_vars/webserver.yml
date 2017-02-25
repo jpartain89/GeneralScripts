@@ -1,6 +1,0 @@
----
-# group_vars/webserver.yml
-
-# git_vars is used specifically in the first-steps/tasks/git-clone.yml file
-git_vars:
-  - { repo: "{{ jp_git_http }}/Software-Install-Guides.git", dest: "{{ git_loc }}/Software-Install-Guides" }

@@ -1,6 +1,0 @@
----
-# host_vars/macbook.yml
-
-git_vars:
-  - { repo: "git://github.com/ansible/ansible.git", dest: "{{ git_loc }}/ansible" }
-  - { repo: "{{ jp_git_http }}/personal-ansible-plays.git", dest: "{{ git_loc }}/personal-ansible-plays" }
