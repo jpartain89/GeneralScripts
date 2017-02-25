@@ -4,9 +4,6 @@
 - hosts: linux
   become: yes
 
-  vars:
-    - GIT_HOME: "{{ ansible_user_dir }}/git"
-
   tasks:
     - name: Linux | Update the Cache First
       apt: update_cache=yes cache_valid_time=86400
