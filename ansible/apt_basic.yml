@@ -65,17 +65,3 @@
     - name: Linux | Show AutoRemove "rc" Apps
       debug: var=autoremove_rc_apt.stderr_lines
       when: autoremove_rc_apt|failed
-
-    - name: Linux | Run Pip Installer Against Requirements File
-      pip:
-        requirements: "{{ GIT_HOME }}/linux_dotfiles/requirements.txt"
-        executable: "{{ item }}"
-      with_items:
-        - pip2
-        - pip3
-      register: pip_requirements
-      ignore_errors: True
-
-    - name: Linux | Show pip_requirements Output
-      debug: var=pip_requirements.stderr_lines
-      when: pip_requirements|failed
