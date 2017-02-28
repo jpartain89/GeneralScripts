@@ -6,6 +6,6 @@ source allunix
 trap 'killall homebridge; exit $?' SIGHUP SIGINT SIGTERM
 
 cd /usr/local/lib/node_modules/homebridge-wink &&
-/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge | timestamp 2>&1 &
+/usr/local/bin/homebridge -I -U /Users/jpartain89/.homebridge | LogText &
 echo $! > /var/run/homebridge.pid &&
 exit 0
