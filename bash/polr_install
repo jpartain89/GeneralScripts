@@ -5,7 +5,7 @@
 POLR_FILE="/var/www/html/polr"
 
 if [[ ! -e "$POLR_FILE" ]]; then
-    git clone https://github.com/cydrobolt/polr.git "$POLR_FILE"
+  git clone https://github.com/cydrobolt/polr.git "$POLR_FILE"
 fi
 
 sudo chmod -R 0755 "$POLR_FILE"

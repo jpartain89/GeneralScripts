@@ -4,7 +4,7 @@ GIT_LOC="/home/jpartain89/git"
 . "$(which allunix)"
 
 if [[ ! -e "$GIT_LOC/ddclient" ]]; then
-    git clone https://github.com/wimpunk/ddclient.git "$GIT_LOC/ddclient"
+  git clone https://github.com/wimpunk/ddclient.git "$GIT_LOC/ddclient"
 fi
 
 sudo apt-get update
@@ -16,14 +16,14 @@ press_enter
 sudo cp "$GIT_LOC/ddclient/ddclient" /usr/sbin/ddclient
 
 DDCLIENT_MK=(
-"/etc/ddclient "
-"/var/cache/ddclient"
+  "/etc/ddclient "
+  "/var/cache/ddclient"
 )
 
 if [[ ! -e "${DDCLIENT_MK[@]}" ]]; then
-    echo ""
-    echo "Creating ddclient directories."
-    sudo mkdir "${DDCLIENT_MK[@]}"
+  echo ""
+  echo "Creating ddclient directories."
+  sudo mkdir "${DDCLIENT_MK[@]}"
 fi
 
 echo ""
