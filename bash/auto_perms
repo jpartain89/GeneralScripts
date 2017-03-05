@@ -1,18 +1,18 @@
 #!/bin/bash -e
 
-  read -r -p "Enter (in octal) the permissions for the Directories: (0775) " fdirs
-  read -r -p  "Enter (in octal) the permissions for the Files:      (0664) " ffiles
-  echo "Enter the username:groupname for ownership change     --or--    "
-  read -r -p "     press enter to leave unchanged:                         " fowner
-  echo "Either press enter to perform this change in the current dir "
-  echo "                            $(pwd)"
-  echo "or type in the location desired. Please start with / or ./"
-  read -r ddirs
+read -r -p "Enter (in octal) the permissions for the Directories: (0775) " fdirs
+read -r -p  "Enter (in octal) the permissions for the Files:      (0664) " ffiles
+echo "Enter the username:groupname for ownership change     --or--    "
+read -r -p "     press enter to leave unchanged:                         " fowner
+echo "Either press enter to perform this change in the current dir "
+echo "                            $(pwd)"
+echo "or type in the location desired. Please start with / or ./"
+read -r ddirs
 
-  Ffiles=${ffiles:-0644}
-  Fdirs=${fdirs:-0755}
-  Location=${ddirs:-$(pwd)}
-  Fowner=${fowner:-}
+Ffiles=${ffiles:-0644}
+Fdirs=${fdirs:-0755}
+Location=${ddirs:-$(pwd)}
+Fowner=${fowner:-}
 
 cat << EOF
 
@@ -26,13 +26,13 @@ Ownership: ${Fowner} (It might present an empty string, if unset.)
 
 EOF
 
-  read -r -p "Would you like to continue? (No will exit) " response
-  case $response in
-    [yY][eE][sS] | [yY] )
-      find "${Location}" -type f -print0 | xargs -0 -I {} chmod "${Ffiles}" {} &&
-      find "${Location}" -type d -print0 | xargs -0 -I {} chmod "${Fdirs}" {} &&
-      [ -n "${Fowner}" ] && \
-        find "${Location}" -print0 | xargs -0 -I {} chown "${Fowner}" {}
-    ;;
-    [nN][oO] | [nN] | * ) echo "You said $1, exiting.";;
-  esac
+read -r -p "Would you like to continue? (No will exit) " response
+case $response in
+  [yY][eE][sS] | [yY] )
+    find "${Location}" -type f -print0 | xargs -0 -I {} chmod "${Ffiles}" {} &&
+    find "${Location}" -type d -print0 | xargs -0 -I {} chmod "${Fdirs}" {} &&
+    [ -n "${Fowner}" ] && \
+    find "${Location}" -print0 | xargs -0 -I {} chown "${Fowner}" {}
+  ;;
+  [nN][oO] | [nN] | * ) echo "You said $1, exiting.";;
+esac

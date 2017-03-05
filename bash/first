@@ -4,153 +4,153 @@
 # Splits off between Linux/macOS to start
 
 if [[ $(uname -s) == 'Darwin' ]]; then
-    git_dir=/Users/$(logname)/git
-    owner=jpartain89:staff
+  git_dir=/Users/$(logname)/git
+  owner=jpartain89:staff
 else
-    git_dir=/home/$(logname)/git
-    owner=jpartain89:jpartain89
+  git_dir=/home/$(logname)/git
+  owner=jpartain89:jpartain89
 fi
 
 jp_git=https://jpartain89@github.com/jpartain89
 
 if [[ ! -e "$git_dir" ]]; then
-    echo "Looks like the generic ./git directory doesn't exist."
-    echo "Creating now..."
-    read -r
-    mkdir "$git_dir"
+  echo "Looks like the generic ./git directory doesn't exist."
+  echo "Creating now..."
+  read -r
+  mkdir "$git_dir"
 fi
 
 if [[ ! -e "$git_dir/myfunctions" ]]; then
-    echo "Cloning the myfunctions repo"
-    read -r
-    git clone "$jp_git/myfunctions.git" "$git_dir/myfunctions"
-    sudo chown -R "$owner" "$git_dir/myfunctions"
+  echo "Cloning the myfunctions repo"
+  read -r
+  git clone "$jp_git/myfunctions.git" "$git_dir/myfunctions"
+  sudo chown -R "$owner" "$git_dir/myfunctions"
 fi
 
 . "$git_dir/myfunctions/allunix"
 
 git_repos ()
-    {
-        # Git clones my "General Scripts" repo
-        if [[ ! -e "$git_dir/generalscripts" ]]; then
-            echo "Cloning GeneralScripts repo"
-            press_enter
-            git clone "$jp_git/generalscripts.git" "$git_dir/generalscripts"
-            echo "Changing ownership of generalscripts directory."
-            press_enter
-            sudo chown -R "$owner" "$git_dir/generalscripts"
-        else
-            echo "General Scripts repo already cloned."
-            echo "Moving on."
-            press_enter
-        fi
+{
+  # Git clones my "General Scripts" repo
+  if [[ ! -e "$git_dir/generalscripts" ]]; then
+    echo "Cloning GeneralScripts repo"
+    press_enter
+    git clone "$jp_git/generalscripts.git" "$git_dir/generalscripts"
+    echo "Changing ownership of generalscripts directory."
+    press_enter
+    sudo chown -R "$owner" "$git_dir/generalscripts"
+  else
+    echo "General Scripts repo already cloned."
+    echo "Moving on."
+    press_enter
+  fi
 
-        # makes sure my 'map-pull-sub' script is installed
-        if [[ ! -f /usr/local/bin/map-pull-sub ]]; then
-            echo "Copying map-pull-sub over to /usr/local/bin"
-            press_enter
-            sudo ln -s "$git_dir/generalscripts/bash/map-pull-sub" /usr/local/bin/map-pull-sub
-            sudo chmod +x /usr/local/bin/map-pull-sub
-        fi
+  # makes sure my 'map-pull-sub' script is installed
+  if [[ ! -f /usr/local/bin/map-pull-sub ]]; then
+    echo "Copying map-pull-sub over to /usr/local/bin"
+    press_enter
+    sudo ln -s "$git_dir/generalscripts/bash/map-pull-sub" /usr/local/bin/map-pull-sub
+    sudo chmod +x /usr/local/bin/map-pull-sub
+  fi
 
-        # Clones the git-map repo and then copy the program to the right spot
-        if [[ ! -e "$git_dir/git-map" ]]; then
-            echo ""
-            echo "Cloning git-map repo"
-            press_enter
-            git clone https://github.com/icefox/git-map.git "$git_dir/git-map"
-            echo ""
-            echo "Changing ownership of git-map repo"
-            press_enter
-            sudo chown -R "$owner" "$git_dir/git-map"
-            echo ""
-        else
-            echo "git-map already cloned. Moving on"
-            press_enter
-        fi
+  # Clones the git-map repo and then copy the program to the right spot
+  if [[ ! -e "$git_dir/git-map" ]]; then
+    echo ""
+    echo "Cloning git-map repo"
+    press_enter
+    git clone https://github.com/icefox/git-map.git "$git_dir/git-map"
+    echo ""
+    echo "Changing ownership of git-map repo"
+    press_enter
+    sudo chown -R "$owner" "$git_dir/git-map"
+    echo ""
+  else
+    echo "git-map already cloned. Moving on"
+    press_enter
+  fi
 
-        if [[ ! -f /usr/local/bin/git-map ]]; then
-            echo "Linking git-map to /usr/local/bin"
-            press_enter
-            sudo ln -s "$git_dir/git-map/git-map" "/usr/local/bin/git-map"
-            sudo chmod +x /usr/local/bin/git-map
-        fi
+  if [[ ! -f /usr/local/bin/git-map ]]; then
+    echo "Linking git-map to /usr/local/bin"
+    press_enter
+    sudo ln -s "$git_dir/git-map/git-map" "/usr/local/bin/git-map"
+    sudo chmod +x /usr/local/bin/git-map
+  fi
 
-        # Copys the conffiles directory that all my vm's use
-        if [[ ! -e "$git_dir/conffiles" ]]; then
-            echo ""
-            echo "Cloning conffiles. "
-            press_enter
-            git clone "$jp_git/conffiles.git" "$git_dir/conffiles"
-            echo ""
-            echo "Changing ownership of conffiles."
-            press_enter
-            sudo chown -R "$owner" "$git_dir/conffiles"
-            echo ""
-        else
-            echo "conffiles already cloned."
-            echo ""
-        fi
-    }
+  # Copys the conffiles directory that all my vm's use
+  if [[ ! -e "$git_dir/conffiles" ]]; then
+    echo ""
+    echo "Cloning conffiles. "
+    press_enter
+    git clone "$jp_git/conffiles.git" "$git_dir/conffiles"
+    echo ""
+    echo "Changing ownership of conffiles."
+    press_enter
+    sudo chown -R "$owner" "$git_dir/conffiles"
+    echo ""
+  else
+    echo "conffiles already cloned."
+    echo ""
+  fi
+}
 
 linux_dotfiles ()
-    {
-        if [[ ! -e "$git_dir/linux_dotfiles" ]]; then
-            echo "Cloning your linux_dotfiles"
-            press_enter
-            git clone "$jp_git/linux_dotfiles.git" "$git_dir/linux_dotfiles"
-            echo ""
-            echo "Fixing any ownership permissions"
-            press_enter
-            sudo chown -R "$owner" "$git_dir/linux_dotfiles"
-            echo ""
-            echo "Now sourcing bootstrap.sh"
-            press_enter
-            . "$git_dir/linux_dotfiles/bootstrap.sh"
-        else
-            echo "linux_dotfiles already cloned."
-            echo "Sourcing bootstrap.sh"
-            press_enter
-            . "$git_dir/linux_dotfiles/bootstrap.sh"
-        fi
-    }
+{
+  if [[ ! -e "$git_dir/linux_dotfiles" ]]; then
+    echo "Cloning your linux_dotfiles"
+    press_enter
+    git clone "$jp_git/linux_dotfiles.git" "$git_dir/linux_dotfiles"
+    echo ""
+    echo "Fixing any ownership permissions"
+    press_enter
+    sudo chown -R "$owner" "$git_dir/linux_dotfiles"
+    echo ""
+    echo "Now sourcing bootstrap.sh"
+    press_enter
+    . "$git_dir/linux_dotfiles/bootstrap.sh"
+  else
+    echo "linux_dotfiles already cloned."
+    echo "Sourcing bootstrap.sh"
+    press_enter
+    . "$git_dir/linux_dotfiles/bootstrap.sh"
+  fi
+}
 
 macOS_dotfiles ()
-    {
-        if [[ ! -e "$git_dir/macos_dotfiles" ]]; then
-            echo "Cloning macOS Dotfiles"
-            pres_enter
-            git clone "$jp_git/macos_dotfiles.git" "$git_dir/macos_dotfiles"
-            echo ""
-            echo "Changing Ownership of macOS Dotfiles."
-            press_enter
-            sudo chown -R "$owner" "$git_dir/macos_dotfiles"
-            echo ""
-            echo "Now sourcing the bootstrap.sh file"
-            press_enter
-            . "$git_dir/macos_dotfiles/bootstrap.sh"
-        fi
-    }
+{
+  if [[ ! -e "$git_dir/macos_dotfiles" ]]; then
+    echo "Cloning macOS Dotfiles"
+    pres_enter
+    git clone "$jp_git/macos_dotfiles.git" "$git_dir/macos_dotfiles"
+    echo ""
+    echo "Changing Ownership of macOS Dotfiles."
+    press_enter
+    sudo chown -R "$owner" "$git_dir/macos_dotfiles"
+    echo ""
+    echo "Now sourcing the bootstrap.sh file"
+    press_enter
+    . "$git_dir/macos_dotfiles/bootstrap.sh"
+  fi
+}
 
 os_type ()
-    {
-        case $(uname -s) in
-            Linux )
-                echo "Looks like you're running linux."
-                echo "Cloning linux_dotfiles and bootstrapping"
-                press_enter
-                linux_dotfiles;;
-            Darwin )
-                echo "Looks like you're running macOS."
-                echo "Cloning macOS_dotfiles and bootstrapping"
-                press_enter
-                macOS_dotfiles;;
-            * )
-                echo "Not running Linux or macOS."
-                echo "Exiting"
-                press_enter
-                exit 1
-        esac
-    }
+{
+  case $(uname -s) in
+    Linux )
+      echo "Looks like you're running linux."
+      echo "Cloning linux_dotfiles and bootstrapping"
+      press_enter
+    linux_dotfiles;;
+    Darwin )
+      echo "Looks like you're running macOS."
+      echo "Cloning macOS_dotfiles and bootstrapping"
+      press_enter
+    macOS_dotfiles;;
+    * )
+      echo "Not running Linux or macOS."
+      echo "Exiting"
+      press_enter
+      exit 1
+  esac
+}
 
 no_sudo && git_repos && os_type

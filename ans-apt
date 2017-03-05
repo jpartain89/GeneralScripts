@@ -102,7 +102,9 @@ while [ $# -ge 1 ]; do
             echo "";
             echo "Updating all Managed Machines";
             ansible-playbook "$GEN_ANS/apt_basic.yml";
+            echo "Updating macOS Machines"
             ansible-playbook "$GEN_ANS/brew_basic.yml";
+            echo "Running map-pull-sub"
             ansible-playbook "$GEN_ANS/map-pull-sub.yml";
             exit 0
             ;;
