@@ -8,19 +8,7 @@
     - name: Linux | Update the Cache First
       apt: update_cache=yes cache_valid_time=86400
 
-    - name: Linux | Install Aptitude and Update Apt Cache | Raspbian Stretch
-      apt:
-        name: "{{ item }}"
-        state: latest
-        update_cache: yes
-        cache_valid_time: 86400
-        default_release: stretch
-      with_items:
-        - aptitude
-        - apt
-      when: ansible_lsb.id == "Raspbian"
-
-    - name: Linux | Install Aptitude and Update Apt Cache | Ubuntu
+    - name: Linux | Install Aptitude and Update Apt Cache
       apt:
         name: "{{ item }}"
         state: latest
@@ -29,7 +17,7 @@
       with_items:
         - aptitude
         - apt
-      when: ansible_lsb.id == "Ubuntu"
+        - apt-utils
 
     - name: Linux | Apt Upgrade, Dist-Upgrade
       apt: upgrade="{{ item }}"
