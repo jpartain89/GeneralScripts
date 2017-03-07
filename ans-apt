@@ -20,7 +20,7 @@
 PROGRAM_NAME="ans-apt"
 VERSION="3.0"
 
-if [[ ! -e "$(command - allunix)" ]]; then
+if [[ ! -e "$(command -v allunix)" ]]; then
   echo "AllUnix file is missing."
   wget -O - http://bit.ly/jp_allunix | bash
 fi
