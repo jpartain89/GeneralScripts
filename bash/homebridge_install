@@ -3,7 +3,7 @@
 # This auto-installs homebridge by nfarina
 # https://github.com/nfarina/homebridge/
 
-. "/home/jpartain89/git/myfunctions/allunix"
+. allunix
 
 if [[ $(uname -s) == 'Darwin' ]]; then
   echo ""

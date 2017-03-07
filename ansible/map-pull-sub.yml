@@ -17,9 +17,10 @@
         dest: "{{ default_git_repo_location }}"
         update: yes
       ignore_errors: True
+      become_user: jpartain89
 
-    - name: Run map-pull-sub from Within default_git_repo Location
-      shell: 'git map {{ item }} {{ default_git_repo_location }}'
+    - name: Run map-pull-sub from within default_git_repo Location
+      shell: 'git -C {{ default_git_repo_location }} map {{ item }}'
       args:
         executable: /bin/bash
       with_items:

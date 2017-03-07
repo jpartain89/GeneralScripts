@@ -5,12 +5,10 @@
 
   tasks:
     - name: macOS | Running "brewdate"
-      shell: '~/bin/brewdate'
+      command: 'brewdate'
       args:
         executable: /bin/bash
       register: _brewdate
       ignore_errors: True
 
-    - name: macOS | Show brewdate Output
-      debug: var=_brewdate
-      when: _brewdate|failed
+    - debug: var=_brewdate
