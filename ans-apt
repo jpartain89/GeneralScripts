@@ -17,7 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROGRAM_NAME="ans-apt"
+PROGRAM_LOCATION="${DIR}/${PROGRAM_NAME}"
 VERSION="3.0"
 
 if [[ ! -e "$(command -v allunix)" ]]; then
@@ -27,7 +29,6 @@ fi
 
 . allunix
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 GEN_ANS="${DIR}/ansible"
 
 no_sudo
