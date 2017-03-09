@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Program information
-logdir="/var/log/${SCRIPT_NAME}"
+logdir="/var/log/backup_rsync.log"
 logfile="${logdir}/$(date +%m-%d-%Y_%H.%M.%S).log";
 
 function log_function {
