@@ -18,23 +18,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Program information
-SCRIPT_NAME="backup_rsync"
-VERSION="1.0.0"
-USERNAME="jpartain89"
 logdir="/var/log/${SCRIPT_NAME}"
 logfile="${logdir}/$(date +%m-%d-%Y_%H.%M.%S).log";
-
-if [[ ! -e "$(command -v allunix)" ]]; then
-  echo "AllUnix file is missing."
-  wget -O - http://bit.ly/jp_allunix | bash
-fi
-
-source allunix
 
 function log_function {
   if [ ! -d "$logdir" ]; then
     sudo mkdir "${logdir}"
-    sudo chown -R "${OWNER}" "${logfile}"
+    sudo chown -R :admin "${logfile}"
     sudo chmod 0775 "${logfile}"
   fi
   [ ! -e "$logfile" ] && touch "$logfile"
@@ -43,7 +33,7 @@ function log_function {
 source_dir="/"
 backup_dir="rsync://192.168.1.15:12000/$(hostname)/$(date +%m-%d-%Y_%H.%M.%S)"
 
-trap 'EXIT_NORM; exit 1' SIGHUP SIGINT SIGTERM
+trap 'exit 1' SIGHUP SIGINT SIGTERM
 
 function main {
   rsync -aAXv --info=progress2 \
