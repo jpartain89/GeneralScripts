@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+# Rsync Backup Script
+
+# Copyright © 2017 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Program information
+SCRIPT_NAME="backup_rsync"
+VERSION="1.0.0"
+USERNAME="jpartain89"
+
+source_dir="/"
+backup_dir="rsync://192.168.1.15:12000/$(hostname)/$(date +%m-%d-%Y_%H.%M.%S)"
+logfile="/var/log/"
+
+if [[ ! -e "$(command -v allunix)" ]]; then
+  echo "AllUnix file is missing."
+  wget -O - http://bit.ly/jp_allunix | bash
+fi
+
+source allunix
+
+trap 'EXIT_NORM; exit 1' SIGHUP SIGINT SIGTERM
+
+function main {
+  rsync -aAXv --info=progress2 \
+    --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} \
+    "$source_dir" "$backup_dir"
+}
+
+(main >>"$logfile" 2>&1 & ) &
