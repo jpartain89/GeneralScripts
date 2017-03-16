@@ -75,7 +75,6 @@ There is not currently an option to shutdown all Managed Linux Machines
 
     -h,  --help             : this help
 EOF
-EXIT_NORM
 }
 
 trap 'usage; exit 1' SIGHUP SIGINT SIGTERM
@@ -114,6 +113,16 @@ while [ $# -ge 1 ]; do
             sec_separate;
             echo "Finally, running the map-pull-sub playbook."
             ansible-playbook "${GEN_ANS}/map-pull-sub.yml" --limit=local;
+            exit 0
+          ;;
+          linux )
+            sec_separate;
+            echo "Updating Linux Machines";
+            echo "Frst, the apt_basic playbook.";
+            ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
+            sec_separate;
+            echo "Finally, running the map-pull-sub playbook."
+            ansible-playbook "${GEN_ANS}/map-pull-sub.yml" --limit=local-linux;
             exit 0
           ;;
           * )
