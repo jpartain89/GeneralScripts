@@ -5,21 +5,19 @@
   remote_user: jpartain89
 
   vars:
-    - default_git_repo_name:
-      - conffiles
-      - map-pull-sub
-    - default_git_repo_location: "{{ ansible_user_dir }}/git/{{ default_git_repo_name }}"
+    - default_git_repo_name: conffiles
+    - default_git_repo_location: "{{ git_loc }}/{{ default_git_repo_name }}"
 
   tasks:
     - name: Confirm the {{ default_git_repo_name }} Repo is Downloaded
       git:
-        repo: "https://github.com/jpartain89/{{ default_git_repo_name }}.git"
-        dest: "{{ default_git_repo_location }}"
+        repo: "https://github.com/jpartain89/conffiles.git"
+        dest: "{{ git_loc }}/conffiles"
         update: yes
       ignore_errors: True
 
-    - name: Run map-pull-sub from Within default_git_repo Location
-      shell: 'git map {{ item }} {{ default_git_repo_location }}'
+    - name: Run map-pull-sub from within default_git_repo Location
+      shell: 'git -C {{ git_loc }}/conffiles map {{ item }}'
       args:
         executable: /bin/bash
       with_items:
