@@ -2,8 +2,9 @@
 
 # Script for calling the API Requests to Sonarr
 
-sonarr_IP="192.168.1.15"
-sonarr_PORT="8989"
+sonarr_commands="$1"
+sonarr_nginx_auth=""
+sonarr_IP="jpcdi.com"
 sonarr_PREURL="/sonarr/api"
 sonarr_PREAPI="?apikey="
 sonarr_APIKEY="05c304f19b1946ecb8909fe55b2b420d"
@@ -11,33 +12,40 @@ sonarr_CMDS=
 sonarr_EXTRACMDS=
 sonarr_CTYPE=
 
-sonarr_API_ENDPOINT="${sonarr_IP}:${sonarr_PORT}/${sonarr_PREURL}"
-sonarr_API_ENDING="${sonarr_PRE_API}${sonarr_APIKEY}"
-# IP:Port/sonarr/api/
-# The sonarr_CMDS needs no pre or post backslash
-# sonarr_CMDS : system/status
-# ?apikey=123245asdfads
-sonarr_URL="${sonarr_API_ENDPOINT}/${sonarr_CMDS}${sonarr_API_ENDING}"
+read -r -p "Please, enter your USERNAME for NGINX Auth: " nginx_username
+read -r -sp "PLease, enter your PASSWORD for NGINX Auth: " nginx_password
 
 function GET_REQUEST() {
-    curl --request GET "${sonarr_URL}"
+  sonarr_nginx_auth="${nginx_username}:${nginx_password}"
+  sonarr_API_ENDPOINT="${sonarr_IP}${sonarr_PREURL}"
+  sonarr_API_ENDING="${sonarr_PREAPI}${sonarr_APIKEY}"
+  # IP:Port/sonarr/api/
+  # The sonarr_CMDS needs no pre or post backslash
+  # sonarr_CMDS : system/status
+  # ?apikey=123245asdfads
+  sonarr_URL="https://${sonarr_nginx_auth}@${sonarr_API_ENDPOINT}/${sonarr_CMDS}${sonarr_API_ENDING}"
+
+  curl --request GET -i "${sonarr_URL}"
 }
 
-while [ $? -ge 1 ]; do
-    case $? in
-        calendar )
-            sonarr_CMDS=calendar
-        diskspace )
-        episode )
-        episodefile )
-        history )
-        images )
-        wanted-missing )
-        queue )
-        profile )
-        release )
-        rootfolder )
-        series )
-        series-lookup )
-        system-status )
-            sonarr_CMDS=system/status
+while [ -n "$sonarr_commands"  ]; do
+  case "$sonarr_commands" in
+    calendar )
+    sonarr_CMDS=calendar; GET_REQUEST;;
+    #        diskspace )
+    #        episode )
+    #        episodefile )
+    #        history )
+    #        images )
+    #        wanted-missing )
+    #        queue )
+    #        profile )
+    #        release )
+    #        rootfolder )
+    #        series )
+    #        series-lookup )
+    -ss | system-status )
+      sonarr_CMDS=system/status; GET_REQUEST;;
+  esac
+  sonarr_commands=
+done
