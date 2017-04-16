@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Retrieves missing keys from keyserver.ubuntu.com from user-input pubkey.
+# The "pubkey" is the string of letters and numbers that apt-get will spit out
+# when the private key isn't saved. Its the "public key," thus "pubkey."
+
+echo "Paste in the GPG Keys that need to be retrieved: "
+read -r gpgkey
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$gpgkey"
