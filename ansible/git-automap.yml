@@ -1,0 +1,25 @@
+---
+# Ansible Play to run git-automap
+
+- hosts: all
+  remote_user: jpartain89
+
+  vars:
+    - default_git_repo_name: dotfiles
+
+  tasks:
+    - name: Confirm the Initial Repo is Downloaded
+      git:
+        repo: "https://github.com/jpartain89/{{ default_git_repo_name }}.git"
+        dest: "{{ git_loc }}/{{ default_git_repo_name }}"
+        update: yes
+      ignore_errors: True
+
+    - name: Run git-automap from within default_git_repo Location
+      shell: 'git -C {{ git_loc }}/{{ default_git_repo_name }} automap'
+      args:
+        executable: /bin/bash
+      register: git_automap_debug
+      ignore_errors: true
+
+    - debug: var=git_automap_debug
