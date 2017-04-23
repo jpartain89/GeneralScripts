@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
 
-# Shell Script that will auto-call ansible-playbook for me
+# Shell Script that will auto-call my various ansible-playbooks for me
 
 # Copyright © 2017 JPCDI, JPartain89 and Justin Partain
 #
@@ -98,8 +98,8 @@ while [ $# -ge 1 ]; do
             echo "Next, updating macOS Machines with the brew_basic playbook";
             ansible-playbook "${GEN_ANS}/brew_basic.yml";
             sec_separate;
-            echo "Finally, running the map-pull-sub playbook."
-            ansible-playbook "${GEN_ANS}/map-pull-sub.yml";
+            echo "Finally, running the git-automap playbook."
+            ansible-playbook "${GEN_ANS}/git-automap.yml";
             exit 0
           ;;
           local )
@@ -111,8 +111,8 @@ while [ $# -ge 1 ]; do
             echo "Next, updating macOS Machines with the brew_basic playbook";
             ansible-playbook "${GEN_ANS}/brew_basic.yml";
             sec_separate;
-            echo "Finally, running the map-pull-sub playbook."
-            ansible-playbook "${GEN_ANS}/map-pull-sub.yml" --limit=local;
+            echo "Finally, running the git-automap playbook."
+            ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local;
             exit 0
           ;;
           linux )
@@ -121,8 +121,8 @@ while [ $# -ge 1 ]; do
             echo "Frst, the apt_basic playbook.";
             ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
             sec_separate;
-            echo "Finally, running the map-pull-sub playbook."
-            ansible-playbook "${GEN_ANS}/map-pull-sub.yml" --limit=local-linux;
+            echo "Finally, running the git-automap playbook."
+            ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local-linux;
             exit 0
           ;;
           * )
@@ -135,14 +135,14 @@ while [ $# -ge 1 ]; do
     ;;
     -ma | --map-all )
       sec_separate;
-      echo "Running map-pull-sub from within conffiles repo";
-      ansible-playbook "${GEN_ANS}/map-pull-sub.yml";
+      echo "Running git-automap from within conffiles repo.";
+      ansible-playbook "${GEN_ANS}/git-automap.yml";
       exit 0
     ;;
     -ml | --map-local )
       sec_separate;
-      echo "Running map-pull-sub from within conffiles repo";
-      ansible-playbook "${GEN_ANS}/map-pull-sub.yml" --limit=local;
+      echo "Running git-automap from within conffiles repo";
+      ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local;
       exit 0
     ;;
     -rl | --reboot-linux )
