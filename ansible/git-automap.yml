@@ -16,9 +16,13 @@
       ignore_errors: True
 
     - name: Run git-automap from within default_git_repo Location
-      shell: 'git -C {{ git_loc }}/{{ default_git_repo_name }} automap'
+      shell: 'git -C {{ git_loc }}/{{ default_git_repo_name }} map {{ item }}'
       args:
         executable: /bin/bash
+      with_items:
+        - 'pull'
+        - 'fetch --all'
+        - 'submodule update --init --recursive'
       register: git_automap_debug
       ignore_errors: true
 
