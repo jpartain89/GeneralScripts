@@ -4,7 +4,7 @@
 
 MANUAL_FILE="/Users/jpartain89/git/sickbeard_mp4_automator/manual.py"
 
-trap echo 'exiting', exit 1 SIGQUIT SIGTERM SIGINT
+trap 'echo "exiting"; exit 1' SIGQUIT SIGTERM SIGINT
 
 echo "Please, type the FULL path to the directory you want to work on."
 read -r IN_DIRECTORY
