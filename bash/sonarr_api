@@ -16,36 +16,36 @@ read -r -p "Please, enter your USERNAME for NGINX Auth: " nginx_username
 read -r -sp "PLease, enter your PASSWORD for NGINX Auth: " nginx_password
 
 function GET_REQUEST() {
-  sonarr_nginx_auth="${nginx_username}:${nginx_password}"
-  sonarr_API_ENDPOINT="${sonarr_IP}${sonarr_PREURL}"
-  sonarr_API_ENDING="${sonarr_PREAPI}${sonarr_APIKEY}"
-  # IP:Port/sonarr/api/
-  # The sonarr_CMDS needs no pre or post backslash
-  # sonarr_CMDS : system/status
-  # ?apikey=123245asdfads
-  sonarr_URL="https://${sonarr_nginx_auth}@${sonarr_API_ENDPOINT}/${sonarr_CMDS}${sonarr_API_ENDING}"
+    sonarr_nginx_auth="${nginx_username}:${nginx_password}"
+    sonarr_API_ENDPOINT="${sonarr_IP}${sonarr_PREURL}"
+    sonarr_API_ENDING="${sonarr_PREAPI}${sonarr_APIKEY}"
+    # IP:Port/sonarr/api/
+    # The sonarr_CMDS needs no pre or post backslash
+    # sonarr_CMDS : system/status
+    # ?apikey=123245asdfads
+    sonarr_URL="https://${sonarr_nginx_auth}@${sonarr_API_ENDPOINT}/${sonarr_CMDS}${sonarr_API_ENDING}"
 
-  curl --request GET -i "${sonarr_URL}"
+    curl --request GET -i "${sonarr_URL}"
 }
 
 while [ -n "$sonarr_commands"  ]; do
-  case "$sonarr_commands" in
-    calendar )
-    sonarr_CMDS=calendar; GET_REQUEST;;
-    #        diskspace )
-    #        episode )
-    #        episodefile )
-    #        history )
-    #        images )
-    #        wanted-missing )
-    #        queue )
-    #        profile )
-    #        release )
-    #        rootfolder )
-    #        series )
-    #        series-lookup )
-    -ss | system-status )
-      sonarr_CMDS=system/status; GET_REQUEST;;
-  esac
-  sonarr_commands=
+    case "$sonarr_commands" in
+        calendar )
+        sonarr_CMDS=calendar; GET_REQUEST;;
+        #        diskspace )
+        #        episode )
+        #        episodefile )
+        #        history )
+        #        images )
+        #        wanted-missing )
+        #        queue )
+        #        profile )
+        #        release )
+        #        rootfolder )
+        #        series )
+        #        series-lookup )
+        -ss | system-status )
+        sonarr_CMDS=system/status; GET_REQUEST;;
+    esac
+    sonarr_commands=
 done

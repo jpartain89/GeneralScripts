@@ -23,15 +23,14 @@ PROGRAM_LOCATION="${DIR}/${PROGRAM_NAME}"
 VERSION="3.0"
 
 if [[ ! -e "$(command -v allunix)" ]]; then
-  echo "AllUnix file is missing."
-  wget -O - http://bit.ly/jp_allunix | bash
+    echo "AllUnix file is missing."
+    wget -O - http://bit.ly/jp_allunix | bash
 fi
 
-. allunix
+. "$(command -v allunix)"
+no_sudo
 
 GEN_ANS="${DIR}/ansible"
-
-no_sudo
 
 function usage() {
 cat << EOF
@@ -40,7 +39,7 @@ My personal shortcutting ansible stuffs!
 ans-apt [-u | --update ] [ all | local ]
 ans-apt [ -ma | -ml ] or [ --map-all | --map-local ]
 EOF
-EXIT_NORM
+    EXIT_NORM
 }
 
 function help_text() {
@@ -83,93 +82,93 @@ trap 'EXIT_NORM' EXIT
 [ -n "$1" ] || help_text exit 1
 
 while [ $# -ge 1 ]; do
-  case "$1" in
-    -u | --update )
-      shift
-      [ -n "$1" ] || help_text exit 1
-      while [ $# -ge 1 ]; do
-        case "$1" in
-          all )
+    case "$1" in
+        -u | --update )
+            shift
+            [ -n "$1" ] || help_text exit 1
+            while [ $# -ge 1 ]; do
+                case "$1" in
+                    all )
+                        sec_separate;
+                        echo "Updating all Managed Machines";
+                        echo "First, the apt_basic playbook."; 
+                        ansible-playbook "${GEN_ANS}/apt_basic.yml" &&
+                        sec_separate;
+                        echo "Next, updating macOS Machines with the brew_basic playbook";
+                        ansible-playbook "${GEN_ANS}/brew_basic.yml" &&
+                        sec_separate;
+                        echo "Finally, running the git-automap playbook."
+                        ansible-playbook "${GEN_ANS}/git-automap.yml" &&
+                        exit 0
+                    ;;
+                    local )
+                        sec_separate;
+                        echo "Updating only Local Machines";
+                        echo "First, the apt_basic playbook.";
+                        ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux &&
+                        sec_separate;
+                        echo "Next, updating macOS Machines with the brew_basic playbook";
+                        ansible-playbook "${GEN_ANS}/brew_basic.yml";
+                        sec_separate &&
+                        echo "Finally, running the git-automap playbook."
+                        ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local &&
+                        exit 0
+                    ;;
+                    linux )
+                        sec_separate;
+                        echo "Updating Linux Machines";
+                        echo "Frst, the apt_basic playbook.";
+                        ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
+                        sec_separate;
+                        echo "Finally, running the git-automap playbook."
+                        ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local-linux;
+                        exit 0
+                    ;;
+                    * )
+                        help_text;
+                        exit 1
+                    ;;
+                esac
+            done
+            shift
+        ;;
+        -ma | --map-all )
             sec_separate;
-            echo "Updating all Managed Machines";
-            echo "First, the apt_basic playbook."
-            ansible-playbook "${GEN_ANS}/apt_basic.yml";
-            sec_separate;
-            echo "Next, updating macOS Machines with the brew_basic playbook";
-            ansible-playbook "${GEN_ANS}/brew_basic.yml";
-            sec_separate;
-            echo "Finally, running the git-automap playbook."
+            echo "Running git-automap from within conffiles repo.";
             ansible-playbook "${GEN_ANS}/git-automap.yml";
             exit 0
-          ;;
-          local )
+        ;;
+        -ml | --map-local )
             sec_separate;
-            echo "Updating only Local Machines";
-            echo "First, the apt_basic playbook.";
-            ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
-            sec_separate;
-            echo "Next, updating macOS Machines with the brew_basic playbook";
-            ansible-playbook "${GEN_ANS}/brew_basic.yml";
-            sec_separate;
-            echo "Finally, running the git-automap playbook."
+            echo "Running git-automap from within conffiles repo";
             ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local;
             exit 0
-          ;;
-          linux )
-            sec_separate;
-            echo "Updating Linux Machines";
-            echo "Frst, the apt_basic playbook.";
-            ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
-            sec_separate;
-            echo "Finally, running the git-automap playbook."
-            ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local-linux;
+        ;;
+        -rl | --reboot-linux )
+            echo "";
+            echo "Rebooting Linux Machines ";
+            ansible-playbook  "${GEN_ANS}/restart.yml";
             exit 0
-          ;;
-          * )
-            help_text;
+        ;;
+        -rv | --reboot-virtual )
+            echo "";
+            echo "Rebooting only Virtual Machines ";
+            ansible-playbook  "${GEN_ANS}/restart.yml" --limit=virtual;
+            exit 0
+        ;;
+        -m | --monit )
+            echo "";
+            echo "Reloads monit on Linux Machines ";
+            ansible  linux -s -m service -a 'name=monit state=reloaded';
+            exit 0
+        ;;
+        -h | --help )
+            help_text &&
+            exit 0
+        ;;
+        * )
+            help_text &&
             exit 1
-          ;;
-        esac
-      done
-      shift
-    ;;
-    -ma | --map-all )
-      sec_separate;
-      echo "Running git-automap from within conffiles repo.";
-      ansible-playbook "${GEN_ANS}/git-automap.yml";
-      exit 0
-    ;;
-    -ml | --map-local )
-      sec_separate;
-      echo "Running git-automap from within conffiles repo";
-      ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local;
-      exit 0
-    ;;
-    -rl | --reboot-linux )
-      echo "";
-      echo "Rebooting Linux Machines ";
-      ansible-playbook  "${GEN_ANS}/restart.yml";
-      exit 0
-    ;;
-    -rv | --reboot-virtual )
-      echo "";
-      echo "Rebooting only Virtual Machines ";
-      ansible-playbook  "${GEN_ANS}/restart.yml" --limit=virtual;
-      exit 0
-    ;;
-    -m | --monit )
-      echo "";
-      echo "Reloads monit on Linux Machines ";
-      ansible  linux -s -m service -a 'name=monit state=reloaded';
-      exit 0
-    ;;
-    -h | --help )
-      help_text &&
-      exit 0
-    ;;
-    * )
-      help_text &&
-      exit 1
-    ;;
-  esac
+        ;;
+    esac
 done

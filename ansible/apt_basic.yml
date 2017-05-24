@@ -5,9 +5,6 @@
   become: yes
 
   tasks:
-    - name: Linux | Update the Cache First
-      apt: update_cache=yes cache_valid_time=86400
-
     - name: Linux | Install Aptitude and Update Apt Cache
       apt:
         name: "{{ item }}"
@@ -30,17 +27,17 @@
       ignore_errors: True
 
     - name: Linux | Show upgrade_apt Output
-      debug: var=upgrade_apt.stderr_lines
-      when: upgrade_apt|failed
+      debug: var=upgrade_apt
+      when: upgrade_apt|changed
 
     - name: Linux | Run Apt AutoClean in the Shell
-      shell: 'apt autoclean -y'
+      apt: autoremove=yes
       register: autoclean_apt
       ignore_errors: True
 
     - name: Linux | Show Apt AutoClean Output
-      debug: var=autoclean_apt.stderr_lines
-      when: autoclean_apt|failed
+      debug: var=autoclean_apt
+      when: autoclean_apt|changed
 
     - name: Linux | Autoremove "rc" Labeled Apps in the Shell
       shell: 'apt autoremove --purge -y $(dpkg --list | grep `^rc` | awk `{print $2}`)'
@@ -48,5 +45,5 @@
       ignore_errors: True
 
     - name: Linux | Show AutoRemove "rc" Apps
-      debug: var=autoremove_rc_apt.stderr_lines
-      when: autoremove_rc_apt|failed
+      debug: var=autoremove_rc_apt
+      when: autoremove_rc_apt|changed

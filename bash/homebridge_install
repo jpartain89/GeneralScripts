@@ -6,18 +6,18 @@
 . allunix
 
 if [[ $(uname -s) == 'Darwin' ]]; then
-  echo ""
-  echo "Sorry, this only runs on Linux"
-  read -r
-  exit 1
-else
-  . /etc/*-release
-  if [[ "$ID" != "raspbian" ]]; then
     echo ""
-    echo "You ain't running on a Pi... Sorry"
+    echo "Sorry, this only runs on Linux"
     read -r
     exit 1
-  fi
+else
+    . /etc/*-release
+    if [[ "$ID" != "raspbian" ]]; then
+        echo ""
+        echo "You ain't running on a Pi... Sorry"
+        read -r
+        exit 1
+    fi
 fi
 
 yes_sudo
@@ -26,17 +26,17 @@ DIRECTORY=$(pwd)
 apt-get install git make gcc libavahi-compat-libdnssd-dev -y
 
 if [[ $(dpkg -l | grep nodejs) == "" ]]; then
-  echo ""
-  echo "Installing Nodejs"
-  echo "Will run a script first"
-  press_enter
-  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-  sudo apt-get install -y nodejs
+    echo ""
+    echo "Installing Nodejs"
+    echo "Will run a script first"
+    press_enter
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    sudo apt-get install -y nodejs
 else
-  echo ""
-  echo "Node is installed, running apt update then moving on"
-  press_enter
-  apt update && apt upgrade -y
+    echo ""
+    echo "Node is installed, running apt update then moving on"
+    press_enter
+    apt update && apt upgrade -y
 fi
 
 sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
