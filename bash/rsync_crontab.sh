@@ -3,6 +3,7 @@
 # Bash Script to run `flock` and `rsync_tmbackup.sh` through crontab
 
 logfile="/var/log/$(basename "$0").log"
+[ -e "$logfile" ] || sudo touch "$logfile"
 
 exec 1> >(logger -t "$(basename "$0")" -f "$logfile") 2>&1
 
