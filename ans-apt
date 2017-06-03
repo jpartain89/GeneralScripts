@@ -91,7 +91,7 @@ while [ $# -ge 1 ]; do
                     all )
                         sec_separate;
                         echo "Updating all Managed Machines";
-                        echo "First, the apt_basic playbook."; 
+                        echo "First, the apt_basic playbook.";
                         ansible-playbook "${GEN_ANS}/apt_basic.yml" &&
                         sec_separate;
                         echo "Next, updating macOS Machines with the brew_basic playbook";
@@ -99,6 +99,7 @@ while [ $# -ge 1 ]; do
                         sec_separate;
                         echo "Finally, running the git-automap playbook."
                         ansible-playbook "${GEN_ANS}/git-automap.yml" &&
+                        shift
                         exit 0
                     ;;
                     local )
