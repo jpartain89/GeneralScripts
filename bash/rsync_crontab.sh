@@ -2,7 +2,9 @@
 
 # Bash Script to run `flock` and `rsync_tmbackup.sh` through crontab
 
-exec 1> >(logger -t "$(basename "$0")") 2>&1
+logfile="/var/log/$(basename "$0").log"
+
+exec 1> >(logger -t "$(basename "$0")" -f "$logfile") 2>&1
 
 trap 'sudo rm /tmp/rsync.lock; exit 1' SIGHUP SIGINT SIGTERM
 
