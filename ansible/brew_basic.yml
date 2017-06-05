@@ -4,7 +4,7 @@
   become: no
 
   tasks:
-    - name: macOS | Running "brewdate"
+    - name: Running "brewdate"
       command: 'brewdate'
       args:
         executable: /bin/bash

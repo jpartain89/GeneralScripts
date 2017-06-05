@@ -11,12 +11,12 @@
     - name: Confirm the Initial Repo is Downloaded
       git:
         repo: "https://github.com/jpartain89/{{ default_git_repo_name }}.git"
-        dest: "{{ git_loc }}/{{ default_git_repo_name }}"
+        dest: "{{ git_dir.path }}/{{ default_git_repo_name }}"
         update: yes
       ignore_errors: True
 
     - name: Run git-automap from within default_git_repo Location
-      shell: 'git -C {{ git_loc }}/{{ default_git_repo_name }} map {{ item }}'
+      shell: 'git -C {{ git_dir.path }}/{{ default_git_repo_name }} map {{ item }}'
       args:
         executable: /bin/bash
       with_items:
