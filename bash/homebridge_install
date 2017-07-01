@@ -34,41 +34,45 @@ if [[ $(dpkg -l | grep nodejs) == "" ]]; then
     echo ""
     echo "Installing Nodejs"
     echo "Will run a script first"
+    echo "Press Enter to Continue"
     read -r
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
     sudo apt-get install -y nodejs
 else
     echo ""
     echo "Node is installed, running apt update then moving on"
+    echo "Press Enter to Continue"
     read -r
     sudo apt update && sudo apt upgrade -y
 fi
 
 sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
-cd /usr/lib/node_modules/homebridge/ || cd /usr/local/lib/node_modules/homebridge/ ||
-echo "The /usr/lib/node_modules";
-echo " --- or --- ";
-echo "/usr/local/lib/node_modules";
-echo "file system doesn't exist, exiting";
-read -r;
-exit 1
+(cd /usr/lib/node_modules/homebridge/ || cd /usr/local/lib/node_modules/homebridge/) ||
+    (echo "The /usr/lib/node_modules";
+    echo " --- or --- ";
+    echo "/usr/local/lib/node_modules";
+    echo "file system doesn't exist, exiting";
+    echo "Press Enter to Continue";
+    read -r;
+    exit 1)
 sudo npm install --unsafe-perm bignum
-cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns || cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns ||
-echo "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns";
-echo " --- or --- ";
-echo "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns";
-echo "doesn't exist, exiting";
-read -r;
-exit 1
+(cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns || cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns) || \
+    (echo "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns";
+    echo " --- or --- ";
+    echo "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns";
+    echo "doesn't exist, exiting";
+    echo "Press Enter to Continue"
+    read -r;
+    exit 1)
 node-gyp BUILDTYPE=Release rebuild
 
-cd "$DIRECTORY" || echo "Couldn't return to prior directory, exiting"; press_enter; exit 1
+cd "$DIRECTORY" || echo "Couldn't return to prior directory, exiting"; echo "Press Enter to Continue"; read -r ; exit 1
 sudo npm install -g --unsafe-perm homebridge
 
 echo ""
 echo "Make sure to run homebridge after this exits."
 echo "Also, add the monit autostart script to /etc/monit/conf.d"
 echo ""
+echo "Press Enter to Continue"
 read -r
 exit 0
- 
