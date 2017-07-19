@@ -1,17 +1,21 @@
 #!/bin/bash -e
 
 while IFS= read -r VIDEO; do
-  filename="$(basename ${VIDEO})"
-  extension=${filename##*.}
-  filename=${filename%.*}
 
-  [ ! "${filename}.mp4" ] && 
-  read -rp "Processing ${VIDEO}. Proceed? " yn
-  case $yn in
-    [Yy]* ) break;;
-    [Nn]* ) exit;;
-    * ) echo "Please answer yes or no.";;
-  esac
-  HandBrakeCLI -Z "Super HQ 1080p30 Surround" -i "${VIDEO}" -o "${filename}.mp4"
-  echo ""
-done < <(find /Volumes/BigPartition/Movies -iname "*.mkv"
+    filename=$(basename "${VIDEO}")
+    extension=${filename##*.}
+    filename=${filename%.*}
+
+    if [[ ! -f "${filename}.mp4" ]]; then
+        read -rp "Processing ${VIDEO}. Proceed? " yn
+        case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer yes or no.";;
+        esac
+
+        HandBrakeCLI -Z "Super HQ 1080p30 Surround" -i "${VIDEO}" -o "${filename}.tmp.mp4" < /dev/null
+        mv "${filename}.tmp.mp4" "${filename}.mp4"
+        echo ""
+    fi
+done < <(find /Volumes/BigPartition/Movies -iname "*.mkv" )
