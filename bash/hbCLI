@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+FILE_LOC=/Volumes/BigPartition/Movies
+
 while IFS= read -r VIDEO; do
 
     filename=$(basename "${VIDEO}")
@@ -8,7 +10,7 @@ while IFS= read -r VIDEO; do
 
     if [[ ! -f "${filename}.mp4" ]]; then
         while true; do
-            read -rp "Processing ${VIDEO}. Proceed? " yn
+            read -rp "Processing ${VIDEO}. Proceed? " yn </dev/tty
             case $yn in
                 [Yy]* ) break;;
                 [Nn]* ) exit;;
@@ -16,8 +18,8 @@ while IFS= read -r VIDEO; do
             esac
         done
 
-        HandBrakeCLI -Z "Super HQ 1080p30 Surround" -i "${VIDEO}" -o "${filename}.tmp.mp4" < /dev/null
-        mv "${filename}.tmp.mp4" "${filename}.mp4"
+        HandBrakeCLI -Z "Super HQ 1080p30 Surround" -i "${VIDEO}" -o "${FILE_LOC}/${filename}.tmp.mp4" < /dev/null
+        mv "${FILE_LOC}/${filename}.tmp.mp4" "${FILE_LOC}/${filename}.mp4"
         echo ""
     fi
-done < <(find /Volumes/BigPartition/Movies -iname "*.mkv" )
+done < <(find "${FILE_LOC}" -iname "*.mkv" )
