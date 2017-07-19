@@ -7,12 +7,14 @@ while IFS= read -r VIDEO; do
     filename=${filename%.*}
 
     if [[ ! -f "${filename}.mp4" ]]; then
-        read -rp "Processing ${VIDEO}. Proceed? " yn
-        case $yn in
-            [Yy]* ) break;;
-            [Nn]* ) exit;;
-            * ) echo "Please answer yes or no.";;
-        esac
+        while true; do
+            read -rp "Processing ${VIDEO}. Proceed? " yn
+            case $yn in
+                [Yy]* ) break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
 
         HandBrakeCLI -Z "Super HQ 1080p30 Surround" -i "${VIDEO}" -o "${filename}.tmp.mp4" < /dev/null
         mv "${filename}.tmp.mp4" "${filename}.mp4"
