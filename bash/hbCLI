@@ -2,14 +2,33 @@
 
 FILE_LOC=/Volumes/BigPartition/Movies
 
+remoteNotification() {
+    remoteOutput=$(osascript -e \
+        "set theMachine to \"eppc://jpartain89:lover0778@192.168.1.10\"
+        tell application \"Finder\" of machine theMachine
+            activate
+            set theList to {\"Continue\", \"Wait\", \"Cancel\"}
+            choose from list theList with title \"hbCLI\" with prompt \"Working on ${VIDEO}\" default items \"Cancel\" OK button name \"Continue\" cancel button name \"Cancel\"
+        tell result
+            if it is false then error number -128 -- cancel
+            set choice to first item
+        end tell
+    end tell")
+    if [[ "$remoteOutput" == "-128" ]]; then
+        exit 1
+    fi
+}
+
 while IFS= read -r VIDEO; do
 
     filename=$(basename "${VIDEO}")
     extension=${filename##*.}
     filename=${filename%.*}
+    dir_file=${FILE_LOC}/${filename}
 
-    if [[ ! -f "${filename}.mp4" ]]; then
+    if [[ ! -f "${dir_file}.mp4" ]] || [[ ! -f "${dir_file}.tmp.mp4" ]]; then
         while true; do
+            remoteNotification
             read -rp "Processing ${VIDEO}. Proceed? " yn </dev/tty
             case $yn in
                 [Yy]* ) break;;
@@ -21,5 +40,12 @@ while IFS= read -r VIDEO; do
         HandBrakeCLI -Z "Super HQ 1080p30 Surround" -i "${VIDEO}" -o "${FILE_LOC}/${filename}.tmp.mp4" < /dev/null
         mv "${FILE_LOC}/${filename}.tmp.mp4" "${FILE_LOC}/${filename}.mp4"
         echo ""
+    else
+        echo ""
+        echo "We found a corresponding file ending in .mp4 for "
+        echo "${filename}"
+        echo "We are skipping."
+        echo ""
     fi
+
 done < <(find "${FILE_LOC}" -iname "*.mkv" )
