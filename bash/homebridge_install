@@ -47,31 +47,24 @@ else
 fi
 
 sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
-(cd /usr/lib/node_modules/homebridge/ || cd /usr/local/lib/node_modules/homebridge/) ||
-    (echo "The /usr/lib/node_modules";
-    echo " --- or --- ";
-    echo "/usr/local/lib/node_modules";
-    echo "file system doesn't exist, exiting";
-    echo "Press Enter to Continue";
-    read -r;
-    exit 1)
+
+[ -e /usr/lib/node_modules/homebridge/ ] && \
+    cd /usr/lib/node_modules/homebridge/
+[ -e /usr/local/lib/node_modules/homebridge/ ] && \
+    cd /usr/local/lib/node_modules/homebridge/
+
 sudo npm install --unsafe-perm bignum
-(cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns || cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns) || \
-    (echo "The cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns";
-    echo " --- or --- ";
-    echo "cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns";
-    echo "doesn't exist, exiting";
-    echo "Press Enter to Continue"
-    read -r;
-    exit 1)
+[ -e /usr/lib/node_modules/hap-nodejs/node_modules/mdns ] && \
+    cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns
+[ -e /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns ] && \
+    cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns
 node-gyp BUILDTYPE=Release rebuild
 
-cd "$DIRECTORY" || echo "Couldn't return to prior directory, exiting"; echo "Press Enter to Continue"; read -r ; exit 1
+cd "$DIRECTORY"
 sudo npm install -g --unsafe-perm homebridge
 
 echo ""
-echo "Make sure to run homebridge after this exits."
-echo "Also, add the monit autostart script to /etc/monit/conf.d"
+echo "Make sure to run 'homebridge' after this exits."
 echo ""
 echo "Press Enter to Continue"
 read -r
