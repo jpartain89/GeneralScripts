@@ -58,7 +58,7 @@ sudo npm install --unsafe-perm bignum
     cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns
 [ -e /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns ] && \
     cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns
-node-gyp BUILDTYPE=Release rebuild
+sudo node-gyp BUILDTYPE=Release rebuild
 
 cd "$DIRECTORY"
 sudo npm install -g --unsafe-perm homebridge
