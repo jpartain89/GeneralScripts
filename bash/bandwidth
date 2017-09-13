@@ -6,12 +6,12 @@
 
 speedTest=$(command -v speedtest)
 
-server.OneNum="5023"
-server.OneDesc="5023,AT&T,Richardson,$RIGHTNOW,15.26,0.0,0.0,0.0"
-server.TwoNum="10386"
-server.TwoDesc="10386,Speedtest.net,Dallas,$RIGHTNOW,17.39,0.0,0.0,0.0"
-server.ThreeNum="3501"
-server.ThreeDesc="3501,Skybeam,Dallas,$RIGHTNOW,17.39,0.0,0.0,0.0"
+serverOneNum="5023"
+serverOneDesc="5023,AT&T,Richardson,$RIGHTNOW,15.26,0.0,0.0,0.0"
+serverTwoNum="10386"
+serverTwoDesc="10386,Speedtest.net,Dallas,$RIGHTNOW,17.39,0.0,0.0,0.0"
+serverThreeNum="3501"
+serverThreeDesc="3501,Skybeam,Dallas,$RIGHTNOW,17.39,0.0,0.0,0.0"
 
 function getCSVString () {
     # if speedtest failed (e.g. it couldn't access a server) we need
@@ -23,12 +23,12 @@ function getCSVString () {
 
     # which server are we testing against?
 
-	if [[ "$1" == "${server.OneNum}" ]]; then
-		echo "${server.OneDesc}"
-	elif [[ "$1" == "${server.TwoNum}" ]]; then
-		echo "${server.TwoDesc}"
-	elif [[ "$1" == "${server.ThreeNum}" ]]; then
-		echo "${server.ThreeDesc}"
+	if [[ "$1" == "${serverOneNum}" ]]; then
+		echo "${serverOneDesc}"
+	elif [[ "$1" == "${serverTwoNum}" ]]; then
+		echo "${serverTwoDesc}"
+	elif [[ "$1" == "${serverThreeNum}" ]]; then
+		echo "${serverThreeDesc}"
 	fi
 
     # test/debug case only
@@ -46,9 +46,9 @@ function runTest () {
     fi
 }
 
-runTest "${server.OneNum}" && sleep 10
-runTest "${server.TwoNum}" && sleep 10
-runTest "${server.ThreeNum}" && sleep 1
+runTest "${serverOneNum}" && sleep 10
+runTest "${serverTwoNum}" && sleep 10
+runTest "${serverThreeNum}" && sleep 1
 
 # now import the csv data in to sqlite db
 sqlite3 -batch /usr/local/etc/bandwidth.db << EOF
