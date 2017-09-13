@@ -4,7 +4,13 @@
 # import to sqlite db run by cronjob once per hour
 # from https://www.howtoforge.com/tutorial/how-to-use-speedtest-on-a-linux-server-to-check-store-and-report-internet-speeds-graphically/
 
-speedTest=$(command -v speedtest)
+DESC=speedtest
+workDir=/usr/local/etc
+FILE="${workDir}/${DESC}"
+tmpFile="${FILE}.tmp"
+csvFile="${FILE}.csv"
+dbFile="${FILE}.db"
+bakFile="${FILE}.bak"
 
 serverOneNum="5023"
 serverTwoNum="10386"
@@ -32,27 +38,28 @@ function getCSVString () {
 
 function runTest () {
     # run speedtest against named server with csv output saved in tmp file
-    "${speedTest}" --csv --server "$1" > /usr/local/etc/speedtest.tmp
+    $(command -v speedtest) --csv --server "$1" > "${tmpFile}"
 
     if  [ $? -gt -0 ]; then
         # speedtest failed so create a zero entry in place of any error message
-        getCSVString "$1" > /usr/local/etc/speedtest.tmp
+        getCSVString "$1" > "${tmpFile}"
     fi
 
-    cat /usr/local/etc/speedtest.tmp >> /usr/local/etc/speedtest.csv
+    cat "${tmpFile}" >> "${csvFile}"
 }
 
-cd /usr/local/etc
+cd "${workDir}"
+rm -f "${csvFile}"
 
 runTest "${serverOneNum}" && sleep 10
 runTest "${serverTwoNum}" && sleep 10
 runTest "${serverThreeNum}" && sleep 1
 
 # now import the csv data in to sqlite db
-sqlite3 -batch /usr/local/etc/bandwidth.db << EOF
+sqlite3 -batch "${dbFile}" << EOF
 .separator ","
-.import /usr/local/etc/speedtest.csv bandwidth
+.import "${csvFile}" bandwidth
 EOF
 
 # add current run csv to backup
-cat /usr/local/etc/speedtest.csv >> /usr/local/etc/speedtest.bak
+cat "${csvFile}" >> "${bakFile}"
