@@ -1,14 +1,29 @@
 #!/bin/bash -e
 
-# Run speedtests against 3 servers and save all output results in CSV file for import to sqlite db
-# run by cronjob once per hour
+# Run speedtests against 3 servers and save all output results in CSV file for
+# import to sqlite db run by cronjob once per hour
 # from https://www.howtoforge.com/tutorial/how-to-use-speedtest-on-a-linux-server-to-check-store-and-report-internet-speeds-graphically/
 
 function getCSVString () {
   # if speedtest failed (e.g. it couldn't access a server) we need to create a dummy
   # zero entry for this time slot
   # Get a timestamp string in the same format that speedtest generates - and we need UTC time
-  local RIGHTNOW=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
+  local RIGHTNOW
+  RIGHTNOW=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
+
+  # which server are we testing against?
+	if [ "$1" = "5443" ]; then
+		echo "5443,Fasthosts Internet,Gloucester,$RIGHTNOW,73.09,0.0,0.0,0.0"
+	fi
+	if [ $1 = "1234" ]
+	then
+		echo "1234,Uno,Milton Keynes,$RIGHTNOW,168.27,0.0,0.0,0.0"
+	fi
+	if [ $1 = "1783" ]
+	then
+		echo "1783,Comcast,\"San Francisco, CA\",$RIGHTNOW,8420.0,0.0,0.0,0.0"
+	fi
+
 
 # test/debug case only
     if [ $1 = "199999999" ]
