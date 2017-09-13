@@ -8,11 +8,8 @@ speedTest=$(command -v speedtest)
 
 RIGHTNOW="date --utc +%Y-%m-%dT%H:%M:%S"
 serverOneNum="5023"
-serverOneDesc="5023,AT&T,\"Richardson, Tx\",$(eval "${RIGHTNOW}"),15.26,0.0,0.0,0.0"
 serverTwoNum="10386"
-serverTwoDesc="10386,Speedtest.net,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
 serverThreeNum="3501"
-serverThreeDesc="3501,Skybeam,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
 
 function getCSVString () {
     # if speedtest failed (e.g. it couldn't access a server) we need
@@ -21,11 +18,11 @@ function getCSVString () {
     # which server are we testing against?
 
 	if [[ "$1" == "${serverOneNum}" ]]; then
-		echo "${serverOneDesc}"
+		echo "5023,AT&T,\"Richardson, Tx\",$(eval "${RIGHTNOW}"),15.26,0.0,0.0,0.0"
 	elif [[ "$1" == "${serverTwoNum}" ]]; then
-		echo "${serverTwoDesc}"
+		echo "10386,Speedtest.net,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
 	elif [[ "$1" == "${serverThreeNum}" ]]; then
-		echo "${serverThreeDesc}"
+		echo "3501,Skybeam,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
 	fi
 
     # test/debug case only
