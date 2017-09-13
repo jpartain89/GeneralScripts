@@ -6,7 +6,6 @@
 
 speedTest=$(command -v speedtest)
 
-RIGHTNOW="date --utc +%Y-%m-%dT%H:%M:%S"
 serverOneNum="5023"
 serverTwoNum="10386"
 serverThreeNum="3501"
@@ -18,23 +17,23 @@ function getCSVString () {
     # which server are we testing against?
 
 	if [[ "$1" == "${serverOneNum}" ]]; then
-		echo "5023,AT&T,\"Richardson, Tx\",$(eval "${RIGHTNOW}"),15.26,0.0,0.0,0.0"
+		echo "5023,AT&T,\"Richardson, Tx\",$(date --utc +%Y-%m-%dT%H:%M:%S),15.26,0.0,0.0,0.0"
 	elif [[ "$1" == "${serverTwoNum}" ]]; then
-		echo "10386,Speedtest.net,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
+		echo "10386,Speedtest.net,\"Dallas, Tx\",$(date --utc +%Y-%m-%dT%H:%M:%S),17.39,0.0,0.0,0.0"
 	elif [[ "$1" == "${serverThreeNum}" ]]; then
-		echo "3501,Skybeam,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
+		echo "3501,Skybeam,\"Dallas, Tx\",$(date --utc +%Y-%m-%dT%H:%M:%S),17.39,0.0,0.0,0.0"
 	fi
 
     # test/debug case only
     if [[ "$1" == "199999999" ]]; then
-        echo "99999,Test,Test,${RIGHTNOW},99.99,0.0,0.0,0.0"
+        echo "99999,Test,Test,$(date --utc +%Y-%m-%dT%H:%M:%S),99.99,0.0,0.0,0.0"
     fi
 }
 
 function runTest () {
     # run speedtest against named server with csv output saved in tmp file
-
     "${speedTest}" --csv --server "$1" > /usr/local/etc/speedtest.tmp
+
     if  [ $? -gt -0 ]; then
         # speedtest failed so create a zero entry in place of any error message
         getCSVString "$1" > /usr/local/etc/speedtest.tmp
