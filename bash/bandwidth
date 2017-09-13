@@ -40,10 +40,12 @@ function getCSVString () {
 function runTest () {
     # run speedtest against named server with csv output saved in tmp file
 
-    if [[ ! $("${speedTest}" --csv --server "$1" > /usr/local/etc/speedtest.csv) ]]; then
+    if [[ ! $("${speedTest}" --csv --server "$1" > /usr/local/etc/speedtest.tmp) ]]; then
         # speedtest failed so create a zero entry in place of any error message
-        getCSVString "$1" > /usr/local/etc/speedtest.csv
+        getCSVString "$1" > /usr/local/etc/speedtest.tmp
     fi
+
+    cat /usr/local/etc/speedtest.tmp | sudo tee -a /usr/local/etc/speedtest.csv
 }
 
 runTest "${serverOneNum}" && sleep 10
