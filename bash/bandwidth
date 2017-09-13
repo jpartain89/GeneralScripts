@@ -8,11 +8,11 @@ speedTest=$(command -v speedtest)
 
 RIGHTNOW=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
 serverOneNum="5023"
-serverOneDesc="5023,AT&T,Richardson,${RIGHTNOW},15.26,0.0,0.0,0.0"
+serverOneDesc="5023,AT&T,\"Richardson, Tx\",${RIGHTNOW},15.26,0.0,0.0,0.0"
 serverTwoNum="10386"
-serverTwoDesc="10386,Speedtest.net,Dallas,${RIGHTNOW},17.39,0.0,0.0,0.0"
+serverTwoDesc="10386,Speedtest.net,\"Dallas, Tx\",${RIGHTNOW},17.39,0.0,0.0,0.0"
 serverThreeNum="3501"
-serverThreeDesc="3501,Skybeam,Dallas,${RIGHTNOW},17.39,0.0,0.0,0.0"
+serverThreeDesc="3501,Skybeam,\"Dallas, Tx\",${RIGHTNOW},17.39,0.0,0.0,0.0"
 
 function getCSVString () {
     # if speedtest failed (e.g. it couldn't access a server) we need
@@ -29,8 +29,8 @@ function getCSVString () {
 	fi
 
     # test/debug case only
-    if [[ "$1" = "199999999" ]]; then
-        echo "99999,Test,Test,$RIGHTNOW,99.99,0.0,0.0,0.0"
+    if [[ "$1" == "199999999" ]]; then
+        echo "99999,Test,Test,${RIGHTNOW},99.99,0.0,0.0,0.0"
     fi
 }
 
@@ -42,7 +42,7 @@ function runTest () {
         getCSVString "$1" > /usr/local/etc/speedtest.tmp
     fi
 
-    cat /usr/local/etc/speedtest.tmp | sudo tee -a /usr/local/etc/speedtest.csv
+    cat /usr/local/etc/speedtest.tmp >> /usr/local/etc/speedtest.csv
 }
 
 runTest "${serverOneNum}" && sleep 10
@@ -56,4 +56,4 @@ sqlite3 -batch /usr/local/etc/bandwidth.db << EOF
 EOF
 
 # add current run csv to backup
-cat /usr/local/etc/speedtest.csv | sudo tee -a /usr/local/etc/speedtest.bak
+cat /usr/local/etc/speedtest.csv >> /usr/local/etc/speedtest.bak
