@@ -6,20 +6,17 @@
 
 speedTest=$(command -v speedtest)
 
+RIGHTNOW=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
 serverOneNum="5023"
-serverOneDesc="5023,AT&T,Richardson,$RIGHTNOW,15.26,0.0,0.0,0.0"
+serverOneDesc="5023,AT&T,Richardson,${RIGHTNOW},15.26,0.0,0.0,0.0"
 serverTwoNum="10386"
-serverTwoDesc="10386,Speedtest.net,Dallas,$RIGHTNOW,17.39,0.0,0.0,0.0"
+serverTwoDesc="10386,Speedtest.net,Dallas,${RIGHTNOW},17.39,0.0,0.0,0.0"
 serverThreeNum="3501"
-serverThreeDesc="3501,Skybeam,Dallas,$RIGHTNOW,17.39,0.0,0.0,0.0"
+serverThreeDesc="3501,Skybeam,Dallas,${RIGHTNOW},17.39,0.0,0.0,0.0"
 
 function getCSVString () {
     # if speedtest failed (e.g. it couldn't access a server) we need
     # to create a dummy zero entry for this time slot.
-    # Get a timestamp string in the same format that speedtest
-    # generates - and we need UTC time
-    local RIGHTNOW
-    RIGHTNOW=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
 
     # which server are we testing against?
 
