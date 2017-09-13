@@ -6,15 +6,13 @@
 
 speedTest=$(command -v speedtest)
 
-function RIGHTNOW() {
-    date --utc +%Y-%m-%dT%H:%M:%S
-}
+RIGHTNOW="date --utc +%Y-%m-%dT%H:%M:%S"
 serverOneNum="5023"
-serverOneDesc="5023,AT&T,\"Richardson, Tx\",RIGHTNOW,15.26,0.0,0.0,0.0"
+serverOneDesc="5023,AT&T,\"Richardson, Tx\",$(eval "${RIGHTNOW}"),15.26,0.0,0.0,0.0"
 serverTwoNum="10386"
-serverTwoDesc="10386,Speedtest.net,\"Dallas, Tx\",RIGHTNOW,17.39,0.0,0.0,0.0"
+serverTwoDesc="10386,Speedtest.net,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
 serverThreeNum="3501"
-serverThreeDesc="3501,Skybeam,\"Dallas, Tx\",RIGHTNOW,17.39,0.0,0.0,0.0"
+serverThreeDesc="3501,Skybeam,\"Dallas, Tx\",$(eval "${RIGHTNOW}"),17.39,0.0,0.0,0.0"
 
 function getCSVString () {
     # if speedtest failed (e.g. it couldn't access a server) we need
