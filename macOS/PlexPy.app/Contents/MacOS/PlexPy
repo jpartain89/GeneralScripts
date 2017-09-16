@@ -1,0 +1,5 @@
+#!/usr/local/bin/bash
+
+# This is a simple wrapper script to call python plexpy
+
+/usr/bin/python ../Resources/PlexPy/PlexPy.py -d -q --nolaunch >/dev/null 2>&1 &
