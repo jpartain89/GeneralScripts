@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+
+LETSENCRYPT_GIT="/home/jpartain89/git/letsencrypt"
+CERTBOT="$(command -v certbot)"
+LOGDIR="${LETSENCRYPT_GIT}/logs"
+LOGFILE="${LOGDIR}/certbot.log"
+
+[ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
+
+if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
+    { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
+    git add "$LETSENCRYPT_GIT";
+    git -C "$LETSENCRYPT_GIT" commit -m "Updated Letsencrypt files for $(date '+%m-%d-%Y %H-%M-%S')";
+    git -C "$LETSENCRYPT_GIT" push; } >>$LOGFILE 2>&1
+fi

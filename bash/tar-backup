@@ -1,3 +1,7 @@
+#!/bin/bash -e
+
+BACKUP_IP="192.168.1.15"
+
 tar -cvpz \
     --exclude=/proc \
     --exclude=/tmp \
@@ -13,4 +17,4 @@ tar -cvpz \
     --exclude=/home/*/.gvfs \
     --exclude=/home/*/.cache \
     --exclude=/home/*/.local \
-    --exclude=/home/*/.local/share/Trash / | nc -q 0 192.168.1.15 1024
+    --exclude=/home/*/.local/share/Trash / | nc -q 0 "$BACKUP_IPBACKUP_IP" 1024
