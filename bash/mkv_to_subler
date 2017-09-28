@@ -15,7 +15,7 @@ function listToVariable() {
 function sendToSubler() {
     osascript -e "
     tell application \"Subler\"
-		add to queue list of file "$mkvList"
+		add to queue list of file $mkvList
 	end tell"
 }
 
