@@ -9,7 +9,7 @@ externalPorn="${externalDrive}/Porn"
 function listToVariable() {
     while IFS= read -r file; do
         mkvList="${file}"
-    done < <(find . -type f -iname "*.mkv" -exec echo {} \; )
+    done < <(find "$findDir" -type f -iname "*.mkv" -exec echo {} \; )
 }
 
 function sendToSubler() {
@@ -44,18 +44,13 @@ function osascriptCustomSelector() {
 for choice in $choices; do
     case $choice in
         TV )
-            for f in ${externalTV}/*/*/ ; do
-                cd "$f" || continue;
-                listToVariable;
-                sendToSubler;
-                cd "$OLDPWD" || ! break;
-            done || ! cd - >&2;;
+            findDir="${externalTV}";
+            listToVariable;
+            sendToSubler;;
         Movies )
             for f in ${externalMovies}/*/*/ ; do
-                cd "$f" || continue;
                 listToVariable;
                 sendToSubler;
-                cd "$OLDPWD" || ! break;
             done || ! cd - >&2;;
         Custom )
             osascriptCustomSelector;
