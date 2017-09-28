@@ -9,6 +9,10 @@ externalPorn="${externalDrive}/Porn"
 function listToVariable() {
     while IFS= read -r file; do
         mkvList="${file}"
+        osascript -e "
+        tell application \"Subler\"
+    		add to queue  $mkvList
+    	end tell"
     done < <(find "$findDir" -type f -iname "*.mkv" -exec echo {} \; )
 }
 
@@ -45,12 +49,10 @@ for choice in $choices; do
     case $choice in
         TV )
             findDir="${externalTV}";
-            listToVariable;
-            sendToSubler;;
+            listToVariable;;
         Movies )
             for f in ${externalMovies}/*/*/ ; do
                 listToVariable;
-                sendToSubler;
             done || ! cd - >&2;;
         Custom )
             osascriptCustomSelector;
