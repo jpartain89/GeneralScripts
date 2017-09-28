@@ -1,0 +1,70 @@
+#!/bin/bash -e
+
+externalDrive="/Volumes/8TB_EXT"
+tmp_file="$(mktemp)"
+externalTV="${externalDrive}/TV"
+externalMovies="${externalDrive}/Movies"
+externalPorn="${externalDrive}/Porn"
+
+function listToVariable() {
+    while IFS= read -r file; do
+        mkvList="${file}"
+    done < <(find . -type f -iname "*.mkv" -exec echo {} \; )
+}
+
+function sendToSubler() {
+    osascript -e "
+    tell application \"Subler\"
+		add to queue list of file \"$mkvList\"
+	end tell"
+}
+
+choices=$(osascript -l JavaScript -e'
+    var app = Application.currentApplication()
+    app.includeStandardAdditions = true
+
+    var locationChoices = ["TV", "Movies", "Custom"]
+    var locationList = app.chooseFromList(locationChoices, {
+        withPrompt: "Select options:",
+        defaultItems: ["TV"]
+    })
+    locationList' 2>&1)
+function osascriptCustomSelector() {
+    directories="$(osascript -l JavaScript -e '
+        var app = Application.currentApplication()
+        app.includeStandardAdditions = true
+
+        var outputFolder = app.chooseFolder({
+            withPrompt: "Please select an output folder:",
+            multipleSelectionsAllowed: true
+        })
+        outputFolder' | cut -d '"' -f2)"
+}
+
+for choice in $choices; do
+    case $choice in
+        TV )
+            for f in ${TV_EXT}/*/*/ ; do
+                cd "$f" || continue;
+                listToVariable;
+                sendToSubler;
+                cd "$OLDPWD" || ! break;
+            done || ! cd - >&2;;
+        Movies )
+            for f in ${MOVIES_EXT}/*/*/ ; do
+                cd "$f" || continue;
+                listToVariable;
+                sendToSubler;
+                cd "$OLDPWD" || ! break;
+            done || ! cd - >&2;;
+        Custom )
+            osascriptCustomSelector;
+            myFiles=("$directories"/*)
+            for f in "${myFiles[@]}" ; do
+                cd "$f" || continue;
+                listToVariable;
+                sendToSubler;
+                cd "$OLDPWD" || ! break;
+            done || ! cd - >&2;;
+    esac
+done

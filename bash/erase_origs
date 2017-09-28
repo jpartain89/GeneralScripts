@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+scriptLocation="/Library/Scripts"
+
+find "$scriptLocation" -iname "*~orig*"
