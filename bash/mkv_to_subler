@@ -10,7 +10,7 @@ function listToVariable() {
     while IFS= read -r file; do
         mkvList="${file}"
         osascript -e "
-        set filePath to POSIX file $mkvList
+        set filePath to POSIX file ""$mkvList""
         set filePath to filePath as alias
         tell application \"Subler\"
     		add to queue filePath
