@@ -44,14 +44,14 @@ function osascriptCustomSelector() {
 for choice in $choices; do
     case $choice in
         TV )
-            for f in ${TV_EXT}/*/*/ ; do
+            for f in ${externalTV}/*/*/ ; do
                 cd "$f" || continue;
                 listToVariable;
                 sendToSubler;
                 cd "$OLDPWD" || ! break;
             done || ! cd - >&2;;
         Movies )
-            for f in ${MOVIES_EXT}/*/*/ ; do
+            for f in ${externalMovies}/*/*/ ; do
                 cd "$f" || continue;
                 listToVariable;
                 sendToSubler;
