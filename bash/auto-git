@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+# This script is to try to automatically add, commit and push git repos
+# Its also meant to stay as simple as possible.
+
+# You have to input the git repo's location as the first variable on the cmd line
+
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+[ -e /usr/local/Cellar ] && export PATH="$PATH:/usr/local/Cellar"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ -n "$1" ]; then
+    GIT_LOC="$1"
+else
+    echo "Need to input the requested git location" | tee -a "${GIT_LOC}/git.log"
+fi
+
+( git -C "${GIT_LOC}" add . &&
+git -C "${GIT_LOC}" commit -m "Update for $(date)" &&
+git -C "${GIT_LOC}" push ) && echo "Finished gitting at $(date)" >> "${GIT_LOC}/git.log"
