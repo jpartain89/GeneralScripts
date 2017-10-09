@@ -30,7 +30,7 @@
       debug: var=upgrade_apt
       when: upgrade_apt|changed
 
-    - name: Linux | Run Apt AutoClean in the Shell
+    - name: Linux | Run Apt AutoClean (Autoremove Keyword for Ansible)
       apt: autoremove=yes
       register: autoclean_apt
       ignore_errors: True
@@ -39,7 +39,7 @@
       debug: var=autoclean_apt
       when: autoclean_apt|changed
 
-    - name: Linux | Autoremove "rc" Labeled Apps in the Shell
+    - name: Linux | Autoremove "rc" Labeled Apps using the Shell
       shell: 'apt autoremove --purge -y $(dpkg --list | grep `^rc` | awk `{print $2}`)'
       register: autoremove_rc_apt
       ignore_errors: True
