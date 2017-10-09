@@ -5,10 +5,12 @@
 
   tasks:
     - name: Running "brewdate"
-      command: 'brewdate'
+      shell: 'brewdate'
       args:
         executable: /bin/bash
       register: _brewdate
       ignore_errors: True
+      environment:
+        PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar"
 
-    - debug: var=_brewdate
+    - debug: var=_brewdate.stdout_lines
