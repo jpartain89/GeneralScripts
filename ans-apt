@@ -68,8 +68,6 @@ Options:
     -rl, --reboot-linux     : Reboots the Linux Machines
     -rv, --reboot-virtual   : Reboots all Virtual Machines
 
-    -m,  --monit            : Reloads monit on all Managed Machines
-
 There is not currently an option to shutdown all Managed Linux Machines
 
     -h,  --help             : this help
@@ -155,12 +153,6 @@ while [ $# -ge 1 ]; do
             echo "";
             echo "Rebooting only Virtual Machines ";
             ansible-playbook  "${GEN_ANS}/restart.yml" --limit=virtual;
-            exit 0
-        ;;
-        -m | --monit )
-            echo "";
-            echo "Reloads monit on Linux Machines ";
-            ansible  linux -s -m service -a 'name=monit state=reloaded';
             exit 0
         ;;
         -h | --help )
