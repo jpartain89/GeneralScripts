@@ -1,5 +1,5 @@
 ---
-# Ansible Play to run git-automap
+# Ansible Play to run git-autopull
 
 - hosts: all
   become: no
@@ -17,7 +17,7 @@
         update: yes
       ignore_errors: True
 
-    - name: Run git-automap from within default_git_repo Location
+    - name: Run git-autopull from within default_git_repo Location
       shell: 'git -C {{ git_dir.path }}/{{ default_git_repo_name }} map {{ item }}'
       args:
         executable: /bin/bash
@@ -25,7 +25,7 @@
         - 'pull'
         - 'fetch --all'
         - 'submodule update --init --recursive'
-      register: git_automap_debug
+      register: git_autopull_debug
       ignore_errors: true
 
-    - debug: var=git_automap_debug
+    - debug: var=git_autopull_debug
