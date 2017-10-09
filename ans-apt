@@ -30,6 +30,7 @@ fi
 . "$(command -v allunix)"
 no_sudo
 
+# This is for the local ansible directory
 GEN_ANS="${DIR}/ansible"
 
 function usage() {
@@ -59,6 +60,9 @@ Options:
                   : - Apt, Homebrew and Pip
                   : - Runs map-pull-sub from conffiles outward
                   : (Local Only, macOS and Linux)
+
+    --pip                   : Runs pip-upgrade for all installed pip(\#) that
+                            : are installed
 
     -ma, --map-all          : Runs map-pull-sub from conffiles outward
                             :   on all managed machines
@@ -95,8 +99,8 @@ while [ $# -ge 1 ]; do
                         echo "Next, updating macOS Machines with the brew_basic playbook";
                         ansible-playbook "${GEN_ANS}/brew_basic.yml" &&
                         sec_separate;
-                        echo "Finally, running the git-automap playbook."
-                        ansible-playbook "${GEN_ANS}/git-automap.yml" &&
+                        echo "Finally, running the git-autopull playbook."
+                        ansible-playbook "${GEN_ANS}/git-autopull.yml" &&
                         shift
                         exit 0
                     ;;
@@ -107,20 +111,20 @@ while [ $# -ge 1 ]; do
                         ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux &&
                         sec_separate;
                         echo "Next, updating macOS Machines with the brew_basic playbook";
-                        ansible-playbook "${GEN_ANS}/brew_basic.yml";
+                        ansible-playbook "${GEN_ANS}/brew_basic.yml" --ask-pass;
                         sec_separate &&
-                        echo "Finally, running the git-automap playbook."
-                        ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local &&
+                        echo "Finally, running the git-autopull playbook."
+                        ansible-playbook "${GEN_ANS}/git-autopull.yml" --limit=local --ask-pass &&
                         exit 0
                     ;;
                     linux )
                         sec_separate;
                         echo "Updating Linux Machines";
-                        echo "Frst, the apt_basic playbook.";
+                        echo "First, the apt_basic playbook.";
                         ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
                         sec_separate;
-                        echo "Finally, running the git-automap playbook."
-                        ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local-linux;
+                        echo "Finally, running the git-autopull playbook."
+                        ansible-playbook "${GEN_ANS}/git-autopull.yml" --limit=local-linux;
                         exit 0
                     ;;
                     * )
@@ -131,16 +135,22 @@ while [ $# -ge 1 ]; do
             done
             shift
         ;;
+        --pip )
+            sec_separate;
+            echo "Running pip-upgrade."
+            ansible-playbook "${GEN_ANS}/pip-upgrade.yml" --ask-pass;
+            exit 0
+        ;;
         -ma | --map-all )
             sec_separate;
-            echo "Running git-automap from within conffiles repo.";
-            ansible-playbook "${GEN_ANS}/git-automap.yml";
+            echo "Running git-autopull from within dotfiles repo.";
+            ansible-playbook "${GEN_ANS}/git-autopull.yml";
             exit 0
         ;;
         -ml | --map-local )
             sec_separate;
-            echo "Running git-automap from within conffiles repo";
-            ansible-playbook "${GEN_ANS}/git-automap.yml" --limit=local;
+            echo "Running git-autopull from within dotfiles repo";
+            ansible-playbook "${GEN_ANS}/git-autopull.yml" --limit=local;
             exit 0
         ;;
         -rl | --reboot-linux )
