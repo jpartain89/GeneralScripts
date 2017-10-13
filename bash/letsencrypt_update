@@ -1,5 +1,10 @@
 #!/bin/bash -e
 
+# This script is for running certbot renew through cron
+# It calls `certbot renew`, which renews the certs if they are able to be
+# Then, after a successful renewal, it proceeds to call the `auto-git`
+## script thats in this same git repo
+
 PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 LETSENCRYPT_GIT="/home/jpartain89/git/letsencrypt"
@@ -9,6 +14,7 @@ LOGFILE="${LOGDIR}/certbot.log"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
 
+# Unused Function Block
 function workingBlock() {
 if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
     { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
@@ -18,6 +24,8 @@ if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE"
 fi
 }
 
+# This block calls the renewal as an `if` conditional
+# It then calls auto-git once its successful.
 function callingAutoGit() {
     if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
         { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
