@@ -5,31 +5,52 @@
 # Then, after a successful renewal, it proceeds to call the `auto-git`
 ## script thats in this same git repo
 
-PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+# Copyright © 2017 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-LETSENCRYPT_GIT="/home/jpartain89/git/letsencrypt"
+# Program Info
+PROGRAM_NAME="letsencrypt_update"
+VERSION="1.0.0"
+
+PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [[ ! -e "$(command -v allunix)" ]]; then
+    echo "AllUnix file is missing."
+    wget -O - http://bit.ly/jp_allunix | bash
+fi
+
+. "$(command -v allunix)"
+git_local_bin_install
+
+# The GIT_HOME is called from the allunix script, /home/$user/git
+LETSENCRYPT_GIT="${GIT_HOME}/letsencrypt"
+# This assigns the location of the certbot exec to the variable
 CERTBOT="$(command -v certbot)"
+AUTO_GIT="$(command -v auto-git)"
 LOGDIR="${LETSENCRYPT_GIT}/logs"
 LOGFILE="${LOGDIR}/certbot.log"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
-
-# Unused Function Block
-function workingBlock() {
-if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
-    { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
-    git add "$LETSENCRYPT_GIT";
-    git -C "$LETSENCRYPT_GIT" commit -m "Updated Letsencrypt files for $(date '+%m-%d-%Y %H-%M-%S')";
-    git -C "$LETSENCRYPT_GIT" push; } >>$LOGFILE 2>&1
-fi
-}
 
 # This block calls the renewal as an `if` conditional
 # It then calls auto-git once its successful.
 function callingAutoGit() {
     if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
         { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
-        "$(command -v auto-git) $LETSENCRYPT_GIT"; } >>$LOGFILE 2>&1
+        "${AUTO_GIT} ${LETSENCRYPT_GIT}"; } >>"$LOGFILE" 2>&1
     fi
 }
 
