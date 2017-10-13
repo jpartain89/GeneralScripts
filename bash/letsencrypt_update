@@ -9,9 +9,20 @@ LOGFILE="${LOGDIR}/certbot.log"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
 
+function workingBlock() {
 if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
     { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
     git add "$LETSENCRYPT_GIT";
     git -C "$LETSENCRYPT_GIT" commit -m "Updated Letsencrypt files for $(date '+%m-%d-%Y %H-%M-%S')";
     git -C "$LETSENCRYPT_GIT" push; } >>$LOGFILE 2>&1
 fi
+}
+
+function callingAutoGit() {
+    if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
+        { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
+        "$(command -v auto-git) $LETSENCRYPT_GIT"; } >>$LOGFILE 2>&1
+    fi
+}
+
+callingAutoGit
