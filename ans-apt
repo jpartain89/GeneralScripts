@@ -97,10 +97,10 @@ while [ $# -ge 1 ]; do
                         ansible-playbook "${GEN_ANS}/apt_basic.yml" &&
                         sec_separate;
                         echo "Next, updating macOS Machines with the brew_basic playbook";
-                        ansible-playbook "${GEN_ANS}/brew_basic.yml" &&
+                        ansible-playbook "${GEN_ANS}/brew_basic.yml" --ask-pass &&
                         sec_separate;
                         echo "Finally, running the git-autopull playbook."
-                        ansible-playbook "${GEN_ANS}/git-autopull.yml" &&
+                        ansible-playbook "${GEN_ANS}/git-autopull.yml" --ask-pass &&
                         shift
                         exit 0
                     ;;

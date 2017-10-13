@@ -1,0 +1,31 @@
+#!/bin/bash -e
+# shellcheck disable=SC2086
+
+pipArray=()
+while IFS= read -r line; do
+    pipArray+=("$line")
+done < <(find /usr/local/bin /usr/bin \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
+
+function exitBlock() {
+    unset pipArray apps i
+    exit $?
+}
+
+trap 'exitBlock' EXIT HUP INT QUIT TERM
+
+for i in "${pipArray[@]}"; do
+    echo "Updating the installed apps for:"
+    echo "      $i      "
+    echo ""
+    apps=$("$i" list --format=columns | awk 'NR>2 { print $1 }' | tr '\n' ' ')
+    sudo -H $i install -U $apps 2>&1
+    unset apps
+
+    if [ ${pipArray[$i]} = "$i" ]; then
+        pipArray[$i]=''
+    fi
+
+    if [[ -n "${i}" ]]; then
+        echo ""
+    fi
+done
