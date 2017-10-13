@@ -22,6 +22,7 @@
 
 # Program Info
 PROGRAM_NAME="letsencrypt_update"
+REPO_NAME="generalscripts"
 VERSION="1.0.0"
 
 PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
