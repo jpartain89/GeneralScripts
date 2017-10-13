@@ -60,10 +60,6 @@ for i in "${pipArray[@]}"; do
     sudo -H $i install -U $apps 2>&1
     unset apps
 
-    if [ ${pipArray[$i]} = "$i" ]; then
-        pipArray[$i]=''
-    fi
-
     if [[ -n "${i}" ]]; then
         echo ""
     fi
