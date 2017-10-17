@@ -36,7 +36,8 @@ LOGFILE="${LOGDIR}/certbot.log"
 
 # This assigns the location of the certbot exec to the variable
 CERTBOT="$(command -v certbot)"
-AUTO_GIT="${$(command -v auto-git):-${DIR}/auto-git}"
+ag_LOC="$(command -v auto-git)"
+AUTO_GIT="${ag_LOC:-${DIR}/auto-git}"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
 
