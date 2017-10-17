@@ -9,22 +9,27 @@
     - name: Save the Installed Pip Programs to a Variable
       shell: "pip list --format=columns | awk 'NR>2 { print $1 }'"
       register: pip_list
+      failed_when: False
 
     - name: Save the Installed Pip2 Programs to a Variable
       shell: "pip2 list --format=columns | awk 'NR>2 { print $1 }'"
       register: pip2_list
+      failed_when: False
 
     - name: Save the Installed Pip2.7 Programs to a Variable
       shell: "pip2.7 list --format=columns | awk 'NR>2 { print $1 }'"
       register: pip2_7_list
+      failed_when: False
 
     - name: Save the Installed Pip3 Programs to a Variable
       shell: "pip3 list --format=columns | awk 'NR>2 { print $1 }'"
       register: pip3_list
+      failed_when: False
 
     - name: Save the Installed Pip3.6 Programs to a Variable
       shell: "pip3.6 list --format=columns | awk 'NR>2 { print $1 }'"
       register: pip3_6_list
+      failed_when: False
 
     - debug: var="{{ item }}"
       with_items:
@@ -33,16 +38,22 @@
         - pip2_7_list
         - pip3_list
         - pip3_6_list
+      failed_when: false
 
     - set_fact: pip_form_list="{{ pip_list.stdout|replace('\n', ' ' ) }}"
+      failed_when: False
 
     - set_fact: pip2_form_list="{{ pip2_list.stdout|replace('\n', ' ' ) }}"
+      failed_when: False
 
     - set_fact: pip2_7_form_list="{{ pip2_7_list.stdout|replace('\n', ' ' ) }}"
+      failed_when: False
 
     - set_fact: pip3_form_list="{{ pip3_list.stdout|replace('\n', ' ' ) }}"
+      failed_when: False
 
     - set_fact: pip3_6_form_list="{{ pip3_6_list.stdout|replace('\n', ' ' ) }}"
+      failed_when: False
 
     - name: Run the Install --upgrade on the Installed Pip Programs
       shell: "{{ item.pip }} install -U {{ item.list }} 2>&1"
@@ -53,5 +64,6 @@
         - { pip: 'pip2.7', list: '{{ pip2_7_form_list }}' }
         - { pip: 'pip3', list: '{{ pip3_form_list }}' }
         - { pip: 'pip3.6', list: '{{ pip3_6_form_list }}' }
+      failed_when: false
 
     - debug: var=pip_upgrade

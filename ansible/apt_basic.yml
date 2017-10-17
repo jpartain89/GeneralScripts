@@ -24,7 +24,7 @@
         - full
         - dist
       register: upgrade_apt
-      ignore_errors: True
+      failed_when: False
 
     - name: Linux | Show upgrade_apt Output
       debug: var=upgrade_apt
@@ -40,7 +40,7 @@
       when: autoclean_apt|changed
 
     - name: Linux | Autoremove "rc" Labeled Apps using the Shell
-      shell: 'apt autoremove --purge -y $(dpkg --list | grep `^rc` | awk `{print $2}`)'
+      shell: 'apt-get autoremove --purge -y $(dpkg --list | grep "^rc" | awk "{print $2}")'
       register: autoremove_rc_apt
       ignore_errors: True
 

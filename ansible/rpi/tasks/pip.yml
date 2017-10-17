@@ -1,4 +1,0 @@
----
-# rpi/tasks/pip.yml
-
-- name: Install py

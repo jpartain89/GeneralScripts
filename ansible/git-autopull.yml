@@ -15,7 +15,7 @@
         repo: "https://github.com/jpartain89/{{ default_git_repo_name }}.git"
         dest: "{{ git_dir.path }}/{{ default_git_repo_name }}"
         update: yes
-      ignore_errors: True
+      failed_when: False
 
     - name: Run git-autopull from within default_git_repo Location
       shell: 'git -C {{ git_dir.path }}/{{ default_git_repo_name }} map {{ item }}'
@@ -26,6 +26,6 @@
         - 'fetch --all'
         - 'submodule update --init --recursive'
       register: git_autopull_debug
-      ignore_errors: true
+      failed_when: False
 
     - debug: var=git_autopull_debug
