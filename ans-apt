@@ -22,16 +22,8 @@ PROGRAM_NAME="ans-apt"
 PROGRAM_LOCATION="${DIR}/${PROGRAM_NAME}"
 VERSION="3.0"
 
-if [[ ! -e "$(command -v allunix)" ]]; then
-    echo "AllUnix file is missing."
-    wget -O - http://bit.ly/jp_allunix | bash
-fi
-
-. "$(command -v allunix)"
-no_sudo
-
 # This is for the local ansible directory
-GEN_ANS="${DIR}/ansible"
+genAnsible="${DIR}/ansible"
 
 function usage() {
 cat << EOF
@@ -40,7 +32,6 @@ My personal shortcutting ansible stuffs!
 ans-apt [-u | --update ] [ all | local ]
 ans-apt [ -ma | -ml ] or [ --map-all | --map-local ]
 EOF
-    EXIT_NORM
 }
 
 function help_text() {
@@ -79,52 +70,43 @@ EOF
 }
 
 trap 'usage; exit 1' SIGHUP SIGINT SIGTERM
-trap 'EXIT_NORM' EXIT
 
-[ -n "$1" ] || help_text exit 1
+[ -n "$1" ] || help_text && exit 1
 
 while [ $# -ge 1 ]; do
     case "$1" in
         -u | --update )
             shift
-            [ -n "$1" ] || help_text exit 1
+            [ -n "$1" ] || help_text && exit 1
             while [ $# -ge 1 ]; do
                 case "$1" in
                     all )
-                        sec_separate;
                         echo "Updating all Managed Machines";
                         echo "First, the apt_basic playbook.";
-                        ansible-playbook "${GEN_ANS}/apt_basic.yml" &&
-                        sec_separate;
+                        ansible-playbook "${genAnsible}/apt_basic.yml" &&
                         echo "Next, updating macOS Machines with the brew_basic playbook";
-                        ansible-playbook "${GEN_ANS}/brew_basic.yml" --ask-pass &&
-                        sec_separate;
-                        echo "Finally, running the git-autopull playbook."
-                        ansible-playbook "${GEN_ANS}/git-autopull.yml" --ask-pass &&
-                        shift
+                        ansible-playbook "${genAnsible}/brew_basic.yml" &&
+                        echo "Finally, running the git-autopull playbook.";
+                        ansible-playbook "${genAnsible}/git-autopull.yml" &&
+                        shift;
                         exit 0
                     ;;
                     local )
-                        sec_separate;
                         echo "Updating only Local Machines";
                         echo "First, the apt_basic playbook.";
-                        ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux &&
-                        sec_separate;
+                        ansible-playbook "${genAnsible}/apt_basic.yml" --limit=local-linux &&
                         echo "Next, updating macOS Machines with the brew_basic playbook";
-                        ansible-playbook "${GEN_ANS}/brew_basic.yml" --ask-pass;
-                        sec_separate &&
-                        echo "Finally, running the git-autopull playbook."
-                        ansible-playbook "${GEN_ANS}/git-autopull.yml" --limit=local --ask-pass &&
+                        ansible-playbook "${genAnsible}/brew_basic.yml" &&
+                        echo "Finally, running the git-autopull playbook.";
+                        ansible-playbook "${genAnsible}/git-autopull.yml" --limit=local &&
                         exit 0
                     ;;
                     linux )
-                        sec_separate;
                         echo "Updating Linux Machines";
                         echo "First, the apt_basic playbook.";
-                        ansible-playbook "${GEN_ANS}/apt_basic.yml" --limit=local-linux;
-                        sec_separate;
-                        echo "Finally, running the git-autopull playbook."
-                        ansible-playbook "${GEN_ANS}/git-autopull.yml" --limit=local-linux;
+                        ansible-playbook "${genAnsible}/apt_basic.yml" --limit=local-linux &&
+                        echo "Finally, running the git-autopull playbook.";
+                        ansible-playbook "${genAnsible}/git-autopull.yml" --limit=local-linux &&
                         exit 0
                     ;;
                     * )
@@ -136,33 +118,30 @@ while [ $# -ge 1 ]; do
             shift
         ;;
         --pip )
-            sec_separate;
-            echo "Running pip-upgrade."
-            ansible-playbook "${GEN_ANS}/pip-upgrade.yml" --ask-pass;
+            echo "Running pip-upgrade.";
+            ansible-playbook "${genAnsible}/pip-upgrade.yml" &&
             exit 0
         ;;
         -ma | --map-all )
-            sec_separate;
             echo "Running git-autopull from within dotfiles repo.";
-            ansible-playbook "${GEN_ANS}/git-autopull.yml";
+            ansible-playbook "${genAnsible}/git-autopull.yml" &&
             exit 0
         ;;
         -ml | --map-local )
-            sec_separate;
             echo "Running git-autopull from within dotfiles repo";
-            ansible-playbook "${GEN_ANS}/git-autopull.yml" --limit=local;
+            ansible-playbook "${genAnsible}/git-autopull.yml" --limit=local &&
             exit 0
         ;;
         -rl | --reboot-linux )
             echo "";
             echo "Rebooting Linux Machines ";
-            ansible-playbook  "${GEN_ANS}/restart.yml";
+            ansible-playbook  "${genAnsible}/restart.yml" &&
             exit 0
         ;;
         -rv | --reboot-virtual )
             echo "";
             echo "Rebooting only Virtual Machines ";
-            ansible-playbook  "${GEN_ANS}/restart.yml" --limit=virtual;
+            ansible-playbook  "${genAnsible}/restart.yml" --limit=virtual &&
             exit 0
         ;;
         -h | --help )
