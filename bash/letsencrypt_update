@@ -28,24 +28,15 @@ VERSION="1.0.0"
 PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [[ ! -e "$(command -v allunix)" ]]; then
-    echo "AllUnix file is missing."
-    wget -O - http://bit.ly/jp_allunix | bash
-fi
-
-. "$(command -v allunix)"
-git_local_bin_install
-
-# The GIT_HOME is called from the allunix script, /home/$user/git
 SITE="jpcdi.com"
-LETSENCRYPT_GIT="${GIT_HOME}/letsencrypt"
+LETSENCRYPT_GIT="/home/jpartain89/git/letsencrypt"
 LE_SITE="${LETSENCRYPT_GIT}/live/${SITE}"
 LOGDIR="${LETSENCRYPT_GIT}/logs"
 LOGFILE="${LOGDIR}/certbot.log"
 
 # This assigns the location of the certbot exec to the variable
 CERTBOT="$(command -v certbot)"
-AUTO_GIT="$(command -v auto-git)"
+AUTO_GIT="${$(command -v auto-git):-${DIR}/auto-git}"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
 

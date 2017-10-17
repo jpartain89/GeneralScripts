@@ -2,7 +2,7 @@
 
 # This script is to try to automatically add, commit and push git repos
 # Its also meant to stay as simple as possible.
-
+#
 # You have to input the git repo's location as the first variable
 
 # Copyright © 2017 JPCDI, JPartain89 and Justin Partain
@@ -33,22 +33,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # This makes sure that $1 doesn't get lost in the running of all the code
 if [ $# -ge 1 ]; then cmdLine="$1"; fi
 
-if [[ ! -e "$(command -v allunix)" ]]; then
-    echo "AllUnix file is missing."
-    wget -O - http://bit.ly/jp_allunix | bash
-fi
-
-. "$(command -v allunix)"
-git_local_bin_install
-
-trap 'onError $LINENO "$@" >> "${gitLoc}/${PROGRAM_NAME}.log"' ERR
-
 if [ -n "$cmdLine" ]; then
     gitLoc="$cmdLine"
 else
     echo "Need to input the requested git location" | tee -a "${gitLoc}/git.log"
 fi
 
-( git -C "${gitLoc}" add . &&
-git -C "${gitLoc}" commit -m "Update for $(date '+%m-%d-%Y %H-%M-%S')" &&
-git -C "${gitLoc}" push ) && echo "Finished gitting at $(date)" >> "${gitLoc}/${PROGRAM_NAME}.log"
+( git -C "${gitLoc}" add . && \
+    git -C "${gitLoc}" commit -m "Update for $(date '+%m-%d-%Y %H-%M-%S')" && \
+    git -C "${gitLoc}" push ) && \
+        echo "Finished gitting at $(date)" >> "${gitLoc}/${PROGRAM_NAME}.log"
