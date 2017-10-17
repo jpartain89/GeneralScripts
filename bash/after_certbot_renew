@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+# https://sh.jpcdi.com/2ypfGq1
+
 SITE="jpcdi.com"
 LE_LOC="/etc/letsencrypt"
 LE_SITE="${LE_LOC}/live/${SITE}"
@@ -20,3 +22,5 @@ cp "${LE_SITE}/privkey.pem" "/etc/ssl/private/${SITE}.privkey.pem"
 # adjust permissions of the private key
 chown :ssl-cert "/etc/ssl/private/${SITE}.privkey.pem"
 chmod 640 "/etc/ssl/private/${SITE}.privkey.pem"
+
+sudo systemctl restart slapd

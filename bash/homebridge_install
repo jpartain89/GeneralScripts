@@ -18,7 +18,7 @@ else
     fi
 fi
 
-function yes_sudo {
+function yes_sudo() {
     if [[ $EUID != 0 ]]; then
         echo ""
         echo "Sorry, you have to use sudo in order to run this script."
@@ -26,14 +26,15 @@ function yes_sudo {
         exit 1
     fi
 }
-DIRECTORY=$(pwd)
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 sudo apt-get install git make gcc libavahi-compat-libdnssd-dev -y
 
 if [[ $(dpkg -l | grep nodejs) == "" ]]; then
     echo ""
     echo "Installing Nodejs"
-    echo "Will run a script first"
+    echo "Will download and run a script first"
     echo "Press Enter to Continue"
     read -r
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -46,21 +47,25 @@ else
     sudo apt update && sudo apt upgrade -y
 fi
 
+echo "Now installing homebridge hap-nodejs node-gyp"
 sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp
 
-[ -e /usr/lib/node_modules/homebridge/ ] && \
-    cd /usr/lib/node_modules/homebridge/
-[ -e /usr/local/lib/node_modules/homebridge/ ] && \
-    cd /usr/local/lib/node_modules/homebridge/
+NODE_MODULES="/usr/lib/node_modules"
 
+[ -e "${NODE_MODULES}/homebridge/" ] && \
+    cd "${NODE_MODULES}/homebridge/"
+
+echo "Now installing bignum"
 sudo npm install --unsafe-perm bignum
-[ -e /usr/lib/node_modules/hap-nodejs/node_modules/mdns ] && \
-    cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns
-[ -e /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns ] && \
-    cd /usr/local/lib/node_modules/hap-nodejs/node_modules/mdns
+
+[ -e "${NODE_MODULES}/hap-nodejs/node_modules/mdns" ] && \
+    cd "${NODE_MODULES}/hap-nodejs/node_modules/mdns"
+
+echo "Now running node-gyp rebuild"
 sudo node-gyp BUILDTYPE=Release rebuild
 
-cd "$DIRECTORY"
+cd "$DIR"
+echo "Now installing homebridge, again."
 sudo npm install -g --unsafe-perm homebridge
 
 echo ""

@@ -37,12 +37,15 @@ fi
 git_local_bin_install
 
 # The GIT_HOME is called from the allunix script, /home/$user/git
+SITE="jpcdi.com"
 LETSENCRYPT_GIT="${GIT_HOME}/letsencrypt"
+LE_SITE="${LETSENCRYPT_GIT}/live/${SITE}"
+LOGDIR="${LETSENCRYPT_GIT}/logs"
+LOGFILE="${LOGDIR}/certbot.log"
+
 # This assigns the location of the certbot exec to the variable
 CERTBOT="$(command -v certbot)"
 AUTO_GIT="$(command -v auto-git)"
-LOGDIR="${LETSENCRYPT_GIT}/logs"
-LOGFILE="${LOGDIR}/certbot.log"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
 
@@ -52,6 +55,15 @@ function callingAutoGit() {
     if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
         { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
         "${AUTO_GIT} ${LETSENCRYPT_GIT}"; } >>"$LOGFILE" 2>&1
+
+        # copy the files
+        sudo cp "${LE_SITE}/cert.pem" "/etc/ssl/certs/${SITE}.cert.pem"
+        sudo cp "${LE_SITE}/fullchain.pem" "/etc/ssl/certs/${SITE}.fullchain.pem"
+        sudo cp "${LE_SITE}/privkey.pem" "/etc/ssl/private/${SITE}.privkey.pem"
+
+        # adjust permissions of the private key
+        sudo chown :ssl-cert "/etc/ssl/private/${SITE}.privkey.pem"
+        sudo chmod 640 "/etc/ssl/private/${SITE}.privkey.pem"
     fi
 }
 
