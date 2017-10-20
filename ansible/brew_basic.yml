@@ -6,7 +6,7 @@
     PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar"
 
   tasks:
-    - name: Running "brewdate"
+    - name: Running brewdate
       shell: 'brewdate'
       args:
         executable: /bin/bash
@@ -14,3 +14,12 @@
       failed_when: False
 
     - debug: var=_brewdate.stdout_lines
+
+    - name: Running softwareupdate Command
+      shell: 'softwareupdate -ia'
+      args:
+        executable: /bin/bash
+      register: _softwareupdate
+      failed_when: False
+
+    - debug: var=_softwareupdate.stdout_lines
