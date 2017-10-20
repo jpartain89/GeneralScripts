@@ -1,9 +1,7 @@
 ---
 
 - hosts: all
-  become: no
-  environment:
-    PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+  become: yes
 
   tasks:
     - name: Save the Installed Pip Programs to a Variable

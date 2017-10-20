@@ -1,0 +1,6 @@
+---
+
+- import_playbook: apt_basic.yml
+- import_playbook: brew_basic.yml
+- import_playbook: git-autopull.yml
+- import_playbook: pip-upgrade.yml

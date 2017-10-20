@@ -1,9 +1,8 @@
 ---
 
+# The `become` line is required to make sure these do not run with sudo
 - hosts: macos
   become: no
-  environment:
-    PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar"
 
   tasks:
     - name: Running brewdate

@@ -1,31 +1,29 @@
 ---
-# Ansible Play to run git-autopull
 
+# The `become` line is required to make sure these do not run with sudo
 - hosts: all
   become: no
-  environment:
-    PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 
   vars:
-    - default_git_repo_name: dotfiles
+    - default_repo: dotfiles
 
   tasks:
     - name: Confirm the Initial Repo is Downloaded
       git:
-        repo: "https://github.com/jpartain89/{{ default_git_repo_name }}.git"
-        dest: "{{ git_dir.path }}/{{ default_git_repo_name }}"
+        repo: "https://github.com/jpartain89/{{ default_repo }}.git"
+        dest: "{{ git_dir.path }}/{{ default_repo }}"
         update: yes
       failed_when: False
 
     - name: Run git-autopull from within default_git_repo Location
-      shell: 'git -C {{ git_dir.path }}/{{ default_git_repo_name }} map {{ item }}'
+      shell: 'git -C {{ git_dir.path }}/{{ default_repo }} map {{ item }}'
       args:
         executable: /bin/bash
       with_items:
         - 'pull'
         - 'fetch --all'
         - 'submodule update --init --recursive'
-      register: git_autopull_debug
+      register: _git_autopull_debug
       failed_when: False
 
-    - debug: var=git_autopull_debug
+    - debug: var=_git_autopull_debug

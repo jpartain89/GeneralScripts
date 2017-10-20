@@ -1,0 +1,5 @@
+---
+
+# This sets the overall PATH variable for the Linux Machines
+environment:
+  PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"

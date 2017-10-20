@@ -1,0 +1,4 @@
+---
+
+- name: Run My pip-upgrade Shell Script
+  script: pip-upgrade

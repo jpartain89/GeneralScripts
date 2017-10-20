@@ -5,7 +5,7 @@
   become: yes
 
   tasks:
-    - name: Linux | Install Aptitude and Update Apt Cache
+    - name: Make Sure Basic apt Programs are Installed and Update Cache
       apt:
         name: "{{ item }}"
         state: latest
@@ -16,34 +16,31 @@
         - apt
         - apt-utils
 
-    - name: Linux | Apt Upgrade, Dist-Upgrade
+    - name: Run Basic, Safe, Full and Dist Upgrade with apt Module
       apt: upgrade="{{ item }}"
       with_items:
         - yes
         - safe
         - full
         - dist
-      register: upgrade_apt
+      register: _upgrade_apt
       failed_when: False
 
-    - name: Linux | Show upgrade_apt Output
-      debug: var=upgrade_apt
-      when: upgrade_apt|changed
+    - debug: var=_upgrade_apt
+      when: _upgrade_apt|changed
 
-    - name: Linux | Run Apt AutoClean (Autoremove Keyword for Ansible)
+    - name: Autoremove Command in apt Module
       apt: autoremove=yes
-      register: autoclean_apt
-      ignore_errors: True
+      register: _autoclean_apt
+      failed_when: False
 
-    - name: Linux | Show Apt AutoClean Output
-      debug: var=autoclean_apt
-      when: autoclean_apt|changed
+    - debug: var=_autoclean_apt
+      when: _autoclean_apt|changed
 
-    - name: Linux | Autoremove "rc" Labeled Apps using the Shell
+    - name: Run my AutoRemove apt Command String
       shell: 'apt-get autoremove --purge -y $(dpkg --list | grep "^rc" | awk "{print $2}")'
-      register: autoremove_rc_apt
-      ignore_errors: True
+      register: _autoremove_rc_apt
+      failed_when: False
 
-    - name: Linux | Show AutoRemove "rc" Apps
-      debug: var=autoremove_rc_apt
-      when: autoremove_rc_apt|changed
+    - debug: var=_autoremove_rc_apt
+      when: _autoremove_rc_apt|changed
