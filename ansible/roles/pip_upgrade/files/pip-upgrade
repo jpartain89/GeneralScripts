@@ -1,0 +1,57 @@
+#!/bin/bash -e
+# shellcheck disable=SC2086
+
+# This script attempts to `find` all of the installed pip executables
+# that are installed in `/usr/local/bin` and `/usr/bin` using `find`
+#
+# Then, it runs `freeze` to get a list of all installed pip apps
+# And then runs `install --upgrade` on the list
+
+# Copyright © 2017 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Program Info
+PROGRAM_NAME="pip-upgrade"
+VERSION="1.0.0"
+
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+[ -e /usr/local/Cellar ] && export PATH="$PATH:/usr/local/Cellar"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pipArray=()
+while IFS= read -r line; do
+    pipArray+=("$line")
+done < <(find /usr/local/bin /usr/bin \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
+
+function exitBlock() {
+    unset pipArray apps i
+    exit $?
+}
+
+trap 'exitBlock' EXIT HUP INT QUIT TERM
+
+for i in "${pipArray[@]}"; do
+    echo "Updating the installed apps for:"
+    echo "      $i      "
+    echo ""
+    apps=$("$i" list --format=columns | awk 'NR>2 { print $1 }' | tr '\n' ' ')
+    sudo -H $i install -U $apps 2>&1
+    unset apps
+
+    if [[ -n "${i}" ]]; then
+        echo ""
+    fi
+done

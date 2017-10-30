@@ -1,0 +1,409 @@
+ansible_XHC20:
+  device: XHC20
+  flags: []
+  ipv4: []
+  ipv6: []
+  macaddress: unknown
+  mtu: '0'
+  type: unknown
+ansible_all_ipv4_addresses:
+- 192.168.1.10
+ansible_all_ipv6_addresses:
+- fe80::1cbe:1b49:8e89:2919%en0
+- 2605:6000:151a:4019:1c01:e100:f52e:94be
+- 2605:6000:151a:4019:29aa:7baf:5321:4db6
+- fe80::e839:70ff:fedb:ab6d%awdl0
+- fe80::1148:bbe2:807d:c44c%utun0
+- fda4:3818:4ad7:f13c:1148:bbe2:807d:c44c
+- fe80::a721:efd5:e452:4e8d%utun1
+- fe80::6130:694:786a:58e8%utun2
+ansible_apparmor:
+  status: disabled
+ansible_architecture: x86_64
+ansible_awdl0:
+  device: awdl0
+  flags:
+  - UP
+  - BROADCAST
+  - RUNNING
+  - PROMISC
+  - SIMPLEX
+  - MULTICAST
+  ipv4: []
+  ipv6:
+  - address: fe80::e839:70ff:fedb:ab6d%awdl0
+    prefix: '64'
+    scope: '0x8'
+  macaddress: ea:39:70:db:ab:6d
+  media: Unknown
+  media_select: autoselect
+  mtu: '1484'
+  options:
+  - PERFORMNUD
+  - DAD
+  status: active
+  type: ether
+ansible_bridge0:
+  device: bridge0
+  flags:
+  - BROADCAST
+  - SMART
+  - SIMPLEX
+  - MULTICAST
+  ipv4: []
+  ipv6: []
+  macaddress: 32:00:19:cc:a0:00
+  media: Unknown
+  media_select: Unknown
+  media_type: unknown type
+  mtu: '1500'
+  options:
+  - RXCSUM
+  - TXCSUM
+  - TSO4
+  - TSO6
+  status: inactive
+  type: ether
+ansible_date_time:
+  date: '2017-10-20'
+  day: '20'
+  epoch: '1508489612'
+  hour: '03'
+  iso8601: '2017-10-20T08:53:32Z'
+  iso8601_basic: 20171020T035332324044
+  iso8601_basic_short: 20171020T035332
+  iso8601_micro: '2017-10-20T08:53:32.324283Z'
+  minute: '53'
+  month: '10'
+  second: '32'
+  time: 03:53:32
+  tz: CDT
+  tz_offset: '-0500'
+  weekday: Friday
+  weekday_number: '5'
+  weeknumber: '42'
+  year: '2017'
+ansible_default_ipv4:
+  address: 192.168.1.10
+  broadcast: 192.168.1.255
+  device: en0
+  flags:
+  - UP
+  - BROADCAST
+  - SMART
+  - RUNNING
+  - SIMPLEX
+  - MULTICAST
+  gateway: 192.168.1.1
+  interface: en0
+  macaddress: b8:e8:56:22:e5:58
+  media: Unknown
+  media_select: autoselect
+  mtu: '1500'
+  netmask: 255.255.255.0
+  network: 192.168.1.0
+  options:
+  - PERFORMNUD
+  - DAD
+  status: active
+  type: ether
+ansible_default_ipv6:
+  address: fe80::1cbe:1b49:8e89:2919%en0
+  device: en0
+  flags:
+  - UP
+  - BROADCAST
+  - SMART
+  - RUNNING
+  - SIMPLEX
+  - MULTICAST
+  gateway: fe80::2e4d:54ff:feb0:190%en0
+  interface: en0
+  macaddress: b8:e8:56:22:e5:58
+  media: Unknown
+  media_select: autoselect
+  mtu: '1500'
+  options:
+  - PERFORMNUD
+  - DAD
+  prefix: '64'
+  status: active
+  type: ether
+ansible_distribution: MacOSX
+ansible_distribution_release: 17.2.0
+ansible_distribution_version: 10.13.1
+ansible_dns:
+  nameservers:
+  - 192.168.1.35
+  search:
+  - jpcdi.com
+ansible_domain: ''
+ansible_effective_group_id: 0
+ansible_effective_user_id: 0
+ansible_en0:
+  device: en0
+  flags:
+  - UP
+  - BROADCAST
+  - SMART
+  - RUNNING
+  - SIMPLEX
+  - MULTICAST
+  ipv4:
+  - address: 192.168.1.10
+    broadcast: 192.168.1.255
+    netmask: 255.255.255.0
+    network: 192.168.1.0
+  ipv6:
+  - address: fe80::1cbe:1b49:8e89:2919%en0
+    prefix: '64'
+  - address: 2605:6000:151a:4019:1c01:e100:f52e:94be
+    prefix: '64'
+  - address: 2605:6000:151a:4019:29aa:7baf:5321:4db6
+    prefix: '64'
+  macaddress: b8:e8:56:22:e5:58
+  media: Unknown
+  media_select: autoselect
+  mtu: '1500'
+  options:
+  - PERFORMNUD
+  - DAD
+  status: active
+  type: ether
+ansible_en1:
+  device: en1
+  flags:
+  - UP
+  - BROADCAST
+  - SMART
+  - RUNNING
+  - PROMISC
+  - SIMPLEX
+  - MULTICAST
+  ipv4: []
+  ipv6: []
+  macaddress: 32:00:19:cc:a0:00
+  media: Unknown
+  media_select: autoselect
+  media_type: full-duplex
+  mtu: '1500'
+  options:
+  - TSO4
+  - TSO6
+  status: inactive
+  type: ether
+ansible_env:
+  COLORFGBG: 0;15
+  COLORTERM: truecolor
+  DISPLAY: /private/tmp/com.apple.launchd.TmWa9WMDMB/org.macosforge.xquartz:0
+  EDITOR: nano
+  HOME: /var/root
+  LANG: en_US.UTF-8
+  LC_ALL: en_US.UTF-8
+  LOGNAME: root
+  LS_COLORS: 'no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+  MAIL: /var/mail/root
+  PATH: /usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar:/usr/local/MacGPG2/bin:/usr/local/opt/go/libexec/bin
+  PWD: /Users/jpartain89/git/generalscripts/ansible
+  SHELL: /bin/sh
+  SHLVL: '1'
+  SSH_AUTH_SOCK: /private/tmp/com.apple.launchd.HkRt9yAl6y/Listeners
+  SUDO_COMMAND: /bin/sh -c echo BECOME-SUCCESS-liolleblecrscprahtdqucqhzdjceuel; /usr/bin/python
+    /Users/jpartain89/.ansible/tmp/ansible-tmp-1508489611.388255-56458219555082/setup.py;
+    rm -rf "/Users/jpartain89/.ansible/tmp/ansible-tmp-1508489611.388255-56458219555082/"
+    > /dev/null 2>&1
+  SUDO_GID: '20'
+  SUDO_UID: '501'
+  SUDO_USER: jpartain89
+  TERM: xterm-256color
+  USER: root
+  USERNAME: root
+  VERSIONER_PYTHON_PREFER_32_BIT: 'no'
+  VERSIONER_PYTHON_VERSION: '2.7'
+  VISUAL: nano
+  _: /usr/bin/python
+  __CF_USER_TEXT_ENCODING: 0x0:0:0
+ansible_fips: false
+ansible_fqdn: JustinsMBA
+ansible_gif0:
+  device: gif0
+  flags:
+  - POINTOPOINT
+  - MULTICAST
+  ipv4: []
+  ipv6: []
+  macaddress: unknown
+  mtu: '1280'
+  type: unknown
+ansible_hostname: JustinsMBA
+ansible_interfaces:
+- XHC20
+- awdl0
+- bridge0
+- en0
+- en1
+- gif0
+- lo0
+- p2p0
+- stf0
+- utun0
+- utun1
+- utun2
+ansible_kernel: 17.2.0
+ansible_lo0:
+  device: lo0
+  flags:
+  - UP
+  - LOOPBACK
+  - RUNNING
+  - MULTICAST
+  ipv4:
+  - address: 127.0.0.1
+    broadcast: 127.255.255.255
+    netmask: 255.0.0.0
+    network: 127.0.0.0
+  ipv6:
+  - address: ::1
+    prefix: '128'
+  - address: fe80::1%lo0
+    prefix: '64'
+    scope: '0x1'
+  macaddress: unknown
+  mtu: '16384'
+  options:
+  - PERFORMNUD
+  - DAD
+  type: loopback
+ansible_local: {}
+ansible_lsb: {}
+ansible_machine: x86_64
+ansible_memfree_mb: 750
+ansible_memtotal_mb: 4096
+ansible_model: MacBookAir6,2
+ansible_nodename: JustinsMBA
+ansible_os_family: Darwin
+ansible_osrevision: '199506'
+ansible_osversion: 17B35a
+ansible_p2p0:
+  device: p2p0
+  flags:
+  - UP
+  - BROADCAST
+  - RUNNING
+  - SIMPLEX
+  - MULTICAST
+  ipv4: []
+  ipv6: []
+  macaddress: 0a:e8:56:22:e5:58
+  media: Unknown
+  media_select: autoselect
+  mtu: '2304'
+  status: inactive
+  type: ether
+ansible_pkg_mgr: homebrew
+ansible_processor: Intel(R) Core(TM) i5-4250U CPU @ 1.30GHz
+ansible_processor_cores: '2'
+ansible_python:
+  executable: /usr/bin/python
+  has_sslcontext: true
+  type: CPython
+  version:
+    major: 2
+    micro: 10
+    minor: 7
+    releaselevel: final
+    serial: 0
+  version_info:
+  - 2
+  - 7
+  - 10
+  - final
+  - 0
+ansible_python_version: 2.7.10
+ansible_real_group_id: 0
+ansible_real_user_id: 0
+ansible_selinux: false
+ansible_selinux_python_present: false
+ansible_service_mgr: launchd
+ansible_ssh_host_key_dsa_public: AAAAB3NzaC1kc3MAAACBAO52kyYpv0P6TwNVZIyBBHJ5TDJ4BhJH0lw8tycybZi13E86uM4vmOKEIQ/OntXz+KwEPqa71w76BJTBCT/FGyHp4pOOvNCgt9yH81qatSUiy1IP3CvCsISenGXUVJrQHgdbJhIfjwWMO6pbkicg0wPrvow0Jr0KkG8nRI/iLdMVAAAAFQCpcTvP2DQIsgadUVfzF3EhPAH83wAAAIAZ/lzHEkMwhGt0acMgIsOWVjmhePyzeNHwaU4Ea5J7FGlWUerzkRN4aZ9pn59+EpmnXO3juacuyxKC3vsU/eFMqrvtRIDrVdqebQ0nPelwPuZM8vAhLOovDMlvITIDTmTHDyJJ7qct+u0NYF3XViaeUTzNtu+PkDqh5iprK70ypAAAAIEArG53JMXyAC+CmVc+b86Dr+zC9YH9+zqnaoM2MBPzWI9VgIvdHlGXGKCqs+Rj04a7x1qvPe8ggIEhtMqe9rFBH55EJ8AvGSY2Tf1+qXHPrFN+rQcUWkoSpAASS2b2pR7I/BpFkK0wXxw7uwLsso5qQMftQTStwj7HsZjCYwi7B08=
+ansible_ssh_host_key_ecdsa_public: AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBP/tQjuT6HLdLNczqtGZhJ/yeAGFgsixMImGzijWacwGOQ/SOF9rL84Myn6uJ4HzS6QKC2sKtzZ7xRqUoACZxNs=
+ansible_ssh_host_key_ed25519_public: AAAAC3NzaC1lZDI1NTE5AAAAIGTudEQD7DoKsRuJTOX2qqf+TNy+gkHjP+uK2P2Lqa2K
+ansible_ssh_host_key_rsa_public: AAAAB3NzaC1yc2EAAAADAQABAAABAQDFt0x14BLspJ5xe2yk92yxzxFtUWawjtx/J1Xsg40reb4ClCgyJJRwsiQC1sFB3vvaMaBF4F8I71GwrdakqDy/+KbbtIC+K6inqzladn7NZXzAJz23OS7CIcbqhzR8cNXs5eVq5i6j230newA0ouBty41T5Qy9bp+HQ+eLbhtqxA15nDGNQqdDOMTgidUSM2cNi5xBal31hSV/kb22KMaFj5RtRgaI7LLrgjaKsPIi+M3iE9GXLlMqyvxxwkDd3ex4ld3isQjtqN+ElttO1HEOONC86j+Q0JnvF2yBTCRhESiTWxyzSHmtwRMOl4n9guLgQVYkY5pDN/FE2FLbb1ML
+ansible_stf0:
+  device: stf0
+  flags: []
+  ipv4: []
+  ipv6: []
+  macaddress: unknown
+  mtu: '1280'
+  type: unknown
+ansible_system: Darwin
+ansible_user_dir: /var/root
+ansible_user_gecos: System Administrator
+ansible_user_gid: 0
+ansible_user_id: root
+ansible_user_shell: /bin/sh
+ansible_user_uid: 0
+ansible_userspace_architecture: x86_64
+ansible_userspace_bits: '64'
+ansible_utun0:
+  device: utun0
+  flags:
+  - UP
+  - POINTOPOINT
+  - RUNNING
+  - MULTICAST
+  ipv4: []
+  ipv6:
+  - address: fe80::1148:bbe2:807d:c44c%utun0
+    prefix: '64'
+    scope: '0xa'
+  - address: fda4:3818:4ad7:f13c:1148:bbe2:807d:c44c
+    prefix: '64'
+  macaddress: unknown
+  mtu: '1380'
+  options:
+  - PERFORMNUD
+  - DAD
+  type: unknown
+ansible_utun1:
+  device: utun1
+  flags:
+  - UP
+  - POINTOPOINT
+  - RUNNING
+  - MULTICAST
+  ipv4: []
+  ipv6:
+  - address: fe80::a721:efd5:e452:4e8d%utun1
+    prefix: '64'
+    scope: '0xb'
+  macaddress: unknown
+  mtu: '2000'
+  options:
+  - PERFORMNUD
+  - DAD
+  type: unknown
+ansible_utun2:
+  device: utun2
+  flags:
+  - UP
+  - POINTOPOINT
+  - RUNNING
+  - MULTICAST
+  ipv4: []
+  ipv6:
+  - address: fe80::6130:694:786a:58e8%utun2
+    prefix: '64'
+    scope: '0xc'
+  macaddress: unknown
+  mtu: '1380'
+  options:
+  - PERFORMNUD
+  - DAD
+  type: unknown
+ansible_virtualization_role: ''
+ansible_virtualization_type: ''
+gather_subset:
+- all
+module_setup: true
