@@ -1,5 +1,0 @@
-#!/bin/bash -e
-
-while IFS= read -r PIP; do
-    sudo -H pip install -U "${PIP}";
-done < <( pip freeze | sed 's/==.*//' )

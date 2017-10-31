@@ -26,12 +26,29 @@
 PROGRAM_NAME="pip-upgrade"
 VERSION="1.0.0"
 
+# This makes sure that the PATH is set correctly
+# The `Cellar` line is there for my macOS machines
 export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 [ -e /usr/local/Cellar ] && export PATH="$PATH:/usr/local/Cellar"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+# This creates the blank array
 pipArray=()
+
 while IFS= read -r line; do
     pipArray+=("$line")
 done < <(find /usr/local/bin /usr/bin \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
