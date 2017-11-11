@@ -36,8 +36,11 @@ if [ $# -ge 1 ]; then cmdLine="$1"; fi
 if [ -n "$cmdLine" ]; then
     gitLoc="$cmdLine"
 else
-    echo "Need to input the requested git location" | tee -a "${gitLoc}/git.log"
+    echo "Need to input the requested git location"
+    exit 1
 fi
+
+[ -e "${gitLoc}/${PROGRAM_NAME}.log" ] || touch "${gitLoc}/${PROGRAM_NAME}.log"
 
 ( git -C "${gitLoc}" add . && \
     git -C "${gitLoc}" commit -m "Update for $(date '+%m-%d-%Y %H-%M-%S')" && \
