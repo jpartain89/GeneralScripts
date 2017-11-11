@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+# Script to shutdown and turn off MariaDB
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if sudo service mysql stop; then
+    sudo systemctl disable mariadb.service >/dev/null 2>&1
+    sudo update-rc.d mysql remove
+fi
