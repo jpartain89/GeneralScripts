@@ -46,7 +46,7 @@ AUTO_GIT="${ag_LOC:-${DIR}/auto-git}"
 function callingAutoGit() {
     if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
         { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
-        "${AUTO_GIT} ${LETSENCRYPT_GIT}"; } >>"$LOGFILE" 2>&1
+        "${AUTO_GIT}" "${LETSENCRYPT_GIT}"; } >>"$LOGFILE" 2>&1
     fi
 }
 
