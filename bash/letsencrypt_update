@@ -41,13 +41,4 @@ AUTO_GIT="${ag_LOC:-${DIR}/auto-git}"
 
 [ ! -e "$LOGDIR" ] && mkdir "$LOGDIR"
 
-# This block calls the renewal as an `if` conditional
-# It then calls auto-git once its successful.
-function callingAutoGit() {
-    if "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1; then
-        { sudo chown -R jpartain89:jpartain89 "$LETSENCRYPT_GIT";
-        "${AUTO_GIT}" "${LETSENCRYPT_GIT}"; } >>"$LOGFILE" 2>&1
-    fi
-}
-
-callingAutoGit
+sudo "$CERTBOT" renew --renew-hook /usr/local/bin/after_certbot_renew >>"$LOGFILE" 2>&1
