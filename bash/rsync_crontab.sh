@@ -16,12 +16,10 @@ trap 'exit 1' SIGHUP SIGINT SIGTERM
   echo "";
   echo "Started at $(date '+%m-%d-%Y %H:%M:%S')";
   echo "";
-  echo ""; } | sudo tee -a "$logfile"
-
-sudo bash -ex "$TMBACKUP" / "$BACK_LOC" /home/jpartain89/exclude-file.txt 2>&1 | sudo tee -a "$logfile" && \
-
-{ echo "";
-echo "";
-echo "Ended at $(date '+%m-%d-%Y %H:%M:%S')";
-echo "";
-echo ""; } | sudo tee -a "$logfile"
+  echo "";
+  sudo bash -ex "$TMBACKUP" / "$BACK_LOC" /home/jpartain89/exclude-file.txt;
+  echo "";
+  echo "";
+  echo "Ended at $(date '+%m-%d-%Y %H:%M:%S')";
+  echo "";
+  echo ""; } 2>&1 | sudo tee -a "$logfile"
