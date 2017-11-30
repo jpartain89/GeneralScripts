@@ -12,14 +12,13 @@ logfile="/var/log/$(basename "$0").log"
 
 trap 'exit 1' SIGHUP SIGINT SIGTERM
 
-{ echo "";
-  echo "";
-  echo "Started at $(date '+%m-%d-%Y %H:%M:%S')";
-  echo "";
-  echo "";
-  sudo bash -ex "$TMBACKUP" / "$BACK_LOC" /home/jpartain89/exclude-file.txt;
-  echo "";
-  echo "";
-  echo "Ended at $(date '+%m-%d-%Y %H:%M:%S')";
-  echo "";
-  echo ""; } 2>&1 | sudo tee -a "$logfile"
+{
+    echo "################################################################################";
+    echo "###### Starting at $(date '+%m-%d-%Y %H:%M:%S') ########";
+    echo "################################################################################";
+    sudo bash -ex "$TMBACKUP" / "$BACK_LOC" /home/jpartain89/exclude-file.txt;
+    echo "";
+    echo "";
+    echo "Ended at $(date '+%m-%d-%Y %H:%M:%S')";
+    echo "";
+    echo ""; } 2>&1 | sudo tee -a "$logfile"
