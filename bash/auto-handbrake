@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+die() {
+    echo "$program: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+PRESET="Apple 1080p60 Surround"
+SOURCE="/media/int_2tb/Videos/PORN"
+
+while IFS= read -r line; do
+    output="${line%\.[^.]*}.mp4"
+
+    HandBrakeCLI -Z "${PRESET}" --input "${line}" \
+        --output "${output}" < /dev/null
+
+done < <(find "$SOURCE" \( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" \) -exec echo {} \; ) 2>&1 | tee -a ~/handbrake.log
