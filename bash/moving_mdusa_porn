@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+DEST=/media/int_2tb/Videos/PORN
+
+XTube
+SketchySex
+YouPorn
+PornHub
+FratX
+XVideos
+
+while IFS= read -r line; do
+    sudo rsync -avhP --remove-source-files "${line}" "${DEST}/XTube/"
+done < <(find . -iname "*XTube*" -exec echo {} \; )
+
+while IFS= read -r line; do
+    sudo rsync -avhP --remove-source-files "${line}" "${DEST}/SketchySex/"
+done < <(find . -iname "*SketchySex*" -exec echo {} \; )
+
+while IFS= read -r line; do
+    sudo rsync -avhP --remove-source-files "${line}" "${DEST}/YouPorn/"
+done < <(find . -iname "*YouPorn*" -exec echo {} \; )
+
+while IFS= read -r line; do
+    sudo rsync -avhP --remove-source-files "${line}" "${DEST}/PornHub/"
+done < <(find . -iname "*PornHub*" -exec echo {} \; )
+
+while IFS= read -r line; do
+    sudo rsync -avhP --remove-source-files "${line}" "${DEST}/FratX/"
+done < <(find . -iname "*FratX*" -exec echo {} \; )
+
+while IFS= read -r line; do
+    sudo rsync -avhP --remove-source-files "${line}" "${DEST}/XVideos/"
+done < <(find . -iname "*XVideos*" -exec echo {} \; )
