@@ -4,12 +4,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DEST=/media/int_2tb/Videos/PORN
 
-XTube
-SketchySex
-YouPorn
-PornHub
-FratX
-XVideos
 
 while IFS= read -r line; do
     sudo rsync -avhP --remove-source-files "${line}" "${DEST}/XTube/"
