@@ -21,14 +21,42 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Program Info
-PROGRAM_NAME="auto-git"
+PROGRAM_NAME="git-auto"
 REPO_NAME="generalscripts"
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 [ -e /usr/local/Cellar ] && export PATH="$PATH:/usr/local/Cellar"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# This "auto-installs" git-auto into /usr/local/bin for ya!
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+function USAGE() {
+    cat <<- EOF
+${PROGRAM_NAME}
+
+USAGE :
+      : run ${PROGRAM_NAME} with the git repo's file location as first argument.
+      : this runs `git add .`, 
+      : `git commit` with a pre-made message with the date and time, and
+      : git push.
+
+-h | --help     :    Shows this info
+EOF
+}
 
 # This makes sure that $1 doesn't get lost in the running of all the code
 if [ $# -ge 1 ]; then cmdLine="$1"; fi
