@@ -10,6 +10,11 @@ export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+if (( "$EUID" != 0 )); then
+    echo "This script has to be ran as root"
+    exit 1
+fi
+
 # This "auto-installs" git-auto into /usr/local/bin for ya!
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     (
