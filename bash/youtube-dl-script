@@ -4,11 +4,12 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+
 YTD="$(command -v youtube-dl)"
 OSA="$(command -v osascript)"
 
 "${OSA}" -e '
     display dialog "Please, paste the YouTube URL now." default answer ""
     set theUrl to (text returned of result)
-    
+
     '
