@@ -31,7 +31,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 # Copied from https://sh.jpcdi.com/2C8bugB
 # These lines are linux-standard locations for getting the GPU and CPU temp readings
-gpu=$(/opt/vc/bin/vcgencmd measure_temp | awk -F "[=\']" '{print $2}')
+gpu=$(/opt/vc/bin/vcgencmd measure_temp | awk -F "[=']" '{print $2}')
 cpu=$(</sys/class/thermal/thermal_zone0/temp)
 
 # These lines, obviously, perform the calculations to get from Celsius to Farhenheit
