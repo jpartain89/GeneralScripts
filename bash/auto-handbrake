@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+PROGRAM_NAME="auto-handbrake"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 die() {
@@ -9,8 +10,22 @@ die() {
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
+# This "auto-installs" git-autopull into /usr/local/bin for ya!
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
 PRESET="Apple 1080p60 Surround"
-SOURCE="/media/int_2tb/Videos/PORN"
+SOURCE="/media/server2/Videos/"
 
 while IFS= read -r line; do
     output="${line%\.[^.]*}.mp4"
@@ -20,4 +35,4 @@ while IFS= read -r line; do
 
     rm "$line"
 
-done < <(find "$SOURCE" \( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" \) -exec echo {} \; ) 2>&1 | tee -a ~/handbrake.log
+done < <(find "$SOURCE" \( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv" \) -exec echo {} \; )
