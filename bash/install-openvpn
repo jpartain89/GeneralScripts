@@ -3,33 +3,39 @@
 sudo -s
 
 OPENVPN_HOME=/etc/openvpn
+REQUIRED_APPS=(
+  openvpn
+  easy-rsa
+  iptables-persistent
+  bridge-utils
+)
 
 sudo apt-get update && sudo apt-get upgrade -y
 
 curl -s https://swupdate.openvpn.net/repos/repo-public.gpg | apt-key add
 echo "deb http://build.openvpn.net/debian/openvpn/stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/openvpn-aptrepo.list
 
-sudo apt update && sudo apt install -y openvpn easy-rsa iptables-persistent
+sudo apt update && sudo apt install -y "${REQUIRED_APPS[@]}"
 
-rsync -avhP /usr/share/easy-rsa /etc/openvpn
+sudo make-cadir "${OPENVPN_HOME}/easy-rsa"
 
-nano /etc/openvpn/easy-rsa/vars
+nano "${OPENVPN_HOME}/easy-rsa/vars"
 
 # This is to remove the "interactivity" of the easy-rsa scripts
 sed -i "s/--interact //g" /etc/openvpn/easy-rsa/build-*
 
-cd "$OPENVPN_HOME/easy-rsa/"
+cd "${OPENVPN_HOME}/easy-rsa/"
 . ./vars
 ./clean-all
 ./build-ca
 ./build-key-server "$VPN_HOSTNAME"
 ./build-dh
-openvpn --genkey --secret "$OPENVPN_HOME/easy-rsa/keys/ta.key"
+openvpn --genkey --secret "${OPENVPN_HOME}/easy-rsa/keys/ta.key"
 
-gzip -d /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz -c > /etc/openvpn/server.conf
+#gzip -d /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz -c > /etc/openvpn/server.conf
 
-sed -i "s/ca ca.crt/ca easy-rsa\/keys\/ca.crt/g" /etc/openvpn/server.conf
-sed -i "s/cert server.crt/cert easy-rsa\/keys\/${VPN_HOSTNAME}.crt/g" /etc/openvpn/server.conf
-sed -i "s/key server.key/key easy-rsa\/keys\/${VPN_HOSTNAME}.key/g" /etc/openvpn/server.conf
-sed -i "s/dh dh2048.pem/dh easy-rsa\/keys\/dh2048.pem/g" /etc/openvpn/server.conf
-sed -i "s/tls-auth ta.key/tls-auth easy-rsa\/keys\/ta.key/g" /etc/openvpn/server.conf
+#sed -i "s/ca ca.crt/ca easy-rsa\/keys\/ca.crt/g" /etc/openvpn/server.conf
+#sed -i "s/cert server.crt/cert easy-rsa\/keys\/${VPN_HOSTNAME}.crt/g" /etc/openvpn/server.conf
+#sed -i "s/key server.key/key easy-rsa\/keys\/${VPN_HOSTNAME}.key/g" /etc/openvpn/server.conf
+#sed -i "s/dh dh2048.pem/dh easy-rsa\/keys\/dh2048.pem/g" /etc/openvpn/server.conf
+#sed -i "s/tls-auth ta.key/tls-auth easy-rsa\/keys\/ta.key/g" /etc/openvpn/server.conf
