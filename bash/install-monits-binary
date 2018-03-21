@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+# This script is to download prebuilt binary files from Monit for installation
+# rather than compiling from git.
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+HTML2TEXT="$(command -v html2text)"
+
+if [[ $(uname -s) == 'Darwin' ]]; then
+    [[ -n "$HTML2TEXT" ]] && brew install html2text
+elif [[ $(uname -s) == 'Linux' ]]; then
+    [[ -n "$HTML2TEXT" ]] && sudo apt install html2text -y
+else
+    echo "This script is setup to be used by Debian and Darwin based OS's only"
+    exit 1
+fi
+
+echo "Now getting the latest released version number from Monit"
+MONITVER=$(wget -q https://mmonit.com/monit/dist/binary/ -O - | html2text | grep DIR | tail -n 1 | tr -d / | awk '{print $2}')
+
+echo ""
+echo "The current released version of Monit is $MONITVER"
+
+cd /tmp

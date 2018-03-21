@@ -8,6 +8,7 @@ REQUIRED_APPS=(
   easy-rsa
   iptables-persistent
   bridge-utils
+  haveged
 )
 
 sudo apt-get update && sudo apt-get upgrade -y
