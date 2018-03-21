@@ -33,5 +33,7 @@ MONITVER=$(wget -q ${MONIT_HTML} -O - | html2text | grep DIR | tail -n 1 | tr -d
 echo ""
 echo "The current released version of Monit is $MONITVER"
 
-cd /tmp
-wget -O - "${MONIT_HTML}${MONITVER}/monit-${MONITVER}-${OS_VAR}.tar.gz" | tar -zxv
+wget -O - "${MONIT_HTML}${MONITVER}/monit-${MONITVER}-${OS_VAR}.tar.gz" | tar -zxv -C /tmp
+
+sudo cp "/tmp/monit-${MONITVER}/bin/monit" /usr/local/bin/monit
+sudo chmod +x /usr/local/bin/monit
