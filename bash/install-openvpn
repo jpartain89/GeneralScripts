@@ -1,7 +1,5 @@
 #!/bin/bash -e
 
-sudo -s
-
 OPENVPN_HOME=/etc/openvpn
 REQUIRED_APPS=(
   openvpn
