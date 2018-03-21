@@ -9,10 +9,10 @@ HTML2TEXT="$(command -v html2text)"
 MONIT_HTML="https://mmonit.com/monit/dist/binary/"
 
 if [[ $(uname -s) == 'Darwin' ]]; then
-    [[ -n "$HTML2TEXT" ]] && brew install html2text
+    [[ -z "$HTML2TEXT" ]] && brew install html2text
     OS_VAR="macos-x64"
 elif [[ $(uname -s) == 'Linux' ]]; then
-    [[ -n "$HTML2TEXT" ]] && sudo apt install html2text -y
+    [[ -z "$HTML2TEXT" ]] && sudo apt install html2text -y
     if [[ "$(lsb_release -sd | awk '{print $1}')" == 'Ubuntu' ]]; then
         if [[ $(uname -p) == "x86_64" ]]; then
             OS_VAR="linux-x64"
