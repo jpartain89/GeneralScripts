@@ -34,4 +34,4 @@ echo ""
 echo "The current released version of Monit is $MONITVER"
 
 cd /tmp
-wget -O - "${MONIT_HTML}${MONITVER}/monit-${MONITVER}-${OS_VAR}.tar.gz" | tar -zxvf
+wget -O - "${MONIT_HTML}${MONITVER}/monit-${MONITVER}-${OS_VAR}.tar.gz" | tar -zxv
