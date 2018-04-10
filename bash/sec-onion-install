@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Script to install Security Onion
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ISO_LOC="/media/server1/TechStuff/System\ Images_Files"
+
+wget -O "${ISO_LOC}/securityonion-14.04.5.11.iso" https://github.com/Security-Onion-Solutions/security-onion/releases/download/v14.04.5.11_20180328/securityonion-14.04.5.11.iso &&
+
+wget -O "${ISO_LOC}/securityonion-14.04.5.11.iso.sig" https://github.com/Security-Onion-Solutions/security-onion/raw/master/sigs/securityonion-14.04.5.11.iso.sig &&
+
+wget -O "${ISO_LOC}/KEYS" https://raw.githubusercontent.com/Security-Onion-Solutions/security-onion/master/KEYS &&
+
+gpg --import "${ISO_LOC}/KEYS" &&
+gpg --verify "${ISO_LOC}/securityonion-14.04.5.11.iso.sig" "${ISO_LOC}/securityonion-14.04.5.11.iso"
