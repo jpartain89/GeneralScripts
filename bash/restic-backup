@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+# Restic backup to Azure Cloud Storage
+
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PIDFILE="/var/run/restic.pid"
+BACKUP="/media/server1/DULC"
+
+trap 'rm $PIDFILE; exit 1' SIGHUP SIGINT SIGTERM
+trap 'rm $PIDFILE; exit 0' EXIT
+
+RESTIC="$(command -v restic)"
+
+. /home/jpartain89/.restic-env
+
+if [ -f "$PIDFILE" ]; then
+    PID=$(cat "${PIDFILE}")
+    if [[ $(ps -p "$PID" >/dev/null 2>&1 && echo $?) == 0 ]]; then
+        echo "Job is already running"
+        exit 1
+    else
+        ## Process not found assume not running
+        if [[ $(echo $$ > "$PIDFILE" && echo $?) != 0 ]]; then
+            echo "Could not create PID file"
+            exit 1
+        fi
+    fi
+else
+    if [[ $(echo $$ > "$PIDFILE" && echo $?) != 0 ]]; then
+        echo "Could not create PID file"
+        exit 1
+    fi
+fi
+
+if [[ ! -x "${RESTIC}" ]]; then
+    echo "Looks like Restic isn't installed, or is not executable!"
+    exit 1
+fi
+
+"${RESTIC}" backup "${BACKUP}" &&
+"${RESTIC}" forget --prune --keep-hourly 4 --keep-daily 7 --keep-weekly 8 --keep-monthly 6
