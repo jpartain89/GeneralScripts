@@ -8,6 +8,8 @@ export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PIDFILE="/var/run/restic.pid"
 BACKUP="/media/server1/DULC"
+EXCLUDE='--exclude=Videos/ --exclude=*.mov --exclude=*.mp4 --exclude="dulc.com content/" --exclude="dulc transfer/" --exclude="Mark Pics-Vids/" --exclude="Music/" --exclude="Sounds/" --exclude="The Most*" --exclude="Unsorted Videos/" --exclude="Various Information/" --exclude="Voice Recordings/" --exclude="Website Copy 06032017/" --exclude="wordpress/"'
+OPTIONS='--limit-upload 9765625 --verbose=10'
 
 trap 'rm $PIDFILE; exit 1' SIGHUP SIGINT SIGTERM
 trap 'rm $PIDFILE; exit 0' EXIT
@@ -40,5 +42,5 @@ if [[ ! -x "${RESTIC}" ]]; then
     exit 1
 fi
 
-"${RESTIC}" backup "${BACKUP}" &&
+"${RESTIC}" backup "${BACKUP}" "${EXCLUDE}" &&
 "${RESTIC}" forget --prune --keep-hourly 4 --keep-daily 7 --keep-weekly 8 --keep-monthly 6
