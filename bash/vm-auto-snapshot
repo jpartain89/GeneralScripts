@@ -1,0 +1,317 @@
+#!/bin/bash -e
+# vim: ts=4 sw=4 et
+
+#
+# Auto-snapshotting script intended to be cron'd,
+# taking automatic snapshots of particular VM, logging it,
+# and providing means of restoring specific snapshots.
+# Included with functionality of rotating them (like logrotate).
+#
+# Example cron entry for this script:
+#   0 12 * * * user vm-auto-snapshot -f -t
+#
+# Taken from https://gist.github.com/mgeeky/f95faffa45e28f214f9c4821f96cd972
+#
+# Mariusz B., 2017
+# v0.4
+#
+
+# -- CONFIGURATION --
+
+# Machine's name to manage, if it's empty - one will have to specify "-n" parameter to this script
+VM_NAME=""
+
+# Max number of snapshots to keep
+SNAPSHOTS_ROTATE=3
+
+# This file must be writeable for the owner of this script!
+LOG_FILE="/var/log/vm-auto-snapshots.log"
+
+# -- CONFIGURATION --
+
+
+function usage {
+    echo "Usage: ./vm-auto-snapshot.sh [options]"
+    echo
+    echo -e "\t-n <name>\tOperate on this particular VM"
+    echo -e "\t-f\t\tTake forced action (no questions, batch mode)"
+    echo -e "\t-t\t\tTake auto snapshot"
+    echo -e "\t-r <num>\tRestore snapshot with number <num>"
+    echo -e "\t-d <num>\tDelete snapshot with number <num>"
+    echo -e "\t-l\t\tList auto-snapshots."
+    echo -e "\t-h\t\tThis cruft"
+    echo
+}
+
+function get_snapshots {
+    S=$(vboxmanage snapshot "$VM_NAME" list --machinereadable)
+    ret=$?
+    if [ "$S" == "This machine does not have any snapshots" ]; then
+        exit 0
+    elif [ $ret -ne 0 ]; then
+        >&2 echo "[!] Listing VM's snapshots has failed. Maybe you specified wrong VM's name? Currently used: '$VM_NAME'"
+        exit 1
+    fi
+    echo "$S" | grep -E '^SnapshotName.*=' | pcregrep -o1 '.+="([^"]+)"'
+}
+
+function rename_snapshots {
+    _snapshots=$(get_snapshots)
+    _new_num=1
+
+    for snap in $(echo "$_snapshots")
+    do 
+        _num=$(echo "$snap" | cut -d- -f3)
+        _to_name="auto-snapshot-$_new_num"
+        vboxmanage snapshot "$VM_NAME" edit "auto-snapshot-$_num" --name "$_to_name" 2> /dev/null
+        ((_new_num++))
+    done
+}
+
+
+BATCH=0
+ACTION=0    # 0 - list, 1 - take, 2 - restore, 3 - delete
+RESTORE_NUM=0
+
+while [[ $# -ge 1 ]]
+do
+    key="$1"
+
+    case $key in
+        -f)
+            BATCH=1
+        ;;
+
+        -t)
+            ACTION=1
+        ;;
+
+        -r)
+            ACTION=2
+            RESTORE_NUM=$2
+            
+            if [ -z "$2" ]; then
+                echo "[!] You did not specify snapshot number to restore."
+                exit 1
+            fi
+            shift
+        ;;
+
+        -d)
+            ACTION=3
+            RESTORE_NUM=$2
+            
+            if [ -z "$2" ]; then
+                echo "[!] You did not specify snapshot number to delete."
+                exit 1
+            fi
+            shift
+        ;;
+
+        -n)
+            if [ -z "$2" ]; then
+                echo "[!] You did not specify name of VM to operate on."
+                exit 1
+            fi
+
+            VM_NAME="$2"
+            shift
+        ;;
+
+        -l)
+            ACTION=0
+        ;;
+
+        -h)
+            usage
+            exit
+        ;;
+
+        *)
+            echo "[!] Unknown option: $1"
+            usage
+            exit 1
+        ;;
+    esac
+    shift
+done
+
+if [ -n "$LOG_FILE" ] && [ $BATCH -eq 1 ]; then
+    exec > >(tee -i -a $LOG_FILE)
+    exec 2>&1
+fi
+
+if [ -z "$VM_NAME" ]; then
+    echo "[!] Please provide VM_NAME either via variable within this script or via -n parameter."
+    exit 1
+else
+    if [ $BATCH -eq 1 ]; then
+        echo
+        echo "[+] Starting auto-snapshot tool on $VM_NAME ($(date))..."
+    else
+        echo "[+] Operating on: $VM_NAME"
+    fi
+fi
+
+date=$(date +'%d.%m.%y-%H:%M')
+snapshots=$(get_snapshots)
+
+if [ $? -eq 1 ] && [ -z "$snapshots" ]; then
+    echo "[!] Could not get snapshots"
+    echo -e "$snapshots"
+    exit 1
+fi
+
+snapshots_num=$(echo -e "$snapshots" | wc -l)
+last_num=$(echo -e "$snapshots" | sort -nr | head -1 | cut -d- -f3)
+first_num=$(echo -e "$snapshots" | sort -n | head -1 | cut -d- -f3)
+
+if [ -z "$last_num" ]; then
+    last_num=0
+fi
+
+if [ -z "$snapshots" ]; then
+    snapshots="<none>"
+fi
+
+((last_num++))
+rotate_driven_rename=0
+
+if [ $last_num -ge $SNAPSHOTS_ROTATE ] && [ $snapshots_num -ge $SNAPSHOTS_ROTATE ]; then
+    last_num=$SNAPSHOTS_ROTATE
+    rotate_driven_rename=1  
+
+elif [ $last_num -ge $SNAPSHOTS_ROTATE ] && [ $snapshots_num -lt $SNAPSHOTS_ROTATE ]; then
+    last_num=$((snapshots_num+1))
+    rotate_driven_rename=1  
+fi
+
+new_name="auto-snapshot-$last_num"
+description="Auto snapshot taken: $date"
+
+if [ $BATCH -eq 1 ]; then
+    echo "[+] There are at the moment: $snapshots_num auto snapshots."
+    echo
+fi
+
+if [ $ACTION -eq 0 ]; then
+    echo "[?] Snapshots taken automatically so far: "
+    echo "--------------------"
+snapshots_raw=$(vboxmanage snapshot "$VM_NAME" list --machinereadable | grep -v Current)
+    IFS=$'\n'
+    for snap in $snapshots
+    do
+            snap_desc=$(echo -e "$snapshots_raw" | grep -A3 "$snap" | pcregrep -o1 'SnapshotDescription.*="([^"]+)"' | head -1) 
+            if [ -n "$snap_desc" ]; then
+                    echo -e "$snap ($snap_desc)"
+            else
+                    echo -e "$snap"
+            fi
+    done
+
+elif [ $ACTION -eq 1 ]; then
+
+    if [ $snapshots_num -ge $SNAPSHOTS_ROTATE ]; then
+        echo "[?] Snapshots rotation needed - reached number of $SNAPSHOTS_ROTATE snapshots."
+
+        _snapshots_num=$snapshots_num
+        _first_num=$(echo -e "$snapshots" | sort -n | head -1 | cut -d- -f3)
+
+        while [ $_snapshots_num -ge $SNAPSHOTS_ROTATE ]
+        do
+            echo "[.] Removing snapshot: auto-snapshot-$_first_num (left snapshots: $_snapshots_num)"
+            vboxmanage snapshot "$VM_NAME" delete "auto-snapshot-$_first_num"
+
+            _snapshots=$(get_snapshots)
+            _snapshots_num=$(echo -e "$_snapshots" | wc -l)
+            _first_num=$(echo -e "$_snapshots" | sort -n | head -1 | cut -d- -f3)
+        done
+
+        echo
+    fi
+
+    if [ $BATCH -eq 0 ]; then
+        read -p "Do you want to take a new snapshot '$new_name' [y/N]? " -n 1 -r
+        echo
+
+        if [[ ! $REPLY =~ ^[Yy]$ ]]
+        then
+            [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+        fi
+
+        echo
+        echo "[?] Taking snapshot $new_name ($description)..."
+        vboxmanage snapshot "$VM_NAME" take $new_name --description "$description"
+    else
+        echo "[?] Taking snapshot $new_name ($description)..."
+        vboxmanage snapshot "$VM_NAME" take $new_name --description "$description"
+    fi
+
+    echo
+
+    if [ $rotate_driven_rename -eq 1 ] ; then
+        rename_snapshots
+    fi
+
+elif [ $ACTION -eq 2 ]; then
+
+    num=$RESTORE_NUM
+    restore_name="auto-snapshot-$num"
+
+    if [ -z "$(echo -e "$snapshots" | grep auto-snapshot-$num)" ]; then
+        echo "[!] There is no auto-snapshot with number: $num. Failure, quitting."
+        exit 1
+    fi
+
+    if [ $BATCH -eq 0 ]; then
+        read -p "Do you want to restore snapshot '$restore_name' [y/N]? " -n 1 -r
+        echo
+
+        if [[ ! $REPLY =~ ^[Yy]$ ]]
+        then
+            [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+        fi
+
+        echo
+        echo "[?] Restoring snapshot $restore_name..."
+        vboxmanage snapshot "$VM_NAME" restore "$restore_name"
+    else
+        echo "[?] Restoring snapshot $restore_name..."
+        vboxmanage snapshot "$VM_NAME" restore "$restore_name"
+    fi
+
+elif [ $ACTION -eq 3 ]; then
+
+    num=$RESTORE_NUM
+    restore_name="auto-snapshot-$num"
+
+    if [ -z "$(echo -e "$snapshots" | grep auto-snapshot-$num)" ]; then
+        echo "[!] There is no auto-snapshot with number: $num. Failure, quitting."
+        exit 1
+    fi
+
+    if [ $BATCH -eq 0 ]; then
+        read -p "Do you want to DELETE snapshot '$restore_name' [y/N]? " -n 1 -r
+        echo
+
+        if [[ ! $REPLY =~ ^[Yy]$ ]]
+        then
+            [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+        fi
+
+        echo
+        echo "[?] Deleting snapshot $restore_name..."
+        vboxmanage snapshot "$VM_NAME" delete "$restore_name"
+    else
+        echo "[?] Deleting snapshot $restore_name..."
+        vboxmanage snapshot "$VM_NAME" delete "$restore_name"
+    fi
+fi
+
+
+if [ $BATCH -eq 1 ]; then
+    echo
+    echo "[+] Script finished ($(date))"
+    echo
+fi
+
