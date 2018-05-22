@@ -18,6 +18,8 @@
 
 # -- CONFIGURATION --
 
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
 # Machine's name to manage, if it's empty - one will have to specify "-n" parameter to this script
 VM_NAME=""
 
@@ -28,7 +30,6 @@ SNAPSHOTS_ROTATE=3
 LOG_FILE="/var/log/vm-auto-snapshots.log"
 
 # -- CONFIGURATION --
-
 
 function usage {
     echo "Usage: ./vm-auto-snapshot.sh [options]"
@@ -59,8 +60,7 @@ function rename_snapshots {
     _snapshots=$(get_snapshots)
     _new_num=1
 
-    for snap in $(echo "$_snapshots")
-    do 
+    for snap in $(get_snapshots); do
         _num=$(echo "$snap" | cut -d- -f3)
         _to_name="auto-snapshot-$_new_num"
         vboxmanage snapshot "$VM_NAME" edit "auto-snapshot-$_num" --name "$_to_name" 2> /dev/null
@@ -68,78 +68,43 @@ function rename_snapshots {
     done
 }
 
-
 BATCH=0
 ACTION=0    # 0 - list, 1 - take, 2 - restore, 3 - delete
 RESTORE_NUM=0
 
-while [[ $# -ge 1 ]]
-do
+while [[ $# -ge 1 ]]; do
     key="$1"
-
     case $key in
-        -f)
-            BATCH=1
-        ;;
-
-        -t)
-            ACTION=1
-        ;;
-
-        -r)
-            ACTION=2
-            RESTORE_NUM=$2
-            
+        -f ) BATCH=1 ;;
+        -t ) ACTION=1 ;;
+        -r ) ACTION=2; RESTORE_NUM=$2
             if [ -z "$2" ]; then
                 echo "[!] You did not specify snapshot number to restore."
                 exit 1
-            fi
-            shift
-        ;;
-
-        -d)
-            ACTION=3
+            fi;
+            shift;;
+        -d ) ACTION=3
             RESTORE_NUM=$2
-            
             if [ -z "$2" ]; then
                 echo "[!] You did not specify snapshot number to delete."
                 exit 1
-            fi
-            shift
-        ;;
-
-        -n)
+            fi;
+            shift;;
+        -n )
             if [ -z "$2" ]; then
                 echo "[!] You did not specify name of VM to operate on."
                 exit 1
             fi
-
             VM_NAME="$2"
-            shift
-        ;;
-
-        -l)
-            ACTION=0
-        ;;
-
-        -h)
+            shift;;
+        -l ) ACTION=0;;
+        -h ) usage; exit;;
+        * ) echo "[!] Unknown option: $1"
             usage
-            exit
-        ;;
-
-        *)
-            echo "[!] Unknown option: $1"
-            usage
-            exit 1
-        ;;
+            exit 1 ;;
     esac
     shift
 done
-
-if [ -n "$LOG_FILE" ] && [ $BATCH -eq 1 ]; then
-    exec > >(tee -i -a $LOG_FILE)
-    exec 2>&1
-fi
 
 if [ -z "$VM_NAME" ]; then
     echo "[!] Please provide VM_NAME either via variable within this script or via -n parameter."
@@ -179,11 +144,11 @@ rotate_driven_rename=0
 
 if [ $last_num -ge $SNAPSHOTS_ROTATE ] && [ $snapshots_num -ge $SNAPSHOTS_ROTATE ]; then
     last_num=$SNAPSHOTS_ROTATE
-    rotate_driven_rename=1  
+    rotate_driven_rename=1
 
 elif [ $last_num -ge $SNAPSHOTS_ROTATE ] && [ $snapshots_num -lt $SNAPSHOTS_ROTATE ]; then
     last_num=$((snapshots_num+1))
-    rotate_driven_rename=1  
+    rotate_driven_rename=1
 fi
 
 new_name="auto-snapshot-$last_num"
@@ -201,7 +166,7 @@ snapshots_raw=$(vboxmanage snapshot "$VM_NAME" list --machinereadable | grep -v 
     IFS=$'\n'
     for snap in $snapshots
     do
-            snap_desc=$(echo -e "$snapshots_raw" | grep -A3 "$snap" | pcregrep -o1 'SnapshotDescription.*="([^"]+)"' | head -1) 
+            snap_desc=$(echo -e "$snapshots_raw" | grep -A3 "$snap" | pcregrep -o1 'SnapshotDescription.*="([^"]+)"' | head -1)
             if [ -n "$snap_desc" ]; then
                     echo -e "$snap ($snap_desc)"
             else
@@ -314,4 +279,3 @@ if [ $BATCH -eq 1 ]; then
     echo "[+] Script finished ($(date))"
     echo
 fi
-
