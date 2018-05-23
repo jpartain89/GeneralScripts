@@ -7,7 +7,7 @@
 # Then, it runs `freeze` to get a list of all installed pip apps
 # And then runs `install --upgrade` on the list
 
-# Copyright © 2017 JPCDI, JPartain89 and Justin Partain
+# Copyright © 2017-2018 JPCDI, JPartain89 and Justin Partain
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

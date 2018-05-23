@@ -5,7 +5,7 @@
 #
 # You have to input the git repo's location as the first variable
 
-# Copyright © 2017 JPCDI, JPartain89 and Justin Partain
+# Copyright © 2017-2018 JPCDI, JPartain89, Justin Partain
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ ${PROGRAM_NAME}
 
 USAGE :
       : run ${PROGRAM_NAME} with the git repo's file location as first argument.
-      : this runs `git add .`, 
+      : this runs `git add .`,
       : `git commit` with a pre-made message with the date and time, and
       : git push.
 
