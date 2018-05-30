@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+# My custom script to run `rsync-tmbackup.sh`
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+RSYNC_TMBACKUP="~/rsync-time-backup/rsync_tmbackup.sh"
+
+function die {
+    echo "$program: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+test -f /etc/default/auto-rsync-tmbackup && . /etc/default/auto-rsync-tmbackup
+
+function usage {
+    echo "Usage: ./auto-rsync-tmbackup"
+}
+
+for i in "${dir_names[@]}"; do
+    "$RSYNC_TMBACKUP" "${root}/${i}" "${dest}:${root}/${i}"
+done
