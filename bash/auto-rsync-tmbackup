@@ -22,5 +22,5 @@ function usage {
 }
 
 for i in "${dir_names[@]}"; do
-    "$RSYNC_TMBACKUP" "${root}/${i}" "${dest}:${root}/${i}"
+    "$RSYNC_TMBACKUP" "${root}/${i}" "${dest_add}:${dest_loc}/${i}"
 done
