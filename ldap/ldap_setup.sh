@@ -13,7 +13,7 @@ FILES=(
 )
 
 for i in "${FILES[@]}"; do
-    "${LDAP_CMD} ${LDAP_ADDRESS} -f ${i}"
+    "${LDAP_CMD}${LDAP_ADDRESS} -f ${i}"
 done
 
 git clone https://github.com/leenooks/phpLDAPadmin.git "${GIT_HOME}/phpldapadmin"
