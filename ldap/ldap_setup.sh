@@ -8,7 +8,7 @@ LDAP_ADDRESS="dc=jpcdi,dc=com -w ${LDAP_PASS}"
 GIT_HOME="/home/jpartain89/git"
 
 FILES=(
-    "./newuser .ldif"
+    "./newuser.ldif"
     "./disable_anon_bind.ldif"
 )
 
