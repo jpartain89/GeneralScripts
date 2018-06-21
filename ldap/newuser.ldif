@@ -7,7 +7,7 @@ dn: ou=People,dc=jpcdi,dc=com
 objectClass: organizationalUnit
 ou: People
 
-dn: cn=net-device-users,Groups,dc=jpcdi,dc=com
+dn: cn=net-device-users,ou=Groups,dc=jpcdi,dc=com
 gidNumber: 500
 objectClass: posixGroup
 objectClass: top
