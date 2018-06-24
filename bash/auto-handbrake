@@ -36,7 +36,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 PRESET="Apple 1080p60 Surround"
 SOURCE="$FILE"
 
-while [[ $FILE -ge 1 ]]; do
+while [[ "$FILE" -ge 1 ]]; do
     case "$FILE" in
         -h ) help;;
         * ) help;;
