@@ -1,9 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash -e
 
-
-cd ~/git/echofish || exit
-
-CMD='mysql --user=jpartain89 --password=lover0778 ETS_echofish'
+ECHO_LOC='/home/jpartain89/git/echofish'
+CMD='/usr/bin/mysql --user=jpartain89 --password=lover0778 ETS_echofish'
 
 SCHEMA=(
     schema/00_echofish-schema.sql
@@ -14,7 +12,7 @@ SCHEMA=(
     schema/echofish-events.sql
 )
 
-for i in "${SCHEMA[@]}"; do
+for i in "${ECHO_LOC}/${SCHEMA[@]}"; do
     "${CMD} < ${i}"
 done
 
