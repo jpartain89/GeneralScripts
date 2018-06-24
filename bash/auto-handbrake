@@ -37,8 +37,10 @@ PRESET="Apple 1080p60 Surround"
 SOURCE="$FILE"
 
 while [[ $FILE -ge 1 ]]; do
-    -h ) help;;
-    * ) help;;
+    case "$FILE" in
+        -h ) help;;
+        * ) help;;
+    esac
 done
 
 while IFS= read -r line; do
