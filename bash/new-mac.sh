@@ -141,6 +141,9 @@ case "$ansible" in
     * ) Continue;;
 esac
 
+prompt "Now running .macOS config files"
+sudo "${GIT_LOC}/dotfiles/.macos"
+
 prompt "Installing brew-file"
 install 'brew install rcmdnk/file/brew-file' &&
 
