@@ -21,7 +21,6 @@ GITHUB_REPO=(
 GITLAB_REPO=(
     conffiles
     dotfiles
-    generalscripts
     nginx-deployment
 )
 BREW_FIRST=(
