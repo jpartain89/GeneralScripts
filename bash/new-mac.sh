@@ -82,7 +82,7 @@ GIT_CONFIGS=(
 
 prompt() {
     if [[ -z "${CI}" ]]; then
-        read -p -r "Hit Enter to ${1}"
+        read -r -p "Hit Enter to ${1}"
     fi
 }
 
@@ -136,7 +136,7 @@ ANSIBLE() {
     sudo -H pip install -U ansible
 }
 
-read -p -r ansible "You want ansible on this machine?"
+read -r -p ansible "You want ansible on this machine?"
 
 case "$ansible" in
     y | Y ) ANSIBLE;;
@@ -152,7 +152,7 @@ sudo "${GIT_LOC}/dotfiles/.macos"
 prompt "Installing brew-file"
 brew install rcmdnk/file/brew-file &&
 
-read -p -r "What is this machine's brew-file name" BREW_FILE_NAME
+read -r -p "What is this machine's brew-file name" BREW_FILE_NAME
 prompt "Setting brew-file's repo"
 brew-file set_repo "jpartain89/brewfile-marks_imac" &&
 
