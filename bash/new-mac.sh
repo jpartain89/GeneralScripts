@@ -86,15 +86,19 @@ prompt() {
     fi
 }
 
+## XCODE ##
 prompt "First, we install xcode's stuff"
 xcode-select --install &&
 
+## HOMEBREW INSTALL ###
 prompt "Next, we install HomeBrew"
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
 
+## HOMEBREW BASICS ##
 prompt "We now install a few homebrew items."
 brew install "${BREW_FIRST[@]}" &&
 
+## GIT CLONE ##
 Prompt "We work on cloning your basic git repos"
 mkdir -p "$GIT_LOC" &&
 for i in "${GITHUB_REPO[@]}"; do
@@ -132,7 +136,7 @@ ANSIBLE() {
     sudo -H pip install -U ansible
 }
 
-read -rp ansible "You want ansible on this machine?"
+read -p -r ansible "You want ansible on this machine?"
 
 case "$ansible" in
     y | Y ) ANSIBLE;;
@@ -148,7 +152,7 @@ sudo "${GIT_LOC}/dotfiles/.macos"
 prompt "Installing brew-file"
 brew install rcmdnk/file/brew-file &&
 
-read -rp "What is this machine's brew-file name" BREW_FILE_NAME
+read -p -r "What is this machine's brew-file name" BREW_FILE_NAME
 prompt "Setting brew-file's repo"
 brew-file set_repo "jpartain89/brewfile-marks_imac" &&
 
