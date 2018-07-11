@@ -82,7 +82,7 @@ GIT_CONFIGS=(
 
 prompt() {
     if [[ -z "${CI}" ]]; then
-        read -pr "Hit Enter to ${1}"
+        read -p -r "Hit Enter to ${1}"
     fi
 }
 
