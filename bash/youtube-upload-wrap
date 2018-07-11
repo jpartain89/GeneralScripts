@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+# This script is to help calling `Tokland's YouTube-Upload`<https://github.com/tokland/youtube-upload> program
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+ROOT='/media/mdusa/DULC/Videos/Service\ Recordings/Finished'

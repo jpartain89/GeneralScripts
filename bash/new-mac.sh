@@ -5,6 +5,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+USER="${USER}"
 GITHUB_WEB="https://jpartain89@github.com/jpartain89"
 GITHUB_SSH="git@github.com:jpartain89"
 GITLAB_SSH="git@gitlab.com:jpartain89"
@@ -92,7 +93,7 @@ prompt "Next, we install HomeBrew"
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
 
 prompt "We now install a few homebrew items."
-install 'brew install' "${BREW_FIRST[@]}" &&
+brew install "${BREW_FIRST[@]}" &&
 
 Prompt "We work on cloning your basic git repos"
 mkdir -p "$GIT_LOC" &&
@@ -109,14 +110,14 @@ git clone git@gitlab.com:dallas-universal-life-church/nginx-deployment.git "${GI
 git clone git@gitlab.com:dallas-universal-life-church/wiki.git "${GIT_LOC}/Wiki" --recurse-submodules
 
 prompt "Installing dotfiles"
-sudo -u jpartain89 bash "${GIT_LOC}/dotfiles/linking"
+sudo -u $USER bash "${GIT_LOC}/dotfiles/linking"
 
 prompt "Installing NanoRC Files"
-sudo -u jpartain89 bash "${GIT_LOC}/nanorc/install.sh"
+sudo -u $USER bash "${GIT_LOC}/nanorc/install.sh"
 
 prompt "Installing git-autopull and brewdate"
 for i in brewdate git-autopull; do
-    sudo -u jpartain89 bash "${GIT_LOC}/${i}/${i}"
+    sudo -u $USER bash "${GIT_LOC}/${i}/${i}"
 done
 
 ANSIBLE() {
@@ -145,11 +146,11 @@ prompt "Now running .macOS config files"
 sudo "${GIT_LOC}/dotfiles/.macos"
 
 prompt "Installing brew-file"
-install 'brew install rcmdnk/file/brew-file' &&
+brew install rcmdnk/file/brew-file &&
 
 read -rp "What is this machine's brew-file name" BREW_FILE_NAME
 prompt "Setting brew-file's repo"
-brew-file set_repo "jpartain89/${BREW_FILE_NAME}" &&
+brew-file set_repo "jpartain89/brewfile-marks_imac" &&
 
 echo "Now we run brew-file install, which tends to take a while and"
 echo "can be hinky. Good Luck"
