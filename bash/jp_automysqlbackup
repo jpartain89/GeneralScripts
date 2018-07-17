@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+# This is to sync the backups made by `automysqlbackup` to an offsite location.
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+dest_add=jpartain89@imac
+dest_loc=/Volumes/8TB_EXT/Backup/Mark/db/
+RSYNC_TMBACKUP=/home/jpartain89/git/rsync-time-backup/rsync_tmbackup.sh
+
+function die {
+    echo "$program: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+function usage {
+    echo "Usage: ./auto-rsync-tmbackup"
+}
+
+test -f /etc/default/automysqlbackup && . /etc/default/automysqlbackup
+
+sudo chown -R jpartain89:admin "$BACKUPDIR"
+
+"$RSYNC_TMBACKUP" "${BACKUPDIR]" "${dest_add}:${dest_loc}/"
