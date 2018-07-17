@@ -55,11 +55,6 @@ echo "There is a default description that auto enters the video's title, the tit
 echo "and the date you entered a second ago."
 read -r -p "Otherwise, what is the video's Description? " scriptDESCRIPTION
 
-if [[ -z "$TAGS" ]]; then
-    echo "What tags do you want to use?"
-    read -r -p "Enter the tags with [comma-space] as the seperators." scriptTAGS
-fi
-
 defaultDESCRIPTION="$(cat <<-EOF
 "The Most Reverend Mark D. Manning, D.D., Pastor of Dallas Universal Life Church, delivers his sermon for the ${scriptDAY_TITLE}, ${scriptDATE}, titled \"${scriptSERMON_TITLE}\", followed by the Post-Service Round table discussion."
 EOF
@@ -69,10 +64,9 @@ xDESCRIPTION="${scriptDESCRIPTION:=$defaultDESCRIPTION}"
 xSERMON_TITLE="${SERMON_TITLE:=$scriptSERMON_TITLE}"
 xDATE="${DATE:=$scriptDATE}"
 xDAY_TITLE="${DAY_TITLE:=$scriptDAY_TITLE}"
-xTAGS="${TAGS:=$scriptTAGS}"
 
 if [[ -z "${xSERMON_TITLE}" ]] || [[ -z "${xDATE}" ]] || [[ -z "${xDAY_TITLE}" ]] || [[ -z "${xDESCRIPTION}" ]]; then
     die "Missing a variable... Retry?"
 else
-    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" --description="\"${xDESCRIPTION}\"" --category="${CATEGORY}" --tags="${xTAGS}" --default-language="${DEFAULT_LANGUAGE}" --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" "\"${FILE}\""
+    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" --description="\"${xDESCRIPTION}\"" --category="${CATEGORY}" --default-language="${DEFAULT_LANGUAGE}" --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" "\"${FILE}\""
 fi
