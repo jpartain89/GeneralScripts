@@ -35,7 +35,7 @@ EOF
 
 YOUTUBE_UPLOAD="$(command -v youtube-upload)"
 
-if [[ $# = 1 ]]; then FILE="$1"; else usage && exit; fi
+if [[ $# = 1 ]]; then FILE="\"$1\""; else usage && exit; fi
 
 test -f /etc/youtube-upload/youtube-upload.conf && \
     . /etc/youtube-upload/youtube-upload.conf
