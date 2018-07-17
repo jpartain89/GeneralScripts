@@ -65,11 +65,11 @@ defaultDESCRIPTION="$(cat <<-EOF
 EOF
 )"
 
-xDESCRIPTION="${scriptDESCRIPTION:=defaultDESCRIPTION}"
-xSERMON_TITLE="${SERMON_TITLE:=scriptSERMON_TITLE}"
-xDATE="${DATE:=scriptDATE}"
-xDAY_TITLE="${DAY_TITLE:=scriptDAY_TITLE}"
-xTAGS="${TAGS:=scriptTAGS}"
+xDESCRIPTION="${scriptDESCRIPTION:=$defaultDESCRIPTION}"
+xSERMON_TITLE="${SERMON_TITLE:=$scriptSERMON_TITLE}"
+xDATE="${DATE:=$scriptDATE}"
+xDAY_TITLE="${DAY_TITLE:=$scriptDAY_TITLE}"
+xTAGS="${TAGS:=$scriptTAGS}"
 
 if [[ -z "${xSERMON_TITLE}" ]] || [[ -z "${xDATE}" ]] || [[ -z "${xDAY_TITLE}" ]] || [[ -z "${xDESCRIPTION}" ]] || [[ -z "${xTAGS}" ]]; then
     die "Missing a variable... Retry?"
