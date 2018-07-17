@@ -2,21 +2,34 @@
 
 # This script is to help calling `Tokland's YouTube-Upload`<https://github.com/tokland/youtube-upload> program
 
-program="${}"
+PROGRAM_NAME="youtube-upload-wrap"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
 die() {
-    echo "$program: $1" >&2
+    echo "$PROGRAM_NAME: $1" >&2
     exit "${2:-1}"
 }
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
 usage() {
     cat << EOF
-Usage: youtube-upload-wrap <file-to-upload>
+Usage: ${PROGRAM} <file-to-upload>
 
 The script will/should prompt you for all of the required entries, other than the file you want to upload. Make sure to have that fully entered on the command line. Must be used from root.
 EOF
