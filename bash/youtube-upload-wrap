@@ -2,6 +2,64 @@
 
 # This script is to help calling `Tokland's YouTube-Upload`<https://github.com/tokland/youtube-upload> program
 
+program="${}"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-ROOT='/media/mdusa/DULC/Videos/Service\ Recordings/Finished'
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+die() {
+    echo "$program: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+usage() {
+    cat << EOF
+Usage: youtube-upload-wrap <file-to-upload>
+
+The script will/should prompt you for all of the required entries, other than the file you want to upload. Make sure to have that fully entered on the command line. Must be used from root.
+EOF
+}
+
+YOUTUBE_UPLOAD="$(command -v youtube-upload)"
+
+if [[ $# = 1 ]]; then FILE="$1"; else usage && exit; fi
+
+test -f /etc/youtube-upload/youtube-upload.conf && \
+    . /etc/youtube-upload/youtube-upload.conf
+
+test -x "${YOUTUBE_UPLOAD}" || die "Looks like the youtube-upload program is missing."
+
+read -r -p "What is the sermon's Title? " scriptSERMON_TITLE
+
+echo "What is the recording date?"
+read -r -p  "Please use human readable format (July 15, 2018) " scriptDATE
+
+read -r -p "Please enter the Lectionary day's title. (9th Sunday After Pentecost) " scriptDAY_TITLE
+
+echo "There is a default description that auto enters the video's title, the title of the Lectionary Day,"
+echo "and the date you entered a second ago."
+read -r -p "Otherwise, what is the video's Description? " scriptDESCRIPTION
+
+if [[ -z "$TAGS" ]]; then
+    echo "What tags do you want to use?"
+    read -r -p "Enter the tags with [comma-space] as the seperators." scriptTAGS
+fi
+
+defaultDESCRIPTION="$(cat <<-EOF
+"The Most Reverend Mark D. Manning, D.D., Pastor of Dallas Universal Life Church, delivers his sermon for the ${scriptDAY_TITLE}, ${scriptDATE}, titled \"${scriptSERMON_TITLE}\", followed by the Post-Service Round table discussion."
+EOF
+)"
+
+xDESCRIPTION="${scriptDESCRIPTION:=defaultDESCRIPTION}"
+xSERMON_TITLE="${SERMON_TITLE:=scriptSERMON_TITLE}"
+xDATE="${DATE:=scriptDATE}"
+xDAY_TITLE="${DAY_TITLE:=scriptDAY_TITLE}"
+xTAGS="${TAGS:=scriptTAGS}"
+
+if [[ -z "${xSERMON_TITLE}" ]] || [[ -z "${xDATE}" ]] || [[ -z "${xDAY_TITLE}" ]] || [[ -z "${xDESCRIPTION}" ]] || [[ -z "${xTAGS}" ]]; then
+    die "Missing a variable... Retry?"
+else
+    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" --description="\"${xDESCRIPTION}\"" --category="${CATEGORY}" --tags="${xTAGS}" --default-language="${DEFAULT_LANGUAGE}" --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" "\"${FILE}\""
+fi
