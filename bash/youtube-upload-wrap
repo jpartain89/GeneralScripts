@@ -35,7 +35,7 @@ EOF
 
 YOUTUBE_UPLOAD="$(command -v youtube-upload)"
 
-if [[ $# = 1 ]]; then FILE="\"$1\""; else usage && exit; fi
+if [[ $# = 1 ]]; then FILE="$1"; else usage && exit; fi
 
 test -f /etc/youtube-upload/youtube-upload.conf && \
     . /etc/youtube-upload/youtube-upload.conf
@@ -66,5 +66,5 @@ xDAY_TITLE="${DAY_TITLE:=$scriptDAY_TITLE}"
 if [[ -z "${xSERMON_TITLE}" ]] || [[ -z "${xDATE}" ]] || [[ -z "${xDAY_TITLE}" ]] || [[ -z "${xDESCRIPTION}" ]]; then
     die "Missing a variable... Retry?"
 else
-    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" --description="\"${xDESCRIPTION}\"" --category="${CATEGORY}" --default-language="${DEFAULT_LANGUAGE}" --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" "\"${FILE}\""
+    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" --description="\"${xDESCRIPTION}\"" --category="${CATEGORY}" --default-language="${DEFAULT_LANGUAGE}" --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" "${FILE}"
 fi
