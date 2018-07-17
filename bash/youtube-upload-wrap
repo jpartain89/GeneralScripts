@@ -5,8 +5,6 @@
 PROGRAM_NAME="youtube-upload-wrap"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-exec 1> >(logger -s -t "$(basename "$0")") 2>&1
-
 die() {
     echo "$PROGRAM_NAME: $1" >&2
     exit "${2:-1}"
