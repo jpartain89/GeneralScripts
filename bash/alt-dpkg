@@ -72,7 +72,7 @@ URL=$(echo "$URL" | sed -e 's/^ //g' -e 's/ $//g')
 
 if [ ! -z "$URL" ]; then
     for i in $URL; do
-        TEMP_DEB="$(mktemp)"
+        TEMP_DEB="$(mktemp /tmp/output_xxxxxxxx )" || { echo "Failed to create temp file"; exit 1; }
         wget -O "$TEMP_DEB" "$i"
         trap 'rm -f $TEMP_DEB' SIGHUP SIGINT SIGTERM
     done
