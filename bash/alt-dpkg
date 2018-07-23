@@ -75,7 +75,7 @@ if [ ! -z "$URL" ]; then
         TEMP_DEB="$(mktemp)"
         wget -O "$TEMP_DEB" "$i"
     done
-    "sudo dpkg$PASSTODPKG $TEMP_DEB"
+    sudo dpkg$PASSTODPKG $TEMP_DEB
     rm -f "$TEMP_DEB"
 else
     dpkg "$PASSTODPKG"
