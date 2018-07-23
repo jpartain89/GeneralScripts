@@ -3,7 +3,59 @@
 # Wrapper script for dpkg allowing for multiple URL's along side
 # local files with command line flags.
 
-trap 'rm '
+# Copyright © 2017-2018 JPCDI, JPartain89, Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Program Info
+PROGRAM_NAME="alt-dpkg"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
+
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# This "auto-installs" git-auto into /usr/local/bin for ya!
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+function USAGE() {
+    cat <<- EOF
+${PROGRAM_NAME} [ -i ] [ URL ] | [ /a/file/location ]
+
+USAGE :
+      : run ${PROGRAM_NAME} with either a URL or a file that contains some
+      : dpkg-installable code while also adding [-i] to tell dpkg to install.
+
+-h | --help     :    Shows this info
+EOF
+}
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    USAGE && exit 0
+fi
 
 COUNT=0
 for i in "$@"; do
