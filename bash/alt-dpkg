@@ -72,7 +72,7 @@ URL=$(echo "$URL" | sed -e 's/^ //g' -e 's/ $//g')
 
 if [ ! -z "$URL" ]; then
     for i in $URL; do
-        TEMP_DEB="$(mktemp -d /tmp/output_XXXXXX/ )" || { echo "Failed to create temp file"; exit 1; }
+        TEMP_DEB="$(mktemp -d /tmp/output_XXXXXX )" || { echo "Failed to create temp file"; exit 1; }
         cd "$TEMP_DEB" || { echo "Failed to move to temp directory"; exit 1; }
         wget -O "$i"
         trap 'rm -f $TEMP_DEB' SIGHUP SIGINT SIGTERM
