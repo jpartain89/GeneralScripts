@@ -73,7 +73,7 @@ URL=$(echo "$URL" | sed -e 's/^ //g' -e 's/ $//g')
 if [ ! -z "$URL" ]; then
     for i in $URL; do
         TEMP_DEB="$(mktemp)"
-        wget -O "$TEMP_DEB""$i"
+        wget -O "$TEMP_DEB" "$i"
         trap 'rm -f $TEMP_DEB' SIGUP SIGINT SIGTERM
     done
     dpkg "$PASSTODPKG" "$TEMP_DEB"
