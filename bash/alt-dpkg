@@ -64,7 +64,7 @@ for i in "$@"; do
         URL="$URL $i"
         continue
     fi
-    PASSTODPKG=$PASSTODPKG $i
+    PASSTODPKG="$PASSTODPKG $i"
 done
 
 #Remove beginning and trailing space
