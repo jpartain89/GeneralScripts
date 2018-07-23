@@ -59,7 +59,7 @@ fi
 
 COUNT=0
 for i in "$@"; do
-    if [ "$(echo "$i" | grep http 2>&1 > /dev/null)" ] ; then
+    if [[ "$i" == http* ]] ; then
     #if [ $? == 0 ]; then
         URL="$URL $i"
         continue
