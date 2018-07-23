@@ -76,7 +76,7 @@ if [ ! -z "$URL" ]; then
         wget -O "$TEMP_DEB" "$i"
         trap 'rm -f $TEMP_DEB' SIGHUP SIGINT SIGTERM
     done
-    "dpkg $PASSTODPKG $TEMP_DEB"
+    "sudo dpkg $PASSTODPKG $TEMP_DEB"
     rm -f "$TEMP_DEB"
 else
     dpkg "$PASSTODPKG"
