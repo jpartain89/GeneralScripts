@@ -62,7 +62,7 @@ for i in "$@"; do
     if [[ "$i" == http* ]] ; then
     #if [ $? == 0 ]; then
         URL="$URL $i"
-        continue
+        #continue
     fi
     PASSTODPKG="$PASSTODPKG $i"
 done
