@@ -1,7 +1,5 @@
 #!/bin/bash -e
-# vim: ts=4 sw=4 et
 
-#
 # Auto-snapshotting script intended to be cron'd,
 # taking automatic snapshots of particular VM, logging it,
 # and providing means of restoring specific snapshots.
@@ -12,11 +10,8 @@
 #
 # Taken from https://gist.github.com/mgeeky/f95faffa45e28f214f9c4821f96cd972
 #
-# Mariusz B., 2017
-# v0.4
-#
-
-# -- CONFIGURATION --
+# Justin Partain, JPCDI  2018
+# v1.0.0
 
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
@@ -31,20 +26,21 @@ LOG_FILE="/var/log/vm-auto-snapshots.log"
 
 # -- CONFIGURATION --
 
-function usage {
-    echo "Usage: ./vm-auto-snapshot.sh [options]"
-    echo
-    echo -e "\t-n <name>\tOperate on this particular VM"
-    echo -e "\t-f\t\tTake forced action (no questions, batch mode)"
-    echo -e "\t-t\t\tTake auto snapshot"
-    echo -e "\t-r <num>\tRestore snapshot with number <num>"
-    echo -e "\t-d <num>\tDelete snapshot with number <num>"
-    echo -e "\t-l\t\tList auto-snapshots."
-    echo -e "\t-h\t\tThis cruft"
-    echo
+usage() {
+    cat << EOF
+Usage: ./vm-auto-snapshot.sh [options]
+
+    -n <name>   :   Operate on this particular VM
+    -f          :   Take forced action (no questions, batch mode)
+    -t          :   Take auto snapshot
+    -r <num>    :   Restore snapshot with number <num>
+    -d <num>    :   Delete snapshot with number <num>
+    -l          :   List auto-snapshots.
+    -h          :   This cruft
+EOF
 }
 
-function get_snapshots {
+get_snapshots() {
     S=$(vboxmanage snapshot "$VM_NAME" list --machinereadable)
     ret=$?
     if [ "$S" == "This machine does not have any snapshots" ]; then
@@ -56,7 +52,7 @@ function get_snapshots {
     echo "$S" | grep -E '^SnapshotName.*=' | pcregrep -o1 '.+="([^"]+)"'
 }
 
-function rename_snapshots {
+rename_snapshots() {
     _snapshots=$(get_snapshots)
     _new_num=1
 
@@ -82,23 +78,26 @@ while [[ $# -ge 1 ]]; do
                 echo "[!] You did not specify snapshot number to restore."
                 exit 1
             fi;
-            shift;;
+            shift ;;
         -d ) ACTION=3
             RESTORE_NUM=$2
             if [ -z "$2" ]; then
                 echo "[!] You did not specify snapshot number to delete."
                 exit 1
             fi;
-            shift;;
+            shift ;;
         -n )
             if [ -z "$2" ]; then
                 echo "[!] You did not specify name of VM to operate on."
                 exit 1
             fi
             VM_NAME="$2"
-            shift;;
-        -l ) ACTION=0;;
-        -h ) usage; exit;;
+            shift ;;
+        -N )
+            VM_NAME=$(VBoxManage list runningvms)
+            shift ;;
+        -l ) ACTION=0 ;;
+        -h ) usage; exit ;;
         * ) echo "[!] Unknown option: $1"
             usage
             exit 1 ;;
@@ -162,16 +161,15 @@ fi
 if [ $ACTION -eq 0 ]; then
     echo "[?] Snapshots taken automatically so far: "
     echo "--------------------"
-snapshots_raw=$(vboxmanage snapshot "$VM_NAME" list --machinereadable | grep -v Current)
+    snapshots_raw=$(VBoxManage snapshot "$VM_NAME" list --machinereadable | grep -v Current)
     IFS=$'\n'
-    for snap in $snapshots
-    do
-            snap_desc=$(echo -e "$snapshots_raw" | grep -A3 "$snap" | pcregrep -o1 'SnapshotDescription.*="([^"]+)"' | head -1)
-            if [ -n "$snap_desc" ]; then
-                    echo -e "$snap ($snap_desc)"
-            else
-                    echo -e "$snap"
-            fi
+    for snap in $snapshots; do
+        snap_desc=$(echo -e "$snapshots_raw" | grep -A3 "$snap" | pcregrep -o1 'SnapshotDescription.*="([^"]+)"' | head -1)
+        if [ -n "$snap_desc" ]; then
+            echo -e "$snap ($snap_desc)"
+        else
+            echo -e "$snap"
+        fi
     done
 
 elif [ $ACTION -eq 1 ]; then
@@ -185,7 +183,7 @@ elif [ $ACTION -eq 1 ]; then
         while [ $_snapshots_num -ge $SNAPSHOTS_ROTATE ]
         do
             echo "[.] Removing snapshot: auto-snapshot-$_first_num (left snapshots: $_snapshots_num)"
-            vboxmanage snapshot "$VM_NAME" delete "auto-snapshot-$_first_num"
+            VBoxManage snapshot "$VM_NAME" delete "auto-snapshot-$_first_num"
 
             _snapshots=$(get_snapshots)
             _snapshots_num=$(echo -e "$_snapshots" | wc -l)
@@ -209,7 +207,7 @@ elif [ $ACTION -eq 1 ]; then
         vboxmanage snapshot "$VM_NAME" take $new_name --description "$description"
     else
         echo "[?] Taking snapshot $new_name ($description)..."
-        vboxmanage snapshot "$VM_NAME" take $new_name --description "$description"
+        VBoxManage snapshot "$VM_NAME" take $new_name --description "$description"
     fi
 
     echo
