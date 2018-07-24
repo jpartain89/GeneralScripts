@@ -15,6 +15,30 @@
 
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
+# Program Info
+PROGRAM_NAME="vm-auto-snapshot"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
+
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+[ -e /usr/local/Cellar ] && export PATH="$PATH:/usr/local/Cellar"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# This "auto-installs" git-auto into /usr/local/bin for ya!
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
 # Machine's name to manage, if it's empty - one will have to specify "-n" parameter to this script
 VM_NAME=""
 
@@ -31,6 +55,7 @@ usage() {
 Usage: ./vm-auto-snapshot.sh [options]
 
     -n <name>   :   Operate on this particular VM
+    -N          :   Creates snapshots based on running machines
     -f          :   Take forced action (no questions, batch mode)
     -t          :   Take auto snapshot
     -r <num>    :   Restore snapshot with number <num>
@@ -180,8 +205,7 @@ elif [ $ACTION -eq 1 ]; then
         _snapshots_num=$snapshots_num
         _first_num=$(echo -e "$snapshots" | sort -n | head -1 | cut -d- -f3)
 
-        while [ $_snapshots_num -ge $SNAPSHOTS_ROTATE ]
-        do
+        while [ $_snapshots_num -ge $SNAPSHOTS_ROTATE ]; do
             echo "[.] Removing snapshot: auto-snapshot-$_first_num (left snapshots: $_snapshots_num)"
             VBoxManage snapshot "$VM_NAME" delete "auto-snapshot-$_first_num"
 
@@ -194,17 +218,18 @@ elif [ $ACTION -eq 1 ]; then
     fi
 
     if [ $BATCH -eq 0 ]; then
-        read -p "Do you want to take a new snapshot '$new_name' [y/N]? " -n 1 -r
-        echo
+        for i in "${VM_NAME[@]}"; do
+            read -p "Do you want to take a new snapshot '$new_name' [y/N]? " -n 1 -r
+            echo
 
-        if [[ ! $REPLY =~ ^[Yy]$ ]]
-        then
-            [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
-        fi
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+            fi
 
-        echo
-        echo "[?] Taking snapshot $new_name ($description)..."
-        vboxmanage snapshot "$VM_NAME" take $new_name --description "$description"
+            echo
+            echo "[?] Taking snapshot $new_name ($description)..."
+            vboxmanage snapshot "$i" take $new_name --description "$description"
+        done
     else
         echo "[?] Taking snapshot $new_name ($description)..."
         VBoxManage snapshot "$VM_NAME" take $new_name --description "$description"
@@ -257,8 +282,7 @@ elif [ $ACTION -eq 3 ]; then
         read -p "Do you want to DELETE snapshot '$restore_name' [y/N]? " -n 1 -r
         echo
 
-        if [[ ! $REPLY =~ ^[Yy]$ ]]
-        then
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
         fi
 
@@ -271,9 +295,10 @@ elif [ $ACTION -eq 3 ]; then
     fi
 fi
 
-
 if [ $BATCH -eq 1 ]; then
-    echo
-    echo "[+] Script finished ($(date))"
-    echo
+cat << EOF
+
+"[+] Script finished ($(date))"
+
+EOF
 fi
