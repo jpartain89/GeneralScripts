@@ -55,7 +55,6 @@ usage() {
 Usage: ./vm-auto-snapshot.sh [options]
 
     -n <name>   :   Operate on this particular VM
-    -N          :   Creates snapshots based on running machines
     -f          :   Take forced action (no questions, batch mode)
     -t          :   Take auto snapshot
     -r <num>    :   Restore snapshot with number <num>
@@ -66,7 +65,7 @@ EOF
 }
 
 get_snapshots() {
-    S=$(vboxmanage snapshot "$VM_NAME" list --machinereadable)
+    S=$(VBoxManage snapshot "$VM_NAME" list --machinereadable)
     ret=$?
     if [ "$S" == "This machine does not have any snapshots" ]; then
         exit 0
@@ -118,9 +117,6 @@ while [[ $# -ge 1 ]]; do
             fi
             VM_NAME="$2"
             shift ;;
-        -N )
-            VM_NAME=$(VBoxManage list runningvms |  awk '{ print $1 }' | sed -e 's/^"//' -e 's/"$//')
-            shift ;;
         -l ) ACTION=0 ;;
         -h ) usage; exit ;;
         * ) echo "[!] Unknown option: $1"
@@ -142,7 +138,7 @@ else
     fi
 fi
 
-date=$(date +'%d.%m.%y-%H:%M')
+date=$(date +'%m.%d.%y-%H:%M')
 snapshots=$(get_snapshots)
 
 if [ $? -eq 1 ] && [ -z "$snapshots" ]; then
@@ -218,18 +214,16 @@ elif [ $ACTION -eq 1 ]; then
     fi
 
     if [ $BATCH -eq 0 ]; then
-        for i in "${VM_NAME[@]}"; do
-            read -p "Do you want to take a new snapshot '$new_name' [y/N]? " -n 1 -r
-            echo
+        read -p "Do you want to take a new snapshot '$new_name' [y/N]? " -n 1 -r
+        echo
 
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
-            fi
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+        fi
 
-            echo
-            echo "[?] Taking snapshot $new_name ($description)..."
-            vboxmanage snapshot "$i" take $new_name --description "$description"
-        done
+        echo
+        echo "[?] Taking snapshot $new_name ($description)..."
+        vboxmanage snapshot "$i" take $new_name --description "$description"
     else
         echo "[?] Taking snapshot $new_name ($description)..."
         VBoxManage snapshot "$VM_NAME" take $new_name --description "$description"
