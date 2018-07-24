@@ -119,7 +119,7 @@ while [[ $# -ge 1 ]]; do
             VM_NAME="$2"
             shift ;;
         -N )
-            VM_NAME=$(VBoxManage list runningvms)
+            VM_NAME=$(VBoxManage list runningvms |  awk '{ print $1 }' | sed -e 's/^"//' -e 's/"$//')
             shift ;;
         -l ) ACTION=0 ;;
         -h ) usage; exit ;;
