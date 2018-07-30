@@ -47,7 +47,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     )
 }
 
-if [[ -z "$?" ]]; then help && die "$@"; fi
+if [[ -n "$?" ]]; then help && die "$@"; fi
 
 while [[ "$?" -ge 1 ]]; do
     case "$FILE" in
