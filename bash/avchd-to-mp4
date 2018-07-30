@@ -47,31 +47,6 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     )
 }
 
-while (( "$#" )); do
-    case "$1" in
-        -c | --current )
-            CARG=$(PWD);
-            current
-            ;;
-        -d | --directory )
-            DARG=$2;
-            not_here
-            ;;
-        -- ) # end argument parsing
-            shift
-            break
-            ;;
-        -* | --*= ) # unsupported flags
-            echo "Error: Unsupported flag $1" >&2;
-            help;
-            die "$@"
-            ;;
-        * ) # preserve positional arguments
-            PARAMS="$PARAMS $1"
-            shift
-            ;;
-    esac
-done
 
 current() {
 
@@ -92,3 +67,32 @@ not_here() {
 
     done < <(find "${DARG}" -iname "*.MTS" -exec echo {} \; )
 }
+
+
+while (( "$#" )); do
+    case "$1" in
+        -c | --current )
+            CARG=$(pwd) &&
+            current &&
+            break
+            ;;
+        -d | --directory )
+            DARG=$2 &&
+            not_here &&
+            break
+            ;;
+        -- ) # end argument parsing
+            shift
+            break
+            ;;
+        -* | --*= ) # unsupported flags
+            echo "Error: Unsupported flag $1" >&2;
+            help;
+            die "$@"
+            ;;
+        * ) # preserve positional arguments
+            PARAMS="$PARAMS $1"
+            shift
+            ;;
+    esac
+done
