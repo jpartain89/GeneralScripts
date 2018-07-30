@@ -1,0 +1,77 @@
+#!/bin/bash -e
+
+# This script is to take MTS files and convert them to MP4s.
+# Taken from https://sh.jpcdi.com/2NTYVHq
+
+PROGRAM_NAME="avchd-to-mp4"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+FILE="$1"
+
+die() {
+    echo "$program: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+help() {
+    cat << EOF
+$PROGRAM_NAME [ -c | --current ] | [ -d | --directory ]  [directory location]
+
+    -c | --current   :  When using this command line flag, it will run the
+                     :  script from where your currently sitting at in the
+                     :  file system
+    -d | --directory :  When using this flag, you need to also include the
+                     :  location of the AVCHD directory/container. It will
+                     :  search inside of that container.
+
+This script is to find the MTS files inside the AVCHD container and turn them into mp4 files.
+EOF
+#    -o | --output    :  Its best to use this for specifying where you want
+#                     :  the new mp4 files to sit. Otherwise, they'll be
+#                     :  created next to the MTS files.
+
+}
+
+# This "auto-installs" git-autopull into /usr/local/bin for ya!
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+while [[ "$?" -ge 1 ]]; do
+    case "$FILE" in
+        --current | -c ) current;;
+        -d | --directory ) not_here;;
+        -h ) help;;
+        * ) help;;
+    esac
+done
+
+current() {
+
+    IFS=$(echo -en "\n\b")
+
+    for i in *.MTS; do
+
+        ffmpeg -i "$i" -vcodec mpeg4 -b:v 15M -acodec libmp3lame -b:a 192k "${i}.mp4"
+
+    done
+}
+
+not_here() {
+    while IFS= read -r line; do
+        output="${line%\.[^.]*}.mp4"
+
+        ffmpeg -i "${line}" -vcodec mpeg4 -b:v 15M -acodec libmp3lame -b:a 192k "${output}" < /dev/null
+
+    done < <(find "${FILE}" -iname "*.MTS" -exec echo {} \; )
+}
