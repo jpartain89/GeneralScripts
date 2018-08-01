@@ -49,7 +49,7 @@ echo "Enter the Address for after '@'"
 read -r -p "You can use 'localhost' or '%': " host
 read -r -s -p "Enter the password for the new user: " newPassword
 
-mysql -u "$adminUser" -p "$adminPassword" << 'EOF'
+mysql -u"$adminUser" -p"$adminPassword" << 'EOF'
 CREATE DATABASE \`${newDB}\`;
 CREATE USER '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
 GRANT USAGE ON *.* TO '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
