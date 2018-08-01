@@ -49,6 +49,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 
 current() {
+    if [[ $(find "${CARG}" -iname "*.MTS")
 
     IFS=$(echo -en "\n\b")
 

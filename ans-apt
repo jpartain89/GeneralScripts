@@ -25,7 +25,7 @@ VERSION="3.0"
 # This is for the local ansible directory
 genAnsible="${DIR}/ansible"
 
-function usage() {
+usage() {
 cat << EOF
 My personal shortcutting ansible stuffs!
 
@@ -34,7 +34,7 @@ ans-apt [ -ma | -ml ] or [ --map-all | --map-local ]
 EOF
 }
 
-function help_text() {
+help_text() {
 cat <<- EOF
 My personal shortcutting ansible stuffs!
 
