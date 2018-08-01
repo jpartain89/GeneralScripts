@@ -52,7 +52,7 @@ userInput() {
 }
 
 mysqlCMDS() {
-cat > mysql -u"$adminUser" -p"$adminPassword" << EOF
+mysql -u"$adminUser" -p"$adminPassword" << EOF
 CREATE DATABASE ${newDB};
 CREATE USER '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
 GRANT USAGE ON *.* TO '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
