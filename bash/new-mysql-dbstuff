@@ -43,11 +43,11 @@ done
 eval set -- "$PARAMS"
 response=
 
-echo -r -p "Enter the name of the Database: " newDB
-echo -r -p "Enter the UserName: " newUser
+read -r -p "Enter the name of the Database: " newDB
+read -r -p "Enter the UserName: " newUser
 echo "Enter the Address for after '@'"
-echo -r -p "You can use 'localhost' or '%': " host
-echo -r -s -p "Enter the password for the new user: " newPassword
+read -r -p "You can use 'localhost' or '%': " host
+read -r -s -p "Enter the password for the new user: " newPassword
 
 mysql -u "$adminUser" -p "$adminPassword" << 'EOF'
 CREATE DATABASE \`${newDB}\`;
