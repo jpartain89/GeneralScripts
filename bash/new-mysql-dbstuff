@@ -52,11 +52,11 @@ userInput() {
 }
 
 mysqlCMDS() {
-mysql -u"$adminUser" -p"$adminPassword" << 'EOF'
-CREATE DATABASE \`${newDB}\`;
+mysql -u"$adminUser" -p"$adminPassword" << EOF
+CREATE DATABASE ${newDB};
 CREATE USER '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
 GRANT USAGE ON *.* TO '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
-GRANT ALL privileges ON \`${newDb}\`.*
+GRANT ALL privileges ON ${newDb}.*
 TO '${newUser}'@'${host}';FLUSH PRIVILEGES;"
 EOF
 }
