@@ -61,4 +61,4 @@ TO '${newUser}'@'${host}';FLUSH PRIVILEGES;"
 EOF
 }
 
-userinput && mysqlCMDS
+userInput && mysqlCMDS
