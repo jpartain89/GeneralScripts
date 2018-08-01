@@ -41,14 +41,17 @@ while (( "$#" )); do
 done
 
 eval set -- "$PARAMS"
-response=
 
-read -r -p "Enter the name of the Database: " newDB
-read -r -p "Enter the UserName: " newUser
-echo "Enter the Address for after '@'"
-read -r -p "You can use 'localhost' or '%': " host
-read -r -s -p "Enter the password for the new user: " newPassword
+userInput() {
+    response=
+    read -r -p "Enter the name of the Database: " newDB
+    read -r -p "Enter the UserName: " newUser
+    echo "Enter the Address for after '@'"
+    read -r -p "You can use 'localhost' or '%': " host
+    read -r -s -p "Enter the password for the new user: " newPassword
+}
 
+mysqlCMDS() {
 mysql -u"$adminUser" -p"$adminPassword" << 'EOF'
 CREATE DATABASE \`${newDB}\`;
 CREATE USER '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
@@ -56,3 +59,6 @@ GRANT USAGE ON *.* TO '${newUser}'@'${host}' IDENTIFIED BY '${newPassword}';
 GRANT ALL privileges ON \`${newDb}\`.*
 TO '${newUser}'@'${host}';FLUSH PRIVILEGES;"
 EOF
+}
+
+userinput && mysqlCMDS
