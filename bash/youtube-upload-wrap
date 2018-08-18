@@ -66,5 +66,10 @@ xDAY_TITLE="${DAY_TITLE:=$scriptDAY_TITLE}"
 if [[ -z "${xSERMON_TITLE}" ]] || [[ -z "${xDATE}" ]] || [[ -z "${xDAY_TITLE}" ]] || [[ -z "${xDESCRIPTION}" ]]; then
     die "Missing a variable... Retry?"
 else
-    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" --description="\"${xDESCRIPTION}\"" --category="${CATEGORY}" --default-language="${DEFAULT_LANGUAGE}" --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" "${FILE}"
+    ${YOUTUBE_UPLOAD} --title="\"${xSERMON_TITLE}\" Sermon & Round Table" \
+        --description="\"${xDESCRIPTION}\"" \
+        --category="${CATEGORY}" \
+        --default-language="${DEFAULT_LANGUAGE}" \
+        --default-audio-language="${DEFAULT_AUDIO_LANGUAGE}" \
+        "${FILE}"
 fi

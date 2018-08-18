@@ -64,7 +64,7 @@ pipArray=()
 # This tries to find all of the installed `pip` commands using the system $PATH
 while IFS= read -r line; do
     pipArray+=("$line")
-done < <(find "$space_PATH" \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
+done < <(find $space_PATH \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
 
 function exitBlock() {
     unset pipArray apps i
