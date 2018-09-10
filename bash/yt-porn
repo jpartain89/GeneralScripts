@@ -33,7 +33,7 @@ test -x "${YT_DL}" || die "Looks like $PROGRAM_NAME is missing."
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            "$YT_DL" "'$i'"
+            "$YT_DL" "$i"
         done
     done< <(cat "$2")
 }
