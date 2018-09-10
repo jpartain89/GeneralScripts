@@ -30,8 +30,6 @@ YT_DL="$(command -v youtube-dl)"
 
 test -x "${YT_DL}" || die "Looks like $PROGRAM_NAME is missing."
 
-[ -n "$1" ] || help_text && exit 1
-
 file() {
     while IFS= read -r file; do
         for i in $file; do
