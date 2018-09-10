@@ -41,7 +41,7 @@ file() {
 while [ $# -ge 1 ]; do
     case "$1" in
         -f | --file )
-            file "$@";;
+            file "$@"; shift;;
         -s | --single )
             single;;
         * )
