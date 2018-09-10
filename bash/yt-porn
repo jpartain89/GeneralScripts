@@ -33,13 +33,26 @@ test -x "${YT_DL}" || die "Looks like $PROGRAM_NAME is missing."
 file() {
     while IFS= read -r file; do
         for i in $file; do
+            FILENAME=$("$YT_DL" "$i" --get-filename)
             "$YT_DL" "$i"
+        done
+    done< <(cat "$2")
+}
+
+move() {
+    while IFS= read -r file; do
+        for i in $file; do
+            FILENAME=$("$YT_DL" "$i" --get-filename) &&
+            "$YT_DL" "$i" &&
+            rsync -avhP --remove-source-file "$FILENAME" "${DESTINATION}/$(basename "$FILENAME")"
         done
     done< <(cat "$2")
 }
 
 while [ $# -ge 1 ]; do
     case "$1" in
+        -m | --move )
+            move "$@"; shift;;
         -f | --file )
             file "$@"; shift;;
         -s | --single )
