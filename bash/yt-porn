@@ -1,5 +1,21 @@
 #!/bin/bash -e
 
+# Copyright © 2017-2018 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# program info
 PROGRAM_NAME="yt-porn"
 REPO_NAME="generalscripts"
 VERSION="1.0.0"
@@ -12,6 +28,20 @@ die() {
 }
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+help() {
+    cat << EOF
+
+Usage: yt-porn [ -f | --file ] [ arguments ]
+
+    yt-porn is meant to download porn videos and automatically move them to the porn directory. (Moving feature not yet implemented)
+
+    -f | --file :   This specifies that the videos you want downloaded are
+                    saved inside a text file, each on their own lines
+
+EOF
+exit 1
+}
 
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     (
@@ -39,6 +69,9 @@ file() {
     done< <(cat "$2")
 }
 
+single() {
+
+}
 
 while [ $# -ge 1 ]; do
     case "$1" in
@@ -47,6 +80,10 @@ while [ $# -ge 1 ]; do
         -s | --single )
             single;;
         * )
-            die;;
+            if [[ -f "$1" ]]; then
+                file "$@"; shift;;
+            else
+                die
+            fi;;
     esac
 done
