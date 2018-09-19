@@ -29,6 +29,9 @@ die() {
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
+logfileERROR=~/yt-porn.error.log
+logfileLOG=~/yt-porn.log
+
 help() {
     cat << EOF
 
@@ -68,9 +71,9 @@ move() {
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            fileNAME=$("$YT_DL" "$i" --get-filename 2>>/dev/null)
+            fileNAME=$("$YT_DL" "$i" --get-filename 2>>${logfileERROR})
             fileORIGINAL="$i"
-            "$YT_DL" "$i"
+            "$YT_DL" "$i" 2>>${logfileERROR}
             if [[ $* == -m ]] | [[ $* == --move ]]; then
                 move
             fi
