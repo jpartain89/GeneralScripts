@@ -90,7 +90,7 @@ while [ $# -ge 1 ]; do
             single;;
         * )
             if [[ -f "$1" ]]; then
-                file "$@"; shift;;
+                file "$@"; shift;
             else
                 die
             fi;;
