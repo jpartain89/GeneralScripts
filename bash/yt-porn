@@ -60,18 +60,27 @@ YT_DL="$(command -v youtube-dl)"
 
 test -x "${YT_DL}" || die "Looks like $PROGRAM_NAME is missing."
 
+move() {
+    unsorted=/media/2TB_APFS/Porn/Unsorted
+    rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
+}
+
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            FILENAME=$("$YT_DL" "$i" --get-filename)
+            fileNAME=$("$YT_DL" "$i" --get-filename)
+            fileORIGINAL="$i"
             "$YT_DL" "$i"
+            if [[ $* == -m ]] | [[ $* == --move ]]; then
+                move
+            fi
         done
     done< <(cat "$2")
 }
 
-single() {
-
-}
+#single() {
+#
+#}
 
 while [ $# -ge 1 ]; do
     case "$1" in
