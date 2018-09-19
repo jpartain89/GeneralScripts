@@ -22,15 +22,24 @@ VERSION="1.0.0"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+log() {
+    echo "$@"
+    logger -p user.notice -it "$(basename "$0")" "$@"
+}
+
+err() {
+    echo "$@"
+    logger -p user.error -it "$(basename "$0")" "$@"
+}
+
+exec 1> >(log "$@")
+
 die() {
     echo "$PROGRAM_NAME: $1" >&2
     exit "${2:-1}"
 }
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
-
-logfileERROR=~/yt-porn.error.log
-logfileLOG=~/yt-porn.log
 
 help() {
     cat << EOF
@@ -71,9 +80,9 @@ move() {
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            fileNAME=$("$YT_DL" "$i" --get-filename 2>>${logfileERROR})
+            fileNAME=$("$YT_DL" "$i" --get-filename 2>>err)
             fileORIGINAL="$i"
-            "$YT_DL" "$i" 2>>${logfileERROR}
+            "$YT_DL" "$i" 2>>err
             if [[ $* == -m ]] | [[ $* == --move ]]; then
                 move
             fi
