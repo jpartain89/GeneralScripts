@@ -22,18 +22,6 @@ VERSION="1.0.0"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-log() {
-    echo "$@"
-    logger -p user.notice -it "$(basename "$0")" "$@"
-}
-
-err() {
-    echo "$@"
-    logger -p user.error -it "$(basename "$0")" "$@"
-}
-
-exec 1> >(log "$@")
-
 die() {
     echo "$PROGRAM_NAME: $1" >&2
     exit "${2:-1}"
