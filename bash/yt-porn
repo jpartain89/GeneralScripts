@@ -68,7 +68,7 @@ move() {
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            fileNAME=$("$YT_DL" "$i" --get-filename)
+            fileNAME=$("$YT_DL" "$i" --get-filename 2>>/dev/null)
             fileORIGINAL="$i"
             "$YT_DL" "$i"
             if [[ $* == -m ]] | [[ $* == --move ]]; then
