@@ -80,9 +80,9 @@ move() {
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            fileNAME=$("$YT_DL" "$i" --get-filename )
+            fileNAME=$(basename "$("$YT_DL" "$i" --get-filename)")
             fileORIGINAL="$i"
-            "$YT_DL" "$i" #2>>err
+            "$YT_DL $i"
             if [[ $* == -m ]] | [[ $* == --move ]]; then
                 move
             fi
