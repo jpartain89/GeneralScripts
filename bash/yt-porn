@@ -80,12 +80,12 @@ move() {
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
-            fileNAME="$(basename "${fileORIGINAL}")"
+            #fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
+            #fileNAME="$(basename "${fileORIGINAL}")"
             "${YT_DL}" "${i}"
-            if [[ $* == -m ]] | [[ $* == --move ]]; then
-                move
-            fi
+            #if [[ $* == -m ]] | [[ $* == --move ]]; then
+            #    move
+            #fi
         done
     done< <(cat "$2")
 }
