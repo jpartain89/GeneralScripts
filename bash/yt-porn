@@ -71,7 +71,7 @@ file() {
             fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
             "${YT_DL}" "${i}"
-            if [[ $* == -m ]] | [[ $* == --move ]]; then
+            if [[ $move == 1 ]]; then
                 move
             fi
         done
@@ -81,6 +81,10 @@ file() {
 #single() {
 #
 #}
+
+if [ $? == -m ] || [ $? == --move ]; then
+    move=1
+fi
 
 while [ $# -ge 1 ]; do
     case "$1" in
