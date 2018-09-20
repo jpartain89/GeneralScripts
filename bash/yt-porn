@@ -84,7 +84,7 @@ file() {
 
 while getopts "mf:h" arg; do
     case $arg in
-        m ) move=1;;
+        m ) move=1; shift;;
         f ) file "$@"; shift;;
         h | * )  help;;
     esac
