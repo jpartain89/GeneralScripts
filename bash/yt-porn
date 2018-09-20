@@ -75,7 +75,7 @@ file() {
                 move
             fi
         done
-    done< <(cat "$2")
+    done< <(cat "${GETOPT}")
 }
 
 #single() {
@@ -85,7 +85,7 @@ file() {
 while getopts "mf:h" arg; do
     case $arg in
         m ) move=1; shift;;
-        f ) file "$@"; shift;;
+        f ) file "${GETOPT}"; shift;;
         h | * )  help;;
     esac
 done
