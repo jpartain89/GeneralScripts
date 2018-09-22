@@ -75,7 +75,7 @@ file() {
                 move
             fi
         done
-    done< <(cat "$2")
+    done< <(cat "$3")
 }
 
 #single() {
