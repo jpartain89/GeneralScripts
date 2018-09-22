@@ -82,29 +82,21 @@ file() {
 #
 #}
 
-while getopts "mf:h" arg; do
-    case $arg in
-        m ) move=1; shift;;
-        f ) file "${GETOPT}"; shift;;
-        h | * )  help;;
+if [ $? == -m ] || [ $? == --move ]; then
+    move=1
+fi
+
+while [ $# -ge 1 ]; do
+    case "$1" in
+        -f | --file )
+            file "$@"; shift;;
+        -s | --single )
+            single;;
+        * )
+            if [[ -f "$1" ]]; then
+                file "$@"; shift;
+            else
+                die
+            fi;;
     esac
 done
-
-#if [ $? == -m ] || [ $? == --move ]; then
-#    move=1
-#fi
-#
-#while [ $# -ge 1 ]; do
-#    case "$1" in
-#        -f | --file )
-#            file "$@"; shift;;
-#        -s | --single )
-#            single;;
-#        * )
-#            if [[ -f "$1" ]]; then
-#                file "$@"; shift;
-#            else
-#                die
-#            fi;;
-#    esac
-#done
