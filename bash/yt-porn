@@ -75,7 +75,7 @@ file() {
                 move
             fi
         done
-    done< <(cat "${GETOPT}")
+    done< <(cat "$2")
 }
 
 #single() {
