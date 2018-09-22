@@ -87,7 +87,7 @@ if [ "$1" == -m ] || [ "$1" == --move ]; then
 fi
 
 while [ $# -ge 1 ]; do
-    case "$1" in
+    case "$2" in
         -f | --file )
             file "$@"; shift;;
         -s | --single )
