@@ -86,7 +86,7 @@ move() {
 file() {
     while IFS= read -r file; do
         for i in $file; do
-            fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
+            fileORIGINAL="$("$YTDL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
             exec "${YTDL} ${YTARGS} ${i}" &&
             if [[ $move == 1 ]]; then
