@@ -91,7 +91,7 @@ file() {
             if [[ $move == 1 ]]; then
                 move
             fi
-            sed -i \%"${i}"%d "${3}"
+            sed -i "\%\"${i}\"%d" "${3}"
         done
     done< <(cat "$3")
 }
