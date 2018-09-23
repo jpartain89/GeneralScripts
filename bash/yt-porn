@@ -86,7 +86,7 @@ file() {
         for i in $file; do
             fileORIGINAL="$("$YTDL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            exec "${YTDL} --external-downloader axel --external-downloader-args \"-n 15 -a\" ${i}" &&
+            "${YTDL}" --external-downloader axel --external-downloader-args "-n 15 -a" "${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
