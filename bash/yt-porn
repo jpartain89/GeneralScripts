@@ -72,10 +72,11 @@ file() {
         for i in $file; do
             fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            "${YT_DL}" "${i}"
+            "${YT_DL}" "${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
+            sed -i /"${i}"/d "${file}"
         done
     done< <(cat "$3")
 }
