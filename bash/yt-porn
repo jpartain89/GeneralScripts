@@ -88,7 +88,7 @@ file() {
         for i in $file; do
             fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            "${YT_DL} ${YT_ARGS} ${i}" &&
+            "${YT_DL} ${YT_ARGS}" "${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
