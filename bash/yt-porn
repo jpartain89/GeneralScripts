@@ -61,7 +61,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 # These confirm that the required programs are installed
-YT_DL="$(command -v youtube-dl)"
+YTDL="$(command -v youtube-dl)"
 if [[ -e "$(command -v axel)" ]]; then
     AXEL="$(command -v axel)"
 else
@@ -74,9 +74,9 @@ else
     fi
 fi
 
-test -x "${YT_DL}" || die "Looks like $PROGRAM_NAME is missing."
+test -x "${YTDL}" || die "Looks like $PROGRAM_NAME is missing."
 
-YT_ARGS="--external-downloader axel --external-downloader-args \"-n 15 -a\""
+YTARGS="--external-downloader axel --external-downloader-args \"-n 15 -a\""
 
 move() {
     unsorted=/media/2TB_APFS/Porn/Unsorted
@@ -88,7 +88,7 @@ file() {
         for i in $file; do
             fileORIGINAL="$("$YT_DL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            exec "${YT_DL} ${YT_ARGS} ${i}" &&
+            exec "${YTDL} ${YTARGS} ${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
