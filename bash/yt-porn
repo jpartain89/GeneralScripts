@@ -76,8 +76,6 @@ fi
 
 test -x "${YTDL}" || die "Looks like $PROGRAM_NAME is missing."
 
-YTARGS="--external-downloader axel --external-downloader-args \"-n 15 -a\""
-
 move() {
     unsorted=/media/2TB_APFS/Porn/Unsorted
     rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
@@ -88,7 +86,7 @@ file() {
         for i in $file; do
             fileORIGINAL="$("$YTDL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            exec "${YTDL} ${YTARGS} ${i}" &&
+            exec "${YTDL} --external-downloader axel --external-downloader-args \"-n 15 -a\" ${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
