@@ -83,6 +83,9 @@ move() {
 }
 
 file() {
+    if [[ "$(cat "$3")" == "" ]]; then
+        die "File was empty"
+    fi
     while IFS= read -r file; do
         for i in $file; do
             fileORIGINAL="$("$YTDL" "$i" --get-filename)"
