@@ -77,8 +77,9 @@ fi
 test -x "${YTDL}" || die "Looks like $PROGRAM_NAME is missing."
 
 move() {
+    remote="jpartain89@192.168.1.15"
     unsorted=/media/2TB_APFS/Porn/Unsorted
-    rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
+     rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
 }
 
 file() {
@@ -90,7 +91,7 @@ file() {
             if [[ $move == 1 ]]; then
                 move
             fi
-            sed -i "%\"${i}\"%d" "${3}"
+            sed -i '\%\"${i}\"%d' "${3}"
         done
     done< <(cat "$3")
 }
