@@ -1,0 +1,65 @@
+#!/bin/bash -e
+
+# This script is to delete duplicates using bash and find
+
+# Copyright © 2018 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# program info
+PROGRAM_NAME="deleteDupes"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+die() {
+    echo "$PROGRAM_NAME: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+help() {
+    cat << EOF
+
+Usage: deleteDupes [ -k | --keep ] .mp4 | [ -e | --erase ] .mp3 | [ -d | --directory ] ~/directory
+EOF
+}
+
+press_enter() {
+    echo ""
+    echo -n "Press Enter to Continue..."
+    read -r
+}
+
+main() {
+    while IFS= read -r file; do
+        [[ -e ${file%.${erasingEXT}}.${keepingEXT} ]] &&
+        echo "Erasing ${file}"
+        press_enter
+        rm -f "${file}"
+    done< <(find -s "${findLOC}" -iname "*.${erasingEXT}" -exec echo {} \;)
+}
+
+while [ $# -ge 1 ]; do
+    case "$2" in
+        -k | --keep )
+            shift; keepingEXT="$2"; shift;;
+        -e | --erasing )
+            shift; erasingEXT="$2"; shift;;
+        -d | --directory )
+            shift; findLOC="$2"; shift;;
+    esac
+done
