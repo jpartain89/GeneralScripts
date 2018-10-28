@@ -1,5 +1,16 @@
-#/bin/bash
+#!/bin/bash -e
 
-# this script is to scrape stories off of nifty.org
+rootAddress="https://www.nifty.org/nifty/gay/"
+section="authoritarian/"
+mainTitle="brutal-trucker-sex/"
+specificTitles="brutal-trucker-sex-"
 
+if [[ -e "$HOME/nifty/authoritarian/" ]]; then
+    mkdir "$HOME/nifty/authoritarian/"
+fi
 
+n=0
+
+while (( n++ < 27 )); do
+    wget -P "$HOME/nifty/authoritarian/" "${rootAddress}${section}${mainTitle}${specificTitles}${n}"
+done
