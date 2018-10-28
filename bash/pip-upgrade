@@ -74,9 +74,6 @@ function exitBlock() {
 trap 'exitBlock' EXIT HUP INT QUIT TERM
 
 for i in "${pipArray[@]}"; do
-    echo "Updating the installed apps for:"
-    echo "      $i      "
-    echo ""
     apps=$("$i" list --format=columns | awk 'NR>2 { print $1 }' | tr '\n' ' ')
     if [[ $FLAG == "-l" ]] || [[ $FLAG == "--list" ]]; then
         echo "################################"
