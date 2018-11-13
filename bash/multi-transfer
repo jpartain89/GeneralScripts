@@ -1,6 +1,0 @@
-#!/bin/bash -e
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-RSYNC="$(command -v rsync)"
-
-ls /media/server1 | parallel -v -j8 rsync -ahvP --remove-source-files {} 
