@@ -87,8 +87,6 @@ while IFS= read -r line; do
     output="${line%\.[^.]*}.mp4"
 
     HandBrakeCLI -Z "${PRESET}" --input "${line}" \
-        --output "${output}" < /dev/null &&
-
-    rm "$line"
+        --output "${output}" < /dev/null
 
 done < <(find "$SOURCE" "${FIND_ARGS}" -exec echo {} \; )
