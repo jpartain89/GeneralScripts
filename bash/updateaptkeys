@@ -5,9 +5,9 @@
 # when the private key isn't saved. Its the "public key," thus "pubkey."
 
 if [[ "$#" -ge 1 ]]; then
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$1"
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$1"
 else
-  echo "Paste in the GPG Keys that need to be retrieved: "
-  read -r gpgkey
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$gpgkey"
+    echo "Paste in the GPG Keys that need to be retrieved: "
+    read -r gpgkey
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$gpgkey"
 fi

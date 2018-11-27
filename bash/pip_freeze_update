@@ -1,6 +1,0 @@
-#!/bin/bash -e
-
-for i in pip2 pip2.7 pip3 pip3.6; do
-    "$i" freeze > "${i}.txt" &&
-    sudo -H "$i" install -U -r ./"${i}.txt"
-done

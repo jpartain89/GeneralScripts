@@ -1,7 +1,0 @@
-#!/bin/bash -e
-
-# This is to erase `~orig` files from macOS
-
-scriptLocation="/Library/Scripts"
-
-find "$scriptLocation" -iname "*~orig*"
