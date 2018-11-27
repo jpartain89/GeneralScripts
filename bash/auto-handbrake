@@ -36,7 +36,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 HBCLI="$(command -v HandBrakeCLI)"
 
-if [[ -x "$HBCLI" ]]; then
+if [[ ! -x "$HBCLI" ]]; then
     echo "No HandBrakeCLI is installed. Fix!"
     exit 1
 fi
