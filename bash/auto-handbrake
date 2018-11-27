@@ -9,8 +9,6 @@ die() {
     exit "${2:-1}"
 }
 
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
-
 help() {
     cat << EOF
 auto-handbrake [directory location]
@@ -18,6 +16,8 @@ auto-handbrake [directory location]
 This script is to automatically run HandBrakeCLI with specific preset settings. You need to include the directory location of the movies you want re encoded.
 EOF
 }
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
 # This "auto-installs" git-autopull into /usr/local/bin for ya!
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
@@ -37,6 +37,7 @@ general() {
     # These are the 'general' file extensions that I use.
     FIND_ARGS='\( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv"\)'
 }
+
 AVCHD() {
     # This is for running against AVCHD
     FIND_ARGS='-type d -iname "AVCHD"'
@@ -60,7 +61,7 @@ while (( "$#" )); do
             shift
             break
             ;;
-        -* | --*= ) # unsupported flags
+        -* | --* ) # unsupported flags
             echo "Error: Unsupported flag $1" >&2;
             help;
             die "$@"
@@ -71,7 +72,6 @@ while (( "$#" )); do
             ;;
     esac
 done
-
 
 while [[ "$?" -ge 1 ]]; do
     case "$FILE" in
