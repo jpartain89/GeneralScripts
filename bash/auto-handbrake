@@ -13,7 +13,8 @@ help() {
     cat << EOF
 auto-handbrake [directory location]
 
-This script is to automatically run HandBrakeCLI with specific preset settings. You need to include the directory location of the movies you want re encoded.
+This script is to automatically run HandBrakeCLI with specific preset settings.
+You need to include the directory location of the movies you want re encoded.
 EOF
 }
 
@@ -32,6 +33,13 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
         fi
     )
 }
+
+HBCLI="$(command -v HandBrakeCLI)"
+
+if [[ -x "$HBCLI" ]]; then
+    echo "No HandBrakeCLI is installed. Fix!"
+    exit 1
+fi
 
 general() {
     # These are the 'general' file extensions that I use.
@@ -73,7 +81,7 @@ while (( "$#" )); do
     esac
 done
 
-while [[ "$?" -gt 1 ]]; do
+while [[ "$?" -ge 1 ]]; do
     case "$FILE" in
         -h ) help;;
         * ) help;;
@@ -83,7 +91,7 @@ done
 while IFS= read -r line; do
     output="${line%\.[^.]*}.mp4"
 
-    HandBrakeCLI -Z "${PRESET}" --input "${line}" \
+    "$HBCLI" -Z "${PRESET}" --input "${line}" \
         --output "${output}" < /dev/null &&
 
     rm "$line"
