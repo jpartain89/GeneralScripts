@@ -73,7 +73,7 @@ while (( "$#" )); do
     esac
 done
 
-while [[ "$?" -ge 1 ]]; do
+while [[ "$?" -gt 1 ]]; do
     case "$FILE" in
         -h ) help;;
         * ) help;;
