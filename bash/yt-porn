@@ -90,7 +90,7 @@ file() {
         for i in $file; do
             fileORIGINAL="$("$YTDL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            "${YTDL}" --external-downloader axel --external-downloader-args "-n 15 -a" "${i}" &&
+            "${YTDL}" --external-downloader aria2c "${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
