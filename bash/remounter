@@ -2,10 +2,8 @@
 
 # This script is to test if my externals are mounted or not, and if not, remount them
 
-MOUNTS=(8TB_EXT 2TB_APFS)
-
-for i in "${MOUNTS[@]}"; do
-    if [[ -n $(sudo mount | grep -q "/media/$i") ]]; then
+for i in 8TB_EXT 2TB_APFS; do
+    if [ "$(/bin/mount | grep -c "/media/$i")" ]; then
         echo "already mounted"
         exit 0
     else
