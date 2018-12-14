@@ -5,10 +5,9 @@
 for i in 8TB_EXT 2TB_APFS; do
     if [ "$(/bin/mount | grep -c "/media/$i")" ]; then
         echo "already mounted"
-        exit 0
     else
         { sudo umount "/media/$i" &&
-        sudo mount "/media/$i" && exit 0
+        sudo mount "/media/$i"
             } || { echo "mounting failed" &&
             exit 1
                 }
