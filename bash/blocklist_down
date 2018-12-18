@@ -53,5 +53,3 @@ main() {
 }
 
 main > "$BLOCKLIST" 2>/dev/null
-
-ssh "$TRANSMISSION_HOST" "/usr/local/bin/transmission-remote --blocklist-update"
