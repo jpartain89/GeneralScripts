@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BLOCKLIST=/usr/local/var/transmission/blocklists/jp_full.txt
+BLOCKLIST=/var/www/html/public/jp_full.txt
 
 main() {
     # Link good as of June 2018
