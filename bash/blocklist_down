@@ -51,8 +51,7 @@ CRON() {
 SHELL=/bin/bash
 
 0 */6 * * *  /usr/local/bin/blocklist_down
-
-        EOF '
+'
 
     else
         sudo sh -c 'cat << EOF > /lib/systemd/system/blocklist_down.timer
@@ -75,8 +74,7 @@ Type=simple
 Nice=19
 IOSchedulingClass=2
 IOSchedulingPriority=7
-ExecStart=/usr/local/bin/blocklist_down
-        EOF'
+ExecStart=/usr/local/bin/blocklist_down'
 
         sudo systemctl enable /lib/systemd/system/blocklist_down.timer
         sudo systemctl start /lib/systemd/system/blocklist_down.timer
