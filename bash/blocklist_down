@@ -66,7 +66,7 @@ main() {
         | egrep -v '^#'
 }
 
-if [[ ! -a /etc/cron.d/blocklist_down ]] || [[ ! -a /lib/systemd/system/blacklist_down.service ]] || [[ ! -a /lib/systemd/system/blacklist_down.timer ]]; then
+if [[ ! -a /etc/cron.d/blocklist_down ]]; then
     CRON
 fi
 
