@@ -14,6 +14,11 @@ die() {
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
+if [[ $(hostname) != 'rpi35' ]]; then
+    echo "So sorry! This can only be run on one machine! Exiting!"
+    exit 1
+fi
+
 help() {
     cat << EOF
 
@@ -39,6 +44,45 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     )
 }
 
+CRON() {
+    if [[ ! -e /lib/systemd/system ]]; then
+        sudo sh -c 'cat << EOF > /etc/cron.d/blocklist_down
+# This cron file is for calling my blocklist script for transmission.
+SHELL=/bin/bash
+
+0 */6 * * *  /usr/local/bin/blocklist_down
+
+        EOF '
+
+    else
+        sudo sh -c 'cat << EOF > /lib/systemd/system/blacklist_down.timer
+[Unit]
+Description=Generate Transmission Blocklist
+
+[Timer]
+OnCalendar=6h
+
+[Install]
+WantedBy=timers.target
+        EOF'
+
+        sudo sh -c 'cat << EOF > /lib/systemd/system/blacklist_down.service
+[Unit]
+Description=Generate Transmission Blocklist
+
+[Service]
+Type=simple
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
+ExecStart=/usr/local/bin/blocklist_down
+        EOF'
+
+        sudo systemctl enable /lib/systemd/system/blacklist_down.timer
+        sudo systemctl start /lib/systemd/system/blacklist_down.timer
+    fi
+}
+
 BLOCKLIST=/var/www/html/public/jp_full.txt
 TRANSMISSION_HOST="jpartain89@192.168.0.15"
 
@@ -51,5 +95,9 @@ main() {
         | gunzip \
         | egrep -v '^#'
 }
+
+if [[ ! -a /etc/cron.d/blocklist_down ]] || [[ ! -a /lib/systemd/system/blacklist_down.service ]] || [[ ! -a /lib/systemd/system/blacklist_down.timer ]]; then
+    CRON
+fi
 
 main > "$BLOCKLIST" 2>/dev/null

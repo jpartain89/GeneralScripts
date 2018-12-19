@@ -6,3 +6,5 @@
 #  │  │  │  │  │                    (0 to 6 are Sunday to Saturday, or use names;
 #  │  │  │  │  │                      7 is Sunday, the same as 0)
 #  *  *  *  *  *  command to execute
+
+0 */6 * * *
