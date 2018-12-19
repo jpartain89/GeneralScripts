@@ -45,40 +45,12 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 CRON() {
-    if [[ ! -a /lib/systemd/system ]]; then
-        sudo sh -c 'cat << EOF > /etc/cron.d/blocklist_down
+    sudo sh -c 'cat << EOF > /etc/cron.d/blocklist_down
 # This cron file is for calling my blocklist script for transmission.
 SHELL=/bin/bash
 
 0 */6 * * *  /usr/local/bin/blocklist_down
 '
-
-    else
-        sudo sh -c 'cat << EOF > /lib/systemd/system/blocklist_down.timer
-[Unit]
-Description=Generate Transmission Blocklist
-
-[Timer]
-OnCalendar=6h
-
-[Install]
-WantedBy=timers.target
-        '
-
-        sudo sh -c 'cat << EOF > /lib/systemd/system/blocklist_down.service
-[Unit]
-Description=Generate Transmission Blocklist
-
-[Service]
-Type=simple
-Nice=19
-IOSchedulingClass=2
-IOSchedulingPriority=7
-ExecStart=/usr/local/bin/blocklist_down'
-
-        sudo systemctl enable /lib/systemd/system/blocklist_down.timer
-        sudo systemctl start /lib/systemd/system/blocklist_down.timer
-    fi
 }
 
 BLOCKLIST=/var/www/html/public/jp_full.txt
