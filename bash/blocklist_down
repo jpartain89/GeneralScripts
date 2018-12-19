@@ -63,7 +63,7 @@ OnCalendar=6h
 
 [Install]
 WantedBy=timers.target
-        EOF'
+        '
 
         sudo sh -c 'cat << EOF > /lib/systemd/system/blocklist_down.service
 [Unit]
