@@ -4,8 +4,12 @@
 # The "pubkey" is the string of letters and numbers that apt-get will spit out
 # when the private key isn't saved. Its the "public key," thus "pubkey."
 
+CLI=( "$@" )
+
 if [[ "$#" -ge 1 ]]; then
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$1"
+    for i in "${CLI[@]}"; do
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$i"
+    done
 else
     echo "Paste in the GPG Keys that need to be retrieved: "
     read -r gpgkey
