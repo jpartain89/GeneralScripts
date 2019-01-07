@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # TODO: Add awk line to remove link from yt.txt file when download is finished and removed, and to reload the script to re-pull the correct links
 
@@ -79,45 +79,44 @@ test -x "${YTDL}" || die "Looks like $PROGRAM_NAME is missing."
 move() {
     remote="jpartain89@192.168.0.15"
     unsorted=/media/2TB_APFS/Porn/Unsorted
-     rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
+        rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
 }
 
 file() {
-    if [[ "$(cat "$3")" == "" ]]; then
+    if [[ "$(cat "$2")" == "" ]]; then
         die "File was empty"
+    else
+        PORN_FILE="$2"
     fi
     while IFS= read -r file; do
         for i in $file; do
+            URL="$i"
             fileORIGINAL="$("$YTDL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            "${YTDL}" --external-downloader aria2c "${i}" &&
+            "${YTDL}" "${i}" &&
             if [[ $move == 1 ]]; then
                 move
             fi
-            sed -i "\%${i}%d" "${3}"
+
+            # This replaces URL with `  `
+            sed -i '' "s|${URL}|  |g" "${PORN_FILE}"
         done
-    done< <(cat "$3")
+    done< <(cat "${PORN_FILE}")
 }
 
-#single() {
-#
-#}
-
-if [ "$1" == -m ] || [ "$1" == --move ]; then
+if [ "$?" == -m ] || [ "$?" == --move ]; then
     move=1
 fi
 
-while [ $# -ge 1 ]; do
-    case "$2" in
+if [ $# == 0 ]; then
+  help
+fi
+
+while [ $# -gt 1 ]; do
+    case "$1" in
         -f | --file )
             file "$@"; shift;;
         -s | --single )
             single;;
-        * )
-            if [[ -f "$1" ]]; then
-                file "$@"; shift;
-            else
-                die
-            fi;;
     esac
 done
