@@ -19,7 +19,7 @@
       shell: 'git -C {{ git_dir.path }}/{{ default_repo }} map {{ item }}'
       args:
         executable: /bin/bash
-      with_items:
+      loop:
         - 'pull'
         - 'fetch --all'
         - 'submodule update --init --recursive'

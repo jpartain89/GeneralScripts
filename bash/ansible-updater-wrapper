@@ -1,6 +1,0 @@
-#!/bin/bash -e
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ANS_FILES="${DIR}../ansible/"
-
-ansible-playbook "${ANS_FILES}/apt_basic.yml"

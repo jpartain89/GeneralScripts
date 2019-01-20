@@ -11,14 +11,14 @@
         state: latest
         update_cache: yes
         cache_valid_time: 86400
-      with_items:
+      loop:
         - aptitude
         - apt
         - apt-utils
 
     - name: Run Basic, Safe, Full and Dist Upgrade with apt Module
       apt: upgrade="{{ item }}"
-      with_items:
+      loop:
         - yes
         - safe
         - full
