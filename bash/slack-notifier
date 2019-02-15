@@ -52,9 +52,19 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     )
 }
 
+make_text() {
+    if [[ -n "${TEXT}" ]]; then
+        #TEXT_BLOCK=\"Finally! ${RUN_NAME} has finished! \n ${TEXT}\"
+        TEXT_BLOCK="Finally! ${RUN_NAME} has finished! \n ${TEXT}"
+    else
+        #TEXT_BLOCK=\"Finally! ${RUN_NAME} has finished!\"
+        TEXT_BLOCK="Finally! ${RUN_NAME} has finished!"
+    fi
+}
+
 main() {
     curl -X POST -H 'Content-type: application/json' --data \
-        "{ \"text\": \"Finally! ${RUN_NAME} has finished! \n ${TEXT}\"}" https://hooks.slack.com/services/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
+        "{ \"text\": \"${TEXT_BLOCK}\"}" https://hooks.slack.com/services/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
 }
 
 while [ $# -gt 1 ]; do
