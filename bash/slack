@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+# This is my take on using slack to notify me of finished commands
+
+attachments() {
+
+
+curl -X POST --data "payload={"text": "Cool Message"}"
+ ↪https://hooks.slack.com/services/YOURAPI/CODEHERE/TOPOST
+
