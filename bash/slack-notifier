@@ -68,6 +68,7 @@ while [ $# -gt 1 ]; do
         -h | --help )
             help;
             shift;;
+        * ) shift;;
     esac
 done
 
