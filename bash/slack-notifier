@@ -60,10 +60,10 @@ main() {
 while [ $# -gt 1 ]; do
     case "$1" in
         -n | --name )
-            RUN_NAME="$1";
+            RUN_NAME="$2";
             shift;;
         -t | --text )
-            TEXT="$1";
+            TEXT="$2";
             shift;;
         -h | --help )
             help;
