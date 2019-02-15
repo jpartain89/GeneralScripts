@@ -80,6 +80,7 @@ while [ $# -gt 1 ]; do
             shift;;
         * ) shift;;
     esac
+    make_text
 done
 
 main
