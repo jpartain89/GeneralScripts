@@ -1,0 +1,74 @@
+#!/bin/bash -e
+
+# This is my take on using slack to notify me of finished commands
+
+# Copyright © 2017-2019 JPCDI, JPartain89 and Justin Partain
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# program info
+PROGRAM_NAME="slack-notifier"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+TEXT="$1"
+help() {
+    cat << EOF
+
+Usage: "${PROGRAM_NAME}" [-n | --name ] | [ -t | --text ]
+
+    "${PROGRAM_NAME}" is meant to be a means of sending a notification when a long-running process has finished.
+
+    You'll need to use bash piping to make sure this notification is sent. Basically like using log redirection.
+
+    Example: ( rsync /something /to/something >~/log 2>&1 & ) && "${PROGRAM_NAME}" -n "rsync log" -t \"rsync process has ended\"
+
+EOF
+}
+
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+main() {
+    curl -X POST -H 'Content-type: application/json' --data \
+        "{\"text\":\"Finally! \"${RUN_NAME}\" has finished! \n \"${TEXT}\"}" https://hooks.slack.com/services/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
+}
+
+while [ $# -gt 1 ]; do
+    case "$1" in
+        -n | --name )
+            RUN_NAME="$1";
+            shift;;
+        -t | --text )
+            TEXT="$1";
+            shift;;
+        -h | --help )
+            help;
+            shift;;
+    esac
+done
+
+main
