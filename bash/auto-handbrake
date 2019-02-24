@@ -35,6 +35,9 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 test -x "$(command -v HandBrakeCLI)" || die "Looks like HandBrakeCLI is missing."
+if [[ -n "$1" ]]; then
+    help && die SIGHUP
+fi
 
 general() {
     # These are the 'general' file extensions that I use.
