@@ -91,7 +91,7 @@ for i in "${pipArray[@]}"; do
         echo "Updating the installed apps for:"
         echo "      $i      "
         echo ""
-        sudo -H $i install -U $apps 2>&1
+        $i install -U $apps 2>&1
     fi
     unset apps
 
