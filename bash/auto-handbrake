@@ -4,6 +4,8 @@ PROGRAM_NAME="auto-handbrake"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SOURCE="$1"
 
+LOG_DIR="/var/log/$PROGRAM_NAME/"
+
 die() {
     echo "$program: $1" >&2
     exit "${2:-1}"
@@ -42,7 +44,6 @@ fi
 
 # These are the 'general' file extensions that I use.
 FIND_ARGS='\( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv" -not "*mp4" -not "*mkv" \)'
-EXCLUSION='--exclude'
 
 PRESET="Apple 1080p60 Surround"
 
@@ -59,4 +60,4 @@ while IFS= read -r line; do
     HandBrakeCLI -Z "${PRESET}" --input "${line}" \
         --output "${output}" < /dev/null
 
-done < <(find "$SOURCE" "${FIND_ARGS}" -exec echo {} \; )
+done < <(find "$SOURCE" "${FIND_ARGS}" -exec echo {} \; ) >> "${LOG_DIR}/${PROGRAM_NAME}.log" 2>&1 &
