@@ -41,7 +41,8 @@ if [[ "$#" -lt 1 ]]; then
 fi
 
 # These are the 'general' file extensions that I use.
-FIND_ARGS='\( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv"\)'
+FIND_ARGS='\( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv" -not "*mp4" -not "*mkv" \)'
+EXCLUSION='--exclude'
 
 PRESET="Apple 1080p60 Surround"
 
