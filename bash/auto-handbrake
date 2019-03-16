@@ -2,7 +2,7 @@
 
 PROGRAM_NAME="auto-handbrake"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-FILE="$1"
+SOURCE="$1"
 
 die() {
     echo "$program: $1" >&2
@@ -37,46 +37,16 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 test -x "$(command -v HandBrakeCLI)" || die "Looks like HandBrakeCLI is missing."
 
 if [[ "$#" -lt 1 ]]; then
-    help && die SIGHUP
+    help && die
 fi
 
-general() {
-    # These are the 'general' file extensions that I use.
-    FIND_ARGS='\( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv"\)'
-}
+# These are the 'general' file extensions that I use.
+FIND_ARGS='\( -iname "*avi" -o -iname "*wmv" -o -iname "*mov" -o -iname "*flv"\)'
 
 PRESET="Apple 1080p60 Surround"
-SOURCE="$FILE"
-
-while (( "$#" )); do
-    case "$1" in
-        -g | --general )
-            current
-            break
-            ;;
-        -d | --directory )
-            DARG=$2 &&
-            not_here &&
-            break
-            ;;
-        -- ) # end argument parsing
-            shift
-            break
-            ;;
-        -* | --* ) # unsupported flags
-            echo "Error: Unsupported flag $1" >&2;
-            help;
-            die "$@"
-            ;;
-        * ) # preserve positional arguments
-            PARAMS="$PARAMS $1"
-            shift
-            ;;
-    esac
-done
 
 while [[ "$?" -ge 1 ]]; do
-    case "$FILE" in
+    case "$SOURCE" in
         -h ) help;;
         * ) help;;
     esac
