@@ -20,7 +20,7 @@
 # program info
 PROGRAM_NAME="yt-porn"
 REPO_NAME="generalscripts"
-VERSION="1.0.0"
+VERSION="1.5.0"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -77,9 +77,8 @@ fi
 test -x "${YTDL}" || die "Looks like $PROGRAM_NAME is missing."
 
 move() {
-    remote="jpartain89@192.168.0.15"
     unsorted=/media/2TB_APFS/Porn/Unsorted
-        rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
+    rsync -avhP --remove-source-files "${fileORIGINAL}" "${unsorted}/${fileNAME}"
 }
 
 file() {
@@ -96,12 +95,24 @@ file() {
             "${YTDL}" "${i}" &&
             if [[ $move == 1 ]]; then
                 move
+            else
+                echo "The downloaded file is at"
+                echo "${fileORIGINAL}"
             fi
 
             # This replaces URL with `  `
             sed -i '' "s|${URL}|  |g" "${PORN_FILE}"
         done
     done< <(cat "${PORN_FILE}")
+}
+
+single() {
+    fileORIGINAL="$("$YTDL" "$CLI_URL" --get-filename)"
+    fileNAME="$(basename "${fileORIGINAL}")"
+    "${YTDL}" "${CLI_URL}" &&
+    if [[ $move == 1 ]]; then
+        move
+    fi
 }
 
 if [ "$?" == -m ] || [ "$?" == --move ]; then
@@ -117,6 +128,7 @@ while [ $# -gt 1 ]; do
         -f | --file )
             file "$@"; shift;;
         -s | --single )
+            CLI_URL="$2";
             single;;
     esac
 done
