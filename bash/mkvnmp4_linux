@@ -2,5 +2,7 @@
 
 # This script is meant to ssh into my mac and activate my `to_subler` script
 
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
 ssh jpartain89@192.168.0.15 "
     bash \$DIR/mkvnmp4_mac \$sonarr_episodefile_path"
