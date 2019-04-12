@@ -22,6 +22,7 @@ set -e
 # Program information
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROGRAM_NAME="mkvnmp4_mac"
+REPO_NAME="generalscripts"
 VERSION="1.0.0"
 
 die() {

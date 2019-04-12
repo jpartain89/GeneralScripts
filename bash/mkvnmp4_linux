@@ -2,6 +2,12 @@
 
 # This script is meant to ssh into my mac and activate my `to_subler` script
 
+# Program information
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROGRAM_NAME="mkvnmp4_linux"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
+
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
 ssh jpartain89@192.168.0.15 "
