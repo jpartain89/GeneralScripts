@@ -37,6 +37,10 @@ osascript -e "
     tell application \"Subler\"
         add to queue filePath
         start queue and wait
-            do shell script \"date > ${1}_text.txt\"
+            tell application \"Finder\"
+                if exists file filePath then
+                    delete file filePath
+                end if
+            end tell
     end tell"
 exit 0
