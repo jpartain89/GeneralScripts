@@ -35,7 +35,8 @@ trap 'die trap called' SIGHUP SIGINT SIGTERM
 osascript -e "
     set filePath to (POSIX file \"$1\" as alias)
     tell application \"Subler\"
-        add to queue filePath until completion
+        add to queue filePath
+        start queue and wait
     end tell"
 
     echo "Testing Testing $(date)" > "${1}.txt"
