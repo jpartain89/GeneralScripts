@@ -10,5 +10,9 @@ VERSION="1.0.0"
 
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
-ssh jpartain89@192.168.0.15 "
-    bash \$DIR/mkvnmp4_mac \$sonarr_episodefile_path"
+oldPath="${sonarr_episodefile_path#/media}"
+NewPath="/Volumes/${oldPath}"
+
+ssh jpartain89@192.168.0.15 "bash /Users/jpartain89/git/generalscripts/bash/mkvnmp4_mac \"$NewPath\""
+
+exit 0
