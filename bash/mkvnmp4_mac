@@ -37,14 +37,6 @@ osascript -e "
     tell application \"Subler\"
         add to queue filePath
         start queue and wait
-        tell application \"Finder\"
-            try
-                set newFile to /Users/jpartain89/Desktop/test1.txt
-                make new file with properties {name:newFile, file type:\"TEXT\", creator type:\"ttxt\"}
-            end try
-        end tell
+            do shell script \"date > ${1}_text.txt\"
     end tell"
-
-
-
 exit 0
