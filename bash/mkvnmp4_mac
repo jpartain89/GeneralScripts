@@ -43,4 +43,7 @@ osascript -e "
                 end if
             end tell
     end tell"
+
+curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" http://127.0.0.1:32400/library/sections/1/emptyTrash
+
 exit 0
