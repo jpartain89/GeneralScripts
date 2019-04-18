@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 # shellcheck disable=SC2086
 
 # This script attempts to `find` all of the installed pip executables
@@ -7,7 +8,7 @@
 # Then, it runs `freeze` to get a list of all installed pip apps
 # And then runs `install --upgrade` on the list
 
-# Copyright © 2017-2018 JPCDI, JPartain89 and Justin Partain
+# Copyright © 2017-2019 JPCDI, JPartain89 and Justin Partain
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +25,7 @@
 
 # Program Info
 PROGRAM_NAME="pip-upgrade"
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 if [[ $# -ge 1 ]]; then FLAG="$1"; fi
 space_PATH="$(echo $PATH | tr : " " )"
@@ -72,7 +73,7 @@ pipArray=()
 # This tries to find all of the installed `pip` commands using the system $PATH
 while IFS= read -r line; do
     pipArray+=("$line")
-done < <(find $space_PATH \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
+done < <(sudo find $space_PATH \( -iname 'pip' -o -iname 'pip[0-9]' -o -iname 'pip[0-9].[0-9]' \) -exec sh -c 'echo "$0"' {} \; )
 
 function exitBlock() {
     unset pipArray apps i
@@ -91,7 +92,11 @@ for i in "${pipArray[@]}"; do
         echo "Updating the installed apps for:"
         echo "      $i      "
         echo ""
-        $i install -U $apps 2>&1
+        if [[ "$i" == "pip" ]]; then
+            continue
+        else
+            sudo -H $i install -U $apps 2>&1
+        fi
     fi
     unset apps
 
