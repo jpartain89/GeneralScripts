@@ -44,8 +44,11 @@ osascript -e "
             end tell
     end tell"
 
+sleep 5
+
 for i in refresh emptytrash; do
-    curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" http://127.0.0.1:32400/library/sections/1/${i}
+    curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" "http://127.0.0.1:32400/library/sections/1/${i}"
+    sleep 5
 done
 
 exit 0
