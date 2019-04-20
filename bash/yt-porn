@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# TODO: Add awk line to remove link from yt.txt file when download is finished and removed, and to reload the script to re-pull the correct links
+#!/usr/bin/env bash
 
 # Copyright © 2017-2019 JPCDI, JPartain89 and Justin Partain
 #
