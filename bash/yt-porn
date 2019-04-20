@@ -94,7 +94,7 @@ file() {
 }
 
 single() {
-    fileORIGINAL="$("$YTDL" "$CLI_URL" --get-filename)"
+    fileORIGINAL="$("${YTDL}" "${CLI_URL}" --get-filename)"
     fileNAME="$(basename "${fileORIGINAL}")"
     "${COMMAND}" "${CLI_URL}" &&
     if [[ $move == 1 ]]; then
@@ -103,22 +103,28 @@ single() {
 }
 
 if [ "$?" == -m ] || [ "$?" == --move ]; then
-    move=1
+    move=
 fi
 
-if [ $# == 0 ]; then
-  help
+if [ $1 == "" ]; then
+    help
 fi
 
-while [ $# -gt 1 ]; do
+args=()
+
+while [ "$1" != "" ]; do
     case "$1" in
         -f | --file )
-            file "$@"; shift;;
+            file "$2";
+            shift;;
         -s | --single )
             CLI_URL="$2";
             single;;
-        * )
+        -h | --help )
             help;
-            exit 1;;
+            exit;;
+        * )
+            help; exit 1;;
     esac
+    shift
 done
