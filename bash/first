@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # First Step Script.
 # Splits off between Linux/macOS to start

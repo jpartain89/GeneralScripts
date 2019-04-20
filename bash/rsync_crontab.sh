@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # Bash Script to run `rsync_tmbackup.sh` through crontab
 

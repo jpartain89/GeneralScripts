@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 FILE_LOC=/Volumes/BigPartition/Movies
 

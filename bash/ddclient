@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 GIT_LOC="/home/jpartain89/git"
 . allunix

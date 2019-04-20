@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Retrieves missing keys from keyserver.ubuntu.com from user-input pubkey.
 # The "pubkey" is the string of letters and numbers that apt-get will spit out

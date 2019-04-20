@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # Program Info
 PROGRAM_NAME="jp-etckeeper"

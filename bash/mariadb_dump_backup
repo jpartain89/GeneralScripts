@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # ----------------------------------------------------------
 # `Mysqldump` script, copied from https://sh.jpcdi.com/2x35HqO

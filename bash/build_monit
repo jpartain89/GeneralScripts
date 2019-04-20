@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # This builds monit with the --enable-optimized flag set.
 

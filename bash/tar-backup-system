@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 DATE="$(date +%b-%d-%Y)"
 TAR_FILE="backup-${DATE}.tar.gz"

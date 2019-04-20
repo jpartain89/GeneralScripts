@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # Auto-snapshotting script intended to be cron'd,
 # taking automatic snapshots of particular VM, logging it,

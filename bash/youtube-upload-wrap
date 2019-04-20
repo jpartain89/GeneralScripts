@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # This script is to help calling `Tokland's YouTube-Upload`<https://github.com/tokland/youtube-upload> program
 

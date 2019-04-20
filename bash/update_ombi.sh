@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ####################################
 ##   update_ombi systemd script   ##

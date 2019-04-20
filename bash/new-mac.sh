@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # This script is meant to be downloaded on a new macOS device, either
 # bought new or freshly reinstalled.

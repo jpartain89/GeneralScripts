@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 OPENVPN_HOME=/etc/openvpn
 REQUIRED_APPS=(

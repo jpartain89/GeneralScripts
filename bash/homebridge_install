@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # This auto-installs homebridge by nfarina
 # https://github.com/nfarina/homebridge/

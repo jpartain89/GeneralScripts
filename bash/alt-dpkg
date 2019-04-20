@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Wrapper script for dpkg allowing for multiple URL's along side
 # local files with command line flags.

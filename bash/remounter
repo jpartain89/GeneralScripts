@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 # This script is to test if my externals are mounted or not, and if not, remount them
 
