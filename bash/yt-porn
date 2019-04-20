@@ -60,19 +60,8 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 # These confirm that the required programs are installed
 YTDL="$(command -v youtube-dl)"
-if [[ -e "$(command -v axel)" ]]; then
-    AXEL="$(command -v axel)"
-else
-    if [[ "$(uname)" == "Darwin" ]]; then
-        brew install axel &&
-        AXEL="$(command -v axel)"
-    elif [[ $(uname) == "Linux" ]]; then
-        sudo apt-get install axel
-        AXEL="$(command -v axel)"
-    fi
-fi
 
-test -x "${YTDL}" || die "Looks like $PROGRAM_NAME is missing."
+test -x "${YTDL}" || die "Looks like youtube-dl is missing."
 
 move() {
     unsorted=/media/2TB_APFS/Porn/Unsorted
@@ -90,7 +79,7 @@ file() {
             URL="$i"
             fileORIGINAL="$("$YTDL" "$i" --get-filename)"
             fileNAME="$(basename "${fileORIGINAL}")"
-            "${YTDL}" "${i}" &&
+            "${COMMAND}" "${i}" &&
             if [[ $move == 1 ]]; then
                 move
             else
@@ -107,7 +96,7 @@ file() {
 single() {
     fileORIGINAL="$("$YTDL" "$CLI_URL" --get-filename)"
     fileNAME="$(basename "${fileORIGINAL}")"
-    "${YTDL}" "${CLI_URL}" &&
+    "${COMMAND}" "${CLI_URL}" &&
     if [[ $move == 1 ]]; then
         move
     fi
@@ -128,5 +117,8 @@ while [ $# -gt 1 ]; do
         -s | --single )
             CLI_URL="$2";
             single;;
+        * )
+            help;
+            exit 1;;
     esac
 done
