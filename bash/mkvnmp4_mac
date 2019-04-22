@@ -47,7 +47,7 @@ osascript -e "
 sleep 5
 
 for i in refresh emptytrash; do
-    curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" "http://127.0.0.1:32400/library/sections/1/${i}"
+    curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" "http://127.0.0.1:32400/library/sections/1/${i}" >/dev/null 2>&1
     sleep 5
 done
 
