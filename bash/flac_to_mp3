@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-while IFS= read -r line; do
-    for a in "${line}"; do
-        ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"
-    done
-done < <(find /Volumes/8TB_EXT/Downloads/Music -iname "*.flv" -exec echo {} \;)
+find /Volumes/8TB_EXT/Downloads/Music -iname "*.flac" -print0 | while read -d $'\0' a; do
+    ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"
+done
