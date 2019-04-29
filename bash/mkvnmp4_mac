@@ -35,6 +35,7 @@ die() {
 
 trap 'die trap called' SIGHUP SIGINT SIGTERM
 
+cd "$(dirname $INPUT)" &&
 "$TRANSCODE_VID" --mp4 --quick "$input"
 
 for i in refresh emptytrash; do

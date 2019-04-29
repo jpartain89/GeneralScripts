@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
-find /Volumes/8TB_EXT/Downloads/Music -iname "*.flac" -print0 | while read -d $'\0' a; do
-    ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"
+#exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+LOC=(
+  /Volumes/8TB_EXT/Downloads/Music
+  /Volumes/8TB_EXT/iTunes/Music
+  )
+
+find "${LOC[@]}" -iname "*.flac" -exec echo {} \; | while IFS= read -r line; do
+    ffmpeg -i "$line" -qscale:a 0 "${line[@]/%flac/mp3}"
 done
