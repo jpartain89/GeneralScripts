@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
+set -e
 
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
-
-set -e
 
 if [[ "$EUID" != 0 ]]; then
     SUDO=sudo
 fi
 
-DISK=/dev/sdc
+DISK=$("${SUDO}" blkid | grep h43UmH-o30n-ngf0-rzCd-yQY7-ilin-7bg5kV | awk '{ print $1 }' | tr -d ':')
 DEST=/media/8TB_EXT2/backup/2TBbackup
 LOGFILE=/media/8TB_EXT2/backup/logfile
 
-"$SUDO" ddrescue --no-split "${DISK}" "${DEST}" "${LOGFILE}"
+"${SUDO}" ddrescue --no-split "${DISK}" "${DEST}" "${LOGFILE}"
+"${SUDO}" ddrescue --direct --max-retries=3 "${DISK}" "${DEST}" "${LOGFILE}"
+
+"${SUDO}" e2fsck -v -f "${DEST}"
+
+mount -t ext4 -o ro "${DEST}" /media/mount
