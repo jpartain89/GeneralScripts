@@ -24,6 +24,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROGRAM_NAME="mkvnmp4_mac"
 REPO_NAME="generalscripts"
 VERSION="1.0.0"
+INPUT="$1"
+
+TRANSCODE_VID="$(command -v transcode-video)"
 
 die() {
     echo "$program: $1" >&2
@@ -32,19 +35,8 @@ die() {
 
 trap 'die trap called' SIGHUP SIGINT SIGTERM
 
-osascript -e "
-    set filePath to (POSIX file \"$1\" as alias)
-    tell application \"Subler\"
-        add to queue filePath
-        start queue and wait
-            tell application \"Finder\"
-                if exists file filePath then
-                    delete file filePath
-                end if
-            end tell
-    end tell"
-
-sleep 5
+cd "$(dirname "${INPUT}")" &&
+"$TRANSCODE_VID" --mp4 --quick "$INPUT"
 
 for i in refresh emptytrash; do
     curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" "http://127.0.0.1:32400/library/sections/1/${i}" >/dev/null 2>&1
