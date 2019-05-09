@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+set -e
+
+if [[ "$EUID" != 0 ]]; then
+    SUDO=sudo
+fi
+
+DISK=/dev/sdc
+DEST=/media/8TB_EXT2/backup/2TBbackup
+LOGFILE=/media/8TB_EXT2/backup/logfile
+
+"$SUDO" ddrescue --no-split "${DISK}" "${DEST}" "${LOGFILE}"
