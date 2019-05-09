@@ -7,7 +7,7 @@ if [[ "$EUID" != 0 ]]; then
     SUDO=sudo
 fi
 
-DISK=$("${SUDO}" blkid | grep h43UmH-o30n-ngf0-rzCd-yQY7-ilin-7bg5kV | awk '{ print $1 }' | tr -d ':')
+DISK=$("${SUDO}" blkid | grep h43UmH-o30n-ngf0-rzCd-yQY7-ilin-7bg5kV | awk '{ print $1 }' | tr -d ':' )
 DEST=/media/8TB_EXT2/backup/2TBbackup
 LOGFILE=/media/8TB_EXT2/backup/logfile
 
