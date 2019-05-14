@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#set -e
+
+while IFS= read -r file; do
+  for i in "$file"; do
+    git -C "$(dirname ${file})" rm --cached "${file}" 2>/dev/null
+    sudo rm -rf "${file}"
+  done
+done< <(find "$HOME" -iname "git-auto.log" -exec echo {} \; )
