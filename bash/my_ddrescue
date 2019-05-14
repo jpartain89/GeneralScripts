@@ -5,7 +5,7 @@ exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
 SUDO="$(command -v sudo)"
 
-DISK=$("${SUDO}" blkid | grep h43UmH-o30n-ngf0-rzCd-yQY7-ilin-7bg5kV | awk '{ print $1 }' | tr -d ':' )
+DISK=$("${SUDO}" blkid | grep h43UmH-o30n-ngf0-rzCd-yQY7-ilin-7bg5kV | awk '{ print $1 }' | tr -d '1:' )
 DEST=/media/8TB_EXT2/backup/2TBbackup
 LOGFILE=/media/8TB_EXT2/backup/logfile
 
