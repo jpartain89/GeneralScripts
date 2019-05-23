@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set e
 # This script is meant to ssh into my mac and activate my `to_subler` script
 
 # Program information
@@ -10,7 +10,7 @@ VERSION="1.0.0"
 
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
-oldPath="${sonarr_episodefile_path#/media}"
+oldPath="${sonarr_episodefile_path#/media/}"
 NewPath="/Volumes/${oldPath}"
 
 ssh jpartain89@192.168.0.15 "bash /Users/jpartain89/git/generalscripts/bash/mkvnmp4_mac \"$NewPath\""
