@@ -29,7 +29,10 @@ VERSION="1.0.0"
 
 # exec 1> >(logger -is -t "$(basename "$0")") 2>&1
 
+. ~/.functions.d/notify-slack
+
 die() {
+    notify-slack "$program: $1" >&2
     echo "$program: $1" >&2
     exit "${2:-1}"
 }
@@ -49,12 +52,14 @@ trap 'die "trap called" 2' SIGHUP SIGINT SIGTERM
 cd "$(dirname "${INPUT}")" &&
 if "$TRANSCODE_VID" --mp4 --quick "$INPUT"; then
     rsync -avhP --remove-source-files "$INPUT" "${HOME}/.Trash/" &&
-    echo "Moved "$(dirname "${INPUT}")" to the Trash"
+    notify-slack "Moved "$(dirname "${INPUT}")" to the Trash"
 fi
 
 for i in refresh emptytrash; do
     curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" "http://127.0.0.1:32400/library/sections/1/${i}" >/dev/null 2>&1
     sleep 5
 done
+
+notify-slack "INFO: Finished!"
 
 exit 0
