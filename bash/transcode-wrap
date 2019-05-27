@@ -1,7 +1,9 @@
 #!/usr/local/env bash
 set -e
 LOCATION=/media/8TB_EXT2/Movies
-if TRANSCODE=$(command -v transcode-video); then
+TRANSCODE="$(command -v transcode-video)"
+
+if [[ "${TRANSCODE}" == "" ]]; then
     echo "You don't have the necessary program. Exiting."
     exit 1
 fi
