@@ -9,8 +9,8 @@ if [[ "${TRANSCODE}" == "" ]]; then
 fi
 
 while IFS= read -r line; do
-    FILE_NAME="${basename "${line}"}"
-    BASENAME="${dirname "${line}"}"
+    FILE_NAME="$(basename "${line}")"
+    BASENAME="$(dirname "${line}")"
     mkdir "${BASENAME}/processed"
     "${TRANSCODE}" --mp4 --quick "${line}" -o "${BASENAME}/processed/${FILE_NAME}"
 done< <(find "${LOCATION}" \( -iname "*.mkv" -o -iname "*.mp4" \) -exec echo {} \; )
