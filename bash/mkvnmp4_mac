@@ -44,6 +44,7 @@ elif [[ "$1" == "" ]]; then
 else
     INPUT="${1}"
     FILE_NAME="$(dirname "${INPUT}")"
+    TIMEOUT_WAIT="600"
 fi
 
 TRANSCODE_VID="$(command -v transcode-video)"
@@ -51,17 +52,34 @@ TRANSCODE_VID="$(command -v transcode-video)"
 trap 'die "trap called" 2' SIGHUP SIGINT SIGTERM
 
 cd "$(dirname "${INPUT}")" &&
-if "${TRANSCODE_VID}" --mp4 --quick "${INPUT}"; then
+if "${TRANSCODE_VID}" --mp4 --quick "${FILE_NAME}"; then
+    osascript -e "
+      set filePath to (POSIX file \"${INPUT}\" as alias)
+      set TimeOutWait to \"${TIMEOUT_WAIT}\"
+      tell application \"Subler\"
+          with timeout of TimeOutWait seconds
+          add to queue filePath
+          start queue and wait
+          tell application \"Finder\"
+              if exists file filePath then
+                  delete file filePath
+              end if
+          end tell
+          end timeout
+      end tell"
     rsync -avhP --remove-source-files "${INPUT}" "${HOME}/.Trash/" &&
-    notify-slack "Moved ${FILE_NAME} to the Trash"
+    notify-slack "Moved ${INPUT} to the Trash"
 fi
 
 for i in refresh emptytrash; do
     curl -X PUT -H "X-Plex-Token: zxSt9iYP4A2xcbFz93gM" "http://127.0.0.1:32400/library/sections/1/${i}" >/dev/null 2>&1
     sleep 5
-    notify-slack "INFO: Told plex to refresh the library for ${FILE_NAME}"
+    if [[ "$i" == "refresh" ]]; then
+        notify-slack "INFO: Told plex to refresh the library for ${FILE_NAME}"
+    elif [[ "$i" == "emptytrash" ]]; then
+        notify-slack "INFO: Told plex to empty the trash..."
 done
 
-notify-slack "INFO: Finished processing ${FILE_NAME}"
+notify-slack "INFO: Finished processing ${INPUT}"
 
 exit 0
