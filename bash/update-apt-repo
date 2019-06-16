@@ -32,11 +32,11 @@ dpkg-scanpackages . /dev/null > Packages
 gzip --keep --force -9 Packages
 
 # Generate the Release file
-cat ../distribution.${PROG_NAME} > Release
+cat "${DIR}/${PROG_NAME}/distribution.${PROG_NAME}" > Release
 
 # The Date: field has the same format as the Debian package changelog entries,
 # that is, RFC 2822 with time zone +0000
-echo -e "Date: `LANG=C date -Ru`" >> Release
+echo -e "Date: $(LANG=C date -Ru)" >> Release
 
 # Release must contain MD5 sums of all repository files (in a simple repo just the Packages and Packages.gz files)
 echo -e 'MD5Sum:' >> Release
