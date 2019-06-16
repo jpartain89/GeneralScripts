@@ -51,8 +51,7 @@ TRANSCODE_VID="$(command -v transcode-video)"
 
 trap 'die "trap called" 2' SIGHUP SIGINT SIGTERM
 
-cd "$(dirname "${INPUT}")" &&
-if "${TRANSCODE_VID}" --mp4 --quick "${FILE_NAME}"; then
+sublerTranscode() {
     osascript -e "
       set filePath to (POSIX file \"${INPUT}\" as alias)
       set TimeOutWait to \"${TIMEOUT_WAIT}\"
@@ -67,6 +66,10 @@ if "${TRANSCODE_VID}" --mp4 --quick "${FILE_NAME}"; then
           end tell
           end timeout
       end tell"
+}
+
+cd "$(dirname "${INPUT}")" &&
+if sublerTranscode; then
     rsync -avhP --remove-source-files "${INPUT}" "${HOME}/.Trash/" &&
     notify-slack "Moved ${INPUT} to the Trash"
 fi
@@ -78,6 +81,7 @@ for i in refresh emptytrash; do
         notify-slack "INFO: Told plex to refresh the library for ${FILE_NAME}"
     elif [[ "$i" == "emptytrash" ]]; then
         notify-slack "INFO: Told plex to empty the trash..."
+    fi
 done
 
 notify-slack "INFO: Finished processing ${INPUT}"
