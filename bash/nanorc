@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
 GIT_REPO="https://github.com/scopatz/nanorc.git"
-ROOT_NANO="/usr/share/nano-syntax-highlighting/"
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  ROOT_NANO="/usr/local/share/nano-syntax-highlighting"
+else
+  ROOT_NANO="/usr/share/nano-syntax-highlighting"
+fi
 
 sudo git clone "${GIT_REPO}" "${ROOT_NANO}"
 echo "include ${ROOT_NANO}/*.nanorc" | sudo tee /etc/nanorc
