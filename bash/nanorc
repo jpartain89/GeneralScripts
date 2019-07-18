@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+GIT_REPO="https://github.com/scopatz/nanorc.git"
+ROOT_NANO="/usr/share/nano-syntax-highlighting/"
+
+sudo git clone "${GIT_REPO}" "${ROOT_NANO}"
+echo "include ${ROOT_NANO}/*.nanorc" | sudo tee /etc/nanorc
