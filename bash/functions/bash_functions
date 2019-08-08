@@ -1,0 +1,88 @@
+# My Starter bash functions script for my default stuff I use on all my scripts
+# This script needs to be installed or linked at ~/.bash_func
+
+__link_install() {
+    # This "auto-installs" git-auto into /usr/local/bin for ya!
+    command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+        (
+            if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+                sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+                sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+            else
+                echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+                echo "failed. My apologies for not being able to figure it out..."
+                exit 1
+            fi
+        )
+    }
+}
+
+__on_error_long() {
+    status=$?
+    script=$0
+    line=$1
+    shift
+    args=
+    for i in "$@"; do
+        args+="\"$i\" "
+    done
+
+cat <<- EOF
+
+------------------------------------------------------------
+Error occured on "$script" [Line "$line"]: Status $status
+
+PID: $$
+User: "$USER"
+Current directory: "$PWD"
+Command line: "$script $args"
+------------------------------------------------------------
+
+EOF
+}
+
+__trap_error() {
+    __on_error_long "${@}"
+    trap 'onError ${LINENO} "${@}"' ERR
+}
+
+__die() {
+    echo "${PROGRAM_NAME}: $1" >&2
+    exit "${2:-1}"
+}
+
+__trap_die() {
+    __die "${@}"
+    trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+}
+
+__logging() {
+    exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+}
+
+__getopt_test() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # This tests for gnu-getopt, as thats needed to run
+        if [ -f /usr/local/opt/gnu-getopt/bin/getopt ]; then
+            GETOPT="/usr/local/opt/gnu-getopt/bin/getopt"
+            if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
+                __die "You seem to have the wrong version of gnu-getopt?
+                Please investigate and have the proper one installed."
+            fi
+        else
+            __die "Seems you're missing the required gnu-getopt program.
+            Please install using brew install gnu-getopt."
+        fi
+    elif [[ "$(uname)" == "Linux" ]]; then
+        if [ -f "$(command -v getopt)" ]; then
+            GETOPT="$(command -v getopt)"
+            if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
+                __die "You seem to have the wrong version of getopt!
+                Please, take care to investigate and rectify the situation."
+            fi
+        else
+            __die "Seems you're missing the required getopt program.
+            Please, install using your package manager."
+        fi
+    fi
+}
