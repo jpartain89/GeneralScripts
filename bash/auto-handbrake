@@ -20,7 +20,7 @@ You need to include the directory location of the movies you want re encoded.
 EOF
 }
 
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+x
 
 # This "auto-installs" git-autopull into /usr/local/bin for ya!
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
