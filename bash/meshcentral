@@ -28,7 +28,12 @@ command -v "${PROGRAM_NAME}" 1>/dev/null 2>&1 || {
 
 MC_DIR="/home/jpartain89/node_modules/meshcentral"
 NODE="$(command -v node)"
-LOG_DIR="/var/log/meshcentral/"
+LOG_DIR="/var/log/meshcentral"
+
+if [ ! -d "${LOG_DIR}" ]; then
+    sudo mkdir "${LOG_DIR}"
+    sudo chown -R "${USER}":"${USER}"
+fi
 
 if [ -f "${MC_DIR}" ]; then
     die "Looks like MeshCentral isn't installed in your home directory, for some reason.
