@@ -32,7 +32,7 @@ LOG_DIR="/var/log/meshcentral"
 
 if [ ! -d "${LOG_DIR}" ]; then
     sudo mkdir "${LOG_DIR}"
-    sudo chown -R "${USER}":"${USER}"
+    sudo chown -R "${USER}":"${USER}" "${LOG_DIR}"
 fi
 
 if [ -f "${MC_DIR}" ]; then
