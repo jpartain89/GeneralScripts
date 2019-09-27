@@ -3,4 +3,101 @@ set -e
 
 # This is to start and stop MeshCentral on my Rasperry Pi - or other debian-based OS
 
+# Program information
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROGRAM_NAME="meshcentral"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
 
+die() {
+    echo "${PROGRAM_NAME}: $1" >&2
+    exit "${2:-1}"
+}
+
+command -v "${PROGRAM_NAME}" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            die "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,
+            failed. My apologies for not being able to figure it out..."
+        fi
+    )
+}
+
+MC_DIR="/home/jpartain89/node_modules/meshcentral"
+NODE="$(command -v node)"
+LOG_DIR="/var/log/meshcentral/"
+
+if [ ! -f "${MC_DIR}" ]; then
+    die << EOF
+Looks like MeshCentral isn't installed in your home directory, for some reason.
+
+Please run npm install meshcentral (without the sudo) to install to your home directory.
+EOF
+    exit 1
+fi
+
+# This tests for gnu-getopt, as thats needed to run
+if [ -f /usr/local/opt/gnu-getopt/bin/getopt ]; then
+    GETOPT="/usr/local/opt/gnu-getopt/bin/getopt"
+    if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
+        die "You seem to have the wrong version of gnu-getopt?
+        Please investigate and have the proper one installed."
+    fi
+else
+    die "Seems you're missing the required gnu-getopt program.
+    Please install using brew install gnu-getopt."
+fi
+
+usage() {
+cat << EOF
+${PROGRAM_NAME} [ --start | --stop ]
+
+    start | starting the program
+    stop | stopping the program
+EOF
+}
+
+START() {
+    "${NODE}" "${MC_DIR}"  >"${LOG_DIR}/meshcentral.log" 2>&1 &
+}
+
+STOP() {
+    pkill -f "${MC_DIR}"
+}
+
+trap 'die 1' SIGHUP SIGINT SIGTERM
+
+LONG=start,stop
+
+OPTS=$(${GETOPT} --long ${LONG} --name "$0" -- "$@")
+
+if [ $? != 0 ] ; then
+    die "Failed to parse options...exiting." >&2
+fi
+
+eval set -- "$OPTS"
+
+while true; do
+    case "$1" in
+        --start )
+            START
+            exit 0
+            ;;
+        --stop )
+            STOP
+            exit 0
+            ;;
+        -- )
+            shift
+            break
+            ;;
+        * )
+            die 1
+            ;;
+    esac
+done
+
+exit 0
