@@ -53,7 +53,7 @@ STOP() {
     pkill -f "${MC_DIR}"
 }
 
-trap 'die 'trap called'' SIGHUP SIGINT SIGTERM
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
