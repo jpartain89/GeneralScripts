@@ -30,7 +30,7 @@ MC_DIR="/home/jpartain89/node_modules/meshcentral"
 NODE="$(command -v node)"
 LOG_DIR="/var/log/meshcentral/"
 
-if [ ! -f "${MC_DIR}" ]; then
+if [ -f "${MC_DIR}" ]; then
     die "Looks like MeshCentral isn't installed in your home directory, for some reason.
 
     Please run npm install meshcentral (without the sudo) to install to your home directory."
