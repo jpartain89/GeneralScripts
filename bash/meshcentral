@@ -36,7 +36,7 @@ if [ -f "${MC_DIR}" ]; then
     Please run npm install meshcentral (without the sudo) to install to your home directory."
 fi
 
-usage() {
+USAGE() {
 cat << EOF
 ${PROGRAM_NAME} [ start | stop ]
 
@@ -56,7 +56,7 @@ STOP() {
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
 if [[ $# == 0 ]]; then
-    die usage
+    die "Gotta use a command! 'Start' or 'Stop'"
 fi
 
 while [[ $# -gt 0 ]]; do
