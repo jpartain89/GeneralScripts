@@ -55,6 +55,10 @@ STOP() {
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
+if [[ $# == 0 ]]; then
+    die usage
+fi
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         start )
@@ -66,7 +70,7 @@ while [[ $# -gt 0 ]]; do
             exit 0
             ;;
         * )
-            die "There's no command listed! Gotta say 'start' or 'stop'"
+            die "Wrong command!"
             ;;
     esac
 done
