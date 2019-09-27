@@ -32,8 +32,8 @@ LOG_DIR="/var/log/meshcentral"
 
 if [ ! -d "${LOG_DIR}" ]; then
     sudo mkdir "${LOG_DIR}"
-    sudo chown -R "${USER}":"${USER}" "${LOG_DIR}"
 fi
+sudo chown -R "${USER}":"${USER}" "${LOG_DIR}"
 
 if [ -f "${MC_DIR}" ]; then
     die "Looks like MeshCentral isn't installed in your home directory, for some reason.
