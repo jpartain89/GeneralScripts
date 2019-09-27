@@ -36,21 +36,9 @@ if [ ! -f "${MC_DIR}" ]; then
     Please run npm install meshcentral (without the sudo) to install to your home directory."
 fi
 
-# This tests for gnu-getopt, as thats needed to run
-if [ -f /usr/local/opt/gnu-getopt/bin/getopt ]; then
-    GETOPT="/usr/local/opt/gnu-getopt/bin/getopt"
-    if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
-        die "You seem to have the wrong version of gnu-getopt?
-        Please investigate and have the proper one installed."
-    fi
-else
-    die "Seems you're missing the required gnu-getopt program.
-    Please install using brew install gnu-getopt."
-fi
-
 usage() {
 cat << EOF
-${PROGRAM_NAME} [ --start | --stop ]
+${PROGRAM_NAME} [ start | stop ]
 
     start | starting the program
     stop | stopping the program
@@ -65,34 +53,20 @@ STOP() {
     pkill -f "${MC_DIR}"
 }
 
-trap 'die 1' SIGHUP SIGINT SIGTERM
+trap 'die 'trap called'' SIGHUP SIGINT SIGTERM
 
-LONG=start,stop
-
-OPTS=$(${GETOPT} --long ${LONG} --name "$0" -- "$@")
-
-if [ $? != 0 ] ; then
-    die "Failed to parse options...exiting." >&2
-fi
-
-eval set -- "$OPTS"
-
-while true; do
+while [[ $# -gt 0 ]]; do
     case "$1" in
-        --start )
+        start )
             START
             exit 0
             ;;
-        --stop )
+        stop )
             STOP
             exit 0
             ;;
-        -- )
-            shift
-            break
-            ;;
         * )
-            die 1
+            die "There's no command listed! Gotta say 'start' or 'stop'"
             ;;
     esac
 done
