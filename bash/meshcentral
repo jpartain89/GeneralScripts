@@ -51,7 +51,7 @@ EOF
 }
 
 START() {
-    "${NODE}" "${MC_DIR}"  >"${LOG_DIR}/meshcentral.log" 2>&1 &
+    ( "${NODE}" "${MC_DIR}"  >"${LOG_DIR}/meshcentral.log" 2>&1 & ) &
 }
 
 STOP() {
