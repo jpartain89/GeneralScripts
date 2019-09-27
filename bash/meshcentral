@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+# This is to start and stop MeshCentral on my Rasperry Pi - or other debian-based OS
+
+
