@@ -31,12 +31,9 @@ NODE="$(command -v node)"
 LOG_DIR="/var/log/meshcentral/"
 
 if [ ! -f "${MC_DIR}" ]; then
-    die << EOF
-Looks like MeshCentral isn't installed in your home directory, for some reason.
+    die "Looks like MeshCentral isn't installed in your home directory, for some reason.
 
-Please run npm install meshcentral (without the sudo) to install to your home directory.
-EOF
-    exit 1
+    Please run npm install meshcentral (without the sudo) to install to your home directory."
 fi
 
 # This tests for gnu-getopt, as thats needed to run
