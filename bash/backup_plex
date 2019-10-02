@@ -53,14 +53,14 @@ __BACKUP_TO="/Volumes/2TB_APFS/backup/Plex"
 __BACKUP_FILE="com.plexapp.plexmediaserver.plist"
 BACKUP_FROM_FILES="${__BACKUP_FROM}/Preferences/${__BACKUP_FILE}"
 BACKUP_FROM_DIR="${__BACKUP_FROM}/ApplicationSupport/Plex Media Server"
-BACKUP_TO_FILE="${__BACKUP_TO}/PlexBackup_$(date +"%m-%d-%Y").tar.gz"
+BACKUP_TO_FILE="${__BACKUP_TO}/PlexBackup_$(date +%m-%d-%Y).tar.gz"
 LOGFILE="/usr/local/var/log/PlexBackup"
 
 TAR="$(command -v tar)"
 
 if [[ ! -d "${LOGFILE}" ]]; then mkdir "${LOGFILE}"; fi
 
-"${TAR}" -cfz "${BACKUP_TO_FILE}" "${BACKUP_FROM_DIR}" \
-    2>&1 "${LOGFILE}/$(date +"%m-%d-%Y").log"
+"${TAR}" cfzv "${BACKUP_TO_FILE}" "${BACKUP_FROM_DIR}" \
+    > "${LOGFILE}/$(date +%m-%d-%Y).log" 2>&1
 
-cp "${BACKUP_FROM_FILES}" "${__BACKUP_TO}/${__BACKUP_FILE}_$(date +"%m-%d-%Y")"
+cp "${BACKUP_FROM_FILES}" "${__BACKUP_TO}/${__BACKUP_FILE}_$(date +%m-%d-%Y)"
