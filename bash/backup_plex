@@ -61,6 +61,6 @@ TAR="$(command -v tar)"
 if [[ ! -d "${LOGFILE}" ]]; then mkdir "${LOGFILE}"; fi
 
 "${TAR}" vcfz "${BACKUP_TO_FILE}" "${BACKUP_FROM_DIR}" \
-    > "${LOGFILE}/$(date +"%m-%d-%Y").log" 2&>1
+    > "${LOGFILE}/$(date +"%m-%d-%Y").log" 2>&1
 
 cp "${BACKUP_FROM_FILES}" "${__BACKUP_TO}/${__BACKUP_FILE}_$(date +"%m-%d-%Y")"
