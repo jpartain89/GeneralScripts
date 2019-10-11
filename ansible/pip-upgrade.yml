@@ -1,7 +1,0 @@
----
-
-- hosts: all
-  become: yes
-
-  roles:
-    - pip_upgrade

@@ -1,5 +1,6 @@
 # My Starter bash functions script for my default stuff I use on all my scripts
-# This script needs to be installed or linked at ~/.bash_func
+# This script needs to be installed or linked at
+## ~/.config/functions/bash_functions
 
 __link_install() {
     # This "auto-installs" git-auto into /usr/local/bin for ya!
@@ -54,6 +55,11 @@ __die() {
 __trap_die() {
     __die "${@}"
     trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+}
+
+__trap() {
+    __trap_error
+    __trap_die
 }
 
 __logging() {

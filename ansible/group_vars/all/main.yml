@@ -1,7 +1,0 @@
----
-
-git_dir:
-  path: "{{ ansible_user_dir }}/git"
-  owner: "{{ ansible_user_uid }}"
-  group: "{{ ansible_user_uid }}"
-  mode: 0775

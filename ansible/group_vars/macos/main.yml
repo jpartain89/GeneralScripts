@@ -1,5 +1,0 @@
----
-
-# This sets the overall PATH variable for the macOS Machines
-environment:
-  PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar:/usr/local/MacGPG2/bin"

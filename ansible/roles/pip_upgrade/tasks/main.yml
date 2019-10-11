@@ -1,7 +1,0 @@
----
-
-- name: Run My pip-upgrade Shell Script
-  script: pip-upgrade
-  register: _pip-upgrade
-
-- debug: var=_pip-upgrade
