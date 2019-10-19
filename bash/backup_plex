@@ -29,7 +29,7 @@ source "${FUNCTONS}"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-__link_install "$@"
+_link_install "$@"
 # This "auto-installs"  into /usr/local/bin for ya!
 #command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 #    (
@@ -44,16 +44,16 @@ __link_install "$@"
 #    )
 #}
 
-__die "$@"
+_die "$@"
 #die() {
 #    echo "$PROGRAM_NAME: $1" >&2
 #    exit "${2:-1}"
 #}
 
 #trap 'die "Trap Called"' SIGHUP SIGINT SIGTERM
-__trap "$@"
+_trap "$@"
 
-PATH=/usr/local/opt/python3/bin:/usr/local/opt/python3/libexec/bin:/usr/local/opt/python@2/bin:/usr/local/opt/python/bin:/usr/local/opt/python/libexec/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar:/usr/local/MacGPG2/bin:/usr/local/opt/go/libexec/bin:/Users/jpartain89/.bashhub/bin
+PATH="/usr/local/opt/python3/bin:/usr/local/opt/python3/libexec/bin:/usr/local/opt/python@2/bin:/usr/local/opt/python/bin:/usr/local/opt/python/libexec/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/Cellar:/usr/local/MacGPG2/bin:/usr/local/opt/go/libexec/bin"
 
 __BACKUP_FROM="${HOME}/Library"
 __BACKUP_TO="/Volumes/2TB_APFS/backup/Plex"
