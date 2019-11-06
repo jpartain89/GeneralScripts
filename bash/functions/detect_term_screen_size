@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Find the rows and columns. Will default to 80x24 if it can not be detected.
+screen_size=$(stty size 2>/dev/null || echo 24 80)
+rows=$(echo "${screen_size}" | awk '{print $1}')
+columns=$(echo "${screen_size}" | awk '{print $2}')
+
+# Divide by two so the dialogs take up half of the screen, which looks nice.
+r=$(( rows / 2 ))
+c=$(( columns / 2 ))
+# Unless the screen is tiny
+r=$(( r < 20 ? 20 : r ))
+c=$(( c < 70 ? 70 : c ))
+
+# You use this in a whiptail command structure, aka:
+whiptail --msgbox --backtitle "INVALID OS DETECTED" --title "Invalid OS" "We have not been able to detect a supported OS.
+Currently this installer supports Raspbian and Debian (Jessie and Stretch), Devuan (Jessie) and Ubuntu from 14.04 (trusty) to 17.04 (zesty).
+If you think you received this message in error, you can post an issue on the GitHub at https://github.com/pivpn/pivpn/issues." ${r} ${c}
+
+# The r c at the end? Thats the sizing
