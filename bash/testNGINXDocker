@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DOCKER_EXEC_CMD="docker-compose exec nginx"
-NGINX_TEST_CMD="nginx -t"
-NGINX_RELOAD_CMD="nginx -s reload"
