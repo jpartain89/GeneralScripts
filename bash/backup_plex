@@ -21,7 +21,7 @@ set -e
 # Program Info
 PROGRAM_NAME="backup_plex"
 REPO_NAME="generalscripts"
-VERSION="1.5.0"
+VERSION="1.0.0"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -53,19 +53,28 @@ __BACKUP_TO="/Volumes/2TB_APFS/backup/Plex"
 __BACKUP_FILE="com.plexapp.plexmediaserver.plist"
 BACKUP_FROM_FILES="${__BACKUP_FROM}/Preferences/${__BACKUP_FILE}"
 BACKUP_FROM_DIR="${__BACKUP_FROM}/Application Support/Plex Media Server"
-BACKUP_TO_FILE="${__BACKUP_TO}/PlexBackup_$(date +"%m-%d-%Y").tar.gz"
+START=$(date +"%Y")
+DATE=$(date +"%F_%H-%M-%S")
+BACKUP_TO_TAR="${__BACKUP_TO}/PlexBackup_${DATE}.tar.gz"
+BACKUP_TO_FILE="${__BACKUP_TO}/${__BACKUP_FILE}_${DATE}"
 LOGDIR="/usr/local/var/log/PlexBackup"
+FULLBACKUPCYCLE="86400"
+KEEP="3"
+MINS=$(( FULLBACKUPCYCLE * (KEEP + 1 ) / 60 ))
 
 TAR="$(command -v tar)"
-PV="$(command -v pv)"
-SIZE="$(($(du -sk "${BACKUP_FROM_DIR}" | awk '{print $1}') * 1024))"
 
 # This is to create the log directory, just in case
 if [[ ! -d "${LOGDIR}" ]]; then mkdir "${LOGDIR}"; fi
 
 # This is the actual TAR step
-"${TAR}" cf - "${BACKUP_FROM_DIR}" -P | \
-    "${PV}" -p -s "${SIZE}k" | gzip > "${BACKUP_TO_FILE}"
+"${TAR}" vcfz "${BACKUP_TO_TAR}" "${BACKUP_FROM_DIR}" \
+    > "${LOGDIR}/$(date +"%m-%d-%Y").log" 2>&1
 
 # This is to copy the PLIST file for macOS
-cp "${BACKUP_FROM_FILES}" "${__BACKUP_TO}/${__BACKUP_FILE}_$(date +"%m-%d-%Y")"
+cp "${BACKUP_FROM_FILES}" "${BACKUP_TO_FILE}"
+
+while IFS= read -r line; do
+    echo "deleting ${line}"
+    rm -rf "${__BACKUP_TO:?}/${line}"
+done < <(find "${__BACKUP_TO}" -iname "*PlexBackup*" -mindepth 1 -maxdepth 1 -type f -mmin +$MINS -exec echo "${1}" \; )
