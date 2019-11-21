@@ -67,17 +67,17 @@ TAR="$(command -v tar)"
 # This is to create the log directory, just in case
 if [[ ! -d "${LOGDIR}" ]]; then mkdir "${LOGDIR}"; fi
 
-if [[ $(find "${__BACKUP_TO}" -iname "*PlexBackup*" -mindepth 1 -maxdepth 1 -type f -mmin +$MINS) == "" ]]; then
-    echo "Looks like its too soon for a backup to run!"
-    die "Now exiting"
-else
+#if [[ $(find "${__BACKUP_TO}" -iname "*PlexBackup*" -mindepth 1 -maxdepth 1 -type f -mmin +$MINS) == "" ]]; then
+#    echo "Looks like its too soon for a backup to run!"
+#    die "Now exiting"
+#else
     # This is the actual TAR step
     "${TAR}" vcfz "${BACKUP_TO_TAR}" "${BACKUP_FROM_DIR}" \
         > "${LOGDIR}/$(date +"%m-%d-%Y").log" 2>&1
 
     # This is to copy the PLIST file for macOS
     cp "${BACKUP_FROM_FILES}" "${BACKUP_TO_FILE}"
-fi
+#fi
 
 for file in "${LOGDIR}" "${__BACKUP_TO}"; do
     while IFS= read -r line; do
