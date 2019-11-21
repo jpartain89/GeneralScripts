@@ -58,7 +58,7 @@ LOGDIR="/usr/local/var/log/PlexBackup"
 
 TAR="$(command -v tar)"
 PV="$(command -v pv)"
-SIZE="($(du -sk "${BACKUP_FROM_DIR}" | awk '{print $1}') * 1024)"
+SIZE="(($(du -sk "${BACKUP_FROM_DIR}" | awk '{print $1}') * 1024))"
 
 # This is to create the log directory, just in case
 if [[ ! -d "${LOGDIR}" ]]; then mkdir "${LOGDIR}"; fi
