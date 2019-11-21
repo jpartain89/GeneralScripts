@@ -21,7 +21,7 @@ set -e
 # Program Info
 PROGRAM_NAME="backup_plex"
 REPO_NAME="generalscripts"
-VERSION="1.0.0"
+VERSION="1.5.0"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -53,17 +53,20 @@ __BACKUP_TO="/Volumes/2TB_APFS/backup/Plex"
 __BACKUP_FILE="com.plexapp.plexmediaserver.plist"
 BACKUP_FROM_FILES="${__BACKUP_FROM}/Preferences/${__BACKUP_FILE}"
 BACKUP_FROM_DIR="${__BACKUP_FROM}/Application Support/Plex Media Server"
-BACKUP_TO_FILE="${__BACKUP_TO}/PlexBackup_$(date +"%m-%d-%Y").tar.gz"
+BACKUP_TO_FILE="${__BACKUP_TO}/PlexBackup_$(date +"%m-%d-%Y").tar.bz2"
 LOGDIR="/usr/local/var/log/PlexBackup"
 
 TAR="$(command -v tar)"
+PV="$(command -v pv)"
+BZIP2="$(command -v bzip2)"
 
 # This is to create the log directory, just in case
 if [[ ! -d "${LOGDIR}" ]]; then mkdir "${LOGDIR}"; fi
 
 # This is the actual TAR step
-"${TAR}" vcfz "${BACKUP_TO_FILE}" "${BACKUP_FROM_DIR}" \
-    > "${LOGDIR}/$(date +"%m-%d-%Y").log" 2>&1
+"${TAR}" cfv - "${BACKUP_FROM_DIR}" -P | \
+    "${PV}" -s $(du -sb "${BACKUP_FROM_DIR}" | awk '{print $1}') | \
+    "${BZIP2}" -c > "${BACKUP_TO_FILE}" 2>"${LOGDIR}/$(date +"%m-%d-%Y").log"
 
 # This is to copy the PLIST file for macOS
 cp "${BACKUP_FROM_FILES}" "${__BACKUP_TO}/${__BACKUP_FILE}_$(date +"%m-%d-%Y")"
