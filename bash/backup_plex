@@ -52,7 +52,7 @@ __BACKUP_FROM="${HOME}/Library"
 __BACKUP_TO="/Volumes/2TB_APFS/backup/Plex"
 __BACKUP_FILE="com.plexapp.plexmediaserver.plist"
 BACKUP_FROM_FILES="${__BACKUP_FROM}/Preferences/${__BACKUP_FILE}"
-BACKUP_FROM_DIR="${__BACKUP_FROM}/ApplicationSupport/Plex Media Server"
+BACKUP_FROM_DIR="${__BACKUP_FROM}/Application Support/Plex Media Server"
 BACKUP_TO_FILE="${__BACKUP_TO}/PlexBackup_$(date +"%m-%d-%Y").tar.gz"
 LOGDIR="/usr/local/var/log/PlexBackup"
 
