@@ -78,7 +78,7 @@ if [[ "${LATEST}" ]] && [[ $(( AGE + FULLBACKUPCYCLE + 5 )) -le ${START} ]]; the
         # This is to copy the PLIST file for macOS
         cp "${BACKUP_FROM_FILES}" "${BACKUP_TO_FILE}"
 else
-    die "Too soon for backup!"
+    echo "Too soon for backup!"
     ## This is the actual TAR step
     #"${TAR}" vcfz "${BACKUP_TO_TAR}" "${BACKUP_FROM_DIR}" \
     #    > "${LOGDIR}/$(date +"%m-%d-%Y").log" 2>&1
