@@ -71,7 +71,7 @@ LATEST="$(find "${__BACKUP_TO}" -iname "*PlexBackup*" -mindepth 1 -maxdepth 1 -t
 
 AGE=$(stat -t %s -f %m -- "${LATEST}")
 
-if [[ "${LATEST}" ]] && [[ $(( AGE + FULLBACKUPCYCLE + 5 )) -ge ${START} ]]; then
+if [[ "${LATEST}" ]] && [[ $(( AGE + FULLBACKUPCYCLE + 5 )) -le ${START} ]]; then
     "${TAR}" vcfz "${BACKUP_TO_TAR}" "${BACKUP_FROM_DIR}" \
         > "${LOGDIR}/$(date +"%m-%d-%Y").log" 2>&1
 
