@@ -65,7 +65,7 @@ if [[ ! -d "${LOGDIR}" ]]; then mkdir "${LOGDIR}"; fi
 
 # This is the actual TAR step
 "${TAR}" cfv - "${BACKUP_FROM_DIR}" -P | \
-    "${PV}" -s $(du -sb "${BACKUP_FROM_DIR}" | awk '{print $1}') | \
+    "${PV}" -s $(du -sk "${BACKUP_FROM_DIR}" | awk '{print $1}') | \
     "${BZIP2}" -c > "${BACKUP_TO_FILE}" 2>"${LOGDIR}/$(date +"%m-%d-%Y").log"
 
 # This is to copy the PLIST file for macOS
