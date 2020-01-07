@@ -8,11 +8,11 @@ CLI=( "$@" )
 
 if [[ "$#" -ge 1 ]]; then
     for apps in "${CLI[@]}"; do
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "${apps}"
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "${apps}"
     done
 else
     read -r "Paste in the GPG Key that needs to be retrieved: " gpgkey
     while IFS= read -r file; do
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$file"
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys "$file"
     done < <(${gpgkey})
 fi
