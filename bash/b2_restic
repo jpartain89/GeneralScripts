@@ -1,5 +1,13 @@
 #!/bin/bash -e
 
+if [ -f /var/run/restic.pid ] ; then
+    kill "$(cat /var/run/restic.pid)"
+else
+    killall restic 2>/dev/null
+fi
+
+rm -f /var/run/restic.pid
+
 export B2_ACCOUNT_ID=001363fdd9710cb0000000001
 export B2_ACCOUNT_KEY=K001GHfv1fQ1YcOq2WYs1yrTjuxygO0
 export RESTIC_PASSWORD=lover0778
