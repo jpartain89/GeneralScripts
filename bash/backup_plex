@@ -3,7 +3,7 @@ set -e
 
 # This is to backup the general Plex directory once every 2 days.
 
-# Copyright © 2019 JPCDI, JPartain89, Justin Partain
+# Copyright © 2019-2020 JPCDI, JPartain89, Justin Partain
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

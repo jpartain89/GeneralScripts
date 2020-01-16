@@ -19,7 +19,7 @@ case "$1" in
             mkdir -p /opt/var/run
         fi
         rm -f ${pidfile}
-        ${START_STOP_DAEMON} --pidfile ${pidfile} --name ${NAME} --start --exec ${DAEMON} -- ${DAEMON_OPTS}
+        ${START_STOP_DAEMON} --pidfile ${pidfile} --name ${NAME} --start --exec ${DAEMON} -- ${DAEMON_OPTS} &
     ;;
     stop)
         case $(${START_STOP_DAEMON} --status --pidfile ${pidfile} --name ${NAME}; echo $?) in
