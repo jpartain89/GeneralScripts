@@ -3,8 +3,7 @@ set -e
 
 # This script is to help calling `Tokland's YouTube-Upload`<https://github.com/tokland/youtube-upload> program
 
-PROGRAM_NAME="youtube-upload-wrap"
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ 
 
 die() {
     echo "$PROGRAM_NAME: $1" >&2
