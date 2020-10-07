@@ -1,6 +1,0 @@
-#!/usr/bin/env bash -e
-
-DATE="$(date +%b-%d-%Y)"
-TAR_FILE="backup-${DATE}.tar.gz"
-SRC=/
-DEST=/media/int_2tb
