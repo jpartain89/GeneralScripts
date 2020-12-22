@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# This is to script out my apt-autoremove commands so I can use the alias.
+
+DPKG_LIST=$(dpkg --list | grep '^rc' | awk '{print $2}')
+
+sudo apt-get autoclean
+sudo apt-get autoremove --purge
+
+while IFS= read -r file; do
+  for i in $file; do
+    sudo apt autoremove --purge -y $i;
+  done;
+done< <(${DPKG_LIST})
