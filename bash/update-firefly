@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -e
+
+# Program information
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROGRAM_NAME="update-firefly"
+REPO_NAME="generalscripts"
+VERSION="1.0.0"
+
+die() {
+  echo "${PROGRAM_NAME}: $1" >&2
+  exit "${2:-1}"
+}
+
+command -v "${PROGRAM_NAME}" 1>/dev/null 2>&1 || {
+  (
+    if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+      sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+      sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+    else
+      die "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,
+      failed. My apologies for not being able to figure it out..."
+    fi
+  )
+}
+
+#Modify next line to where your firefly-iii instance is installed to.
+WEB_DIR=/var/www
+latestversion=$(curl -s https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest  | grep -oP '"tag_name": "\K(.*)(?=")')
+
+#Remove old version of firefly-iii
+if [[ -d "${WEB_DIR}/firefly-iii-old" ]]; then
+  rm -r "${WEB_DIR}/firefly-iii-old"
+fi
+
+#Install latest version
+yes | composer create-project grumpydictator/firefly-iii --no-dev --prefer-dist ${WEB_DIR}/firefly-iii-updated $latestversion
+
+cp "${WEB_DIR}/firefly-iii/.env" "${WEB_DIR}/firefly-iii-updated/.env"
+
+rsync -avhP "${WEB_DIR}/firefly-iii/storage/upload/*" "${WEB_DIR}/firefly-iii-updated/storage/upload/"
+rsync -avhP "${WEB_DIR}/firefly-iii/storage/export/*" "${WEB_DIR}/firefly-iii-updated/storage/export/"
+
+rm -rf "${WEB_DIR}/firefly-iii-updated/bootstrap/cache/*"
+
+ARTISAN="${WEB_DIR}/firefly-iii-updated/artisan"
+
+php8.0 ${ARTISAN} cache:clear
+php8.0 ${ARTISAN} migrate --seed
+php8.0 ${ARTISAN} firefly-iii:upgrade-database
+php8.0 ${ARTISAN} passport:install
+php8.0 ${ARTISAN} cache:clear
+
+mv "${WEB_DIR}/firefly-iii" "${WEB_DIR}/firefly-iii-old"
+mv "${WEB_DIR}/firefly-iii-updated" "${WEB_DIR}/firefly-iii"
+
+sudo nginx -s reload
