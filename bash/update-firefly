@@ -38,8 +38,8 @@ yes | composer create-project grumpydictator/firefly-iii --no-dev --prefer-dist 
 
 cp "${WEB_DIR}/firefly-iii/.env" "${WEB_DIR}/firefly-iii-updated/.env"
 
-rsync -avhP "${WEB_DIR}/firefly-iii/storage/upload/*" "${WEB_DIR}/firefly-iii-updated/storage/upload/"
-rsync -avhP "${WEB_DIR}/firefly-iii/storage/export/*" "${WEB_DIR}/firefly-iii-updated/storage/export/"
+rsync -avhP "${WEB_DIR}/firefly-iii/storage/upload/" "${WEB_DIR}/firefly-iii-updated/storage/upload/"
+rsync -avhP "${WEB_DIR}/firefly-iii/storage/export/" "${WEB_DIR}/firefly-iii-updated/storage/export/"
 
 rm -rf "${WEB_DIR}/firefly-iii-updated/bootstrap/cache/*"
 
