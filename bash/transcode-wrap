@@ -1,6 +1,6 @@
-#!/usr/local/env bash
+#!/usr/bin/env bash
 set -e
-LOCATION=/media/8TB_EXT2/Movies
+
 TRANSCODE="$(command -v transcode-video)"
 
 if [[ "${TRANSCODE}" == "" ]]; then
@@ -13,4 +13,4 @@ while IFS= read -r line; do
     BASENAME="$(dirname "${line}")"
     mkdir "${BASENAME}/processed"
     "${TRANSCODE}" --mp4 --quick "${line}" -o "${BASENAME}/processed/${FILE_NAME}"
-done< <(find "${LOCATION}" \( -iname "*.mkv" -o -iname "*.mp4" \) -exec echo {} \; )
+done< <(find "." \( -iname "*.mkv" -o -iname "*.mp4" \) -exec echo {} \; )
