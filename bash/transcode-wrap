@@ -12,17 +12,6 @@ die() {
     exit "${2:-1}"
 }
 
-# This tests for gnu-getopt, as thats needed to run
-if [ -f /usr/local/opt/gnu-getopt/bin/getopt ]; then
-    GETOPT="/usr/local/opt/gnu-getopt/bin/getopt"
-    if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
-        die "You seem to have the wrong version of gnu-getopt?
-        Please investigate and have the proper one installed."
-    fi
-else
-    die "Seems you're missing the required gnu-getopt program.
-    Please install using brew install gnu-getopt."
-fi
 
 # This "auto-installs" git-auto into /usr/local/bin for ya!
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
