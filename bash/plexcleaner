@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -e
+
+PROGRAM_NAME="plexcleaner"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+die() {
+  echo "$PROGRAM_NAME: $1" >&2
+  exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+  (
+  if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+    sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+    sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+  else
+    echo "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,"
+    echo "failed. My apologies for not being able to figure it out..."
+    exit 1
+    fi
+  )
+}
+
+DOCKER=$(command -v docker)
+VOLUME="/media:/media"
+IMAGE="ptr727/plexcleaner"
+CMD="/PlexCleaner/PlexCleaner"
+SETTINGS_FILE="/media/docker/PlexCleaner/PlexCleaner.json"
+LOGFILE="/media/docker/PlexCleaner/PlexCleaner.log"
+
+CLI="run \
+  --it \
+  --rm \
+  --user nobody:users \
+  --env TZ=America/Chicago \
+  --volume ${VOLUME} \
+  ${IMAGE} \
+  ${CMD} \
+  --settingsfile ${SETTINGS_FILE} \
+  --logfile ${LOGFILE} --logappend"
+
+"${DOCKER}" "${CLI}" "$@"
