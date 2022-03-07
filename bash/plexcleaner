@@ -43,4 +43,4 @@ CLI="run \
   --settingsfile ${SETTINGS_FILE} \
   --logfile ${LOGFILE} --logappend"
 
-"${DOCKER}" "${CLI}" "$@"
+"${DOCKER} ${CLI} $@"
