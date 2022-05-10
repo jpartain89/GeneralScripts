@@ -1,0 +1,40 @@
+#!/usr/bin/env bash -e
+
+PROGRAM_NAME=start_docker_containers
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARAMS=""
+
+DOCKER_FILE_LOCATION="${HOME}/git/docker_directory"
+DOCKER_FILE_CHILD_LOCATIONS=(
+  docker-compose.yml
+  authentik/docker-compose.yml
+  duplicati/docker-compose.yml
+  grafana/docker-compose.yml
+  invoiceninja/docker-compose.yml
+  paperless-ng/docker-compose.yml
+  unpoller/docker-compose.yml
+)
+
+die() {
+    echo "$PROGRAM_NAME: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+for i in "${DOCKER_FILE_CHILD_LOCATIONS[@]}"; do
+  docker compose -f "${DOCKER_FILE_LOCATION}/${i}" up -d
+done
