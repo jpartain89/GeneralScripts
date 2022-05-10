@@ -36,5 +36,6 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 for i in "${DOCKER_FILE_CHILD_LOCATIONS[@]}"; do
+  docker compose pull &&
   docker compose -f "${DOCKER_FILE_LOCATION}/${i}" up -d
 done
