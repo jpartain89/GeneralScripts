@@ -29,13 +29,13 @@ DOCKER=$(command -v docker)
 VOLUME="/media:/media"
 IMAGE="ptr727/plexcleaner"
 CMD="/PlexCleaner/PlexCleaner"
-SETTINGS_FILE="/media/ext2/docker/PlexCleaner/PlexCleaner.json"
-LOGFILE="/media/ext2/docker/PlexCleaner/PlexCleaner.log"
+SETTINGS_FILE="/media/General/docker/PlexCleaner/PlexCleaner.json"
+LOGFILE="/media/General/docker/PlexCleaner/PlexCleaner.log"
 
 CLI="run \
   -i -t \
   --rm \
-  --user 5001:7002 \
+  --user 1000:1000 \
   --env TZ=America/Chicago \
   --volume ${VOLUME} \
   ${IMAGE} \
@@ -43,4 +43,4 @@ CLI="run \
   --settingsfile ${SETTINGS_FILE} \
   --logfile ${LOGFILE} --logappend"
 
-${DOCKER} ${CLI} $@
+${DOCKER} ${CLI} "$@"
