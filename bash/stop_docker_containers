@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+set -e
 
 PROGRAM_NAME=stop_docker_containers
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -8,9 +9,7 @@ DOCKER_FILE_LOCATION="${HOME}/git/docker_directory"
 DOCKER_FILE_CHILD_LOCATIONS=(
   docker-compose.yml
   authentik/docker-compose.yml
-  duplicati/docker-compose.yml
   grafana/docker-compose.yml
-  invoiceninja/docker-compose.yml
   paperless-ng/docker-compose.yml
   unpoller/docker-compose.yml
 )
