@@ -9,9 +9,9 @@ DOCKER_FILE_LOCATION="${HOME}/git/docker_directory"
 DOCKER_FILE_CHILD_LOCATIONS=(
   docker-compose.yml
   authentik/docker-compose.yml
-  grafana/docker-compose.yml
   paperless-ng/docker-compose.yml
   unpoller/docker-compose.yml
+  grafana/docker-compose.yml
 )
 
 die() {
