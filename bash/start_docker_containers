@@ -38,10 +38,10 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 for i in "${DOCKER_FILE_CHILD_LOCATIONS[@]}"; do
-    if [[ -e .env.tpl ]]; then
+    if [[ -e "${i}/.env.tpl" ]]; then
         eval $(op signin)
         op inject -i .env.tpl -o .env
-    elif [[ -e docker-compose.env.tpl ]]; then
+    elif [[ -e "${i}/docker-compose.env.tpl" ]]; then
         eval $(op signin)
         op inject -i docker-compose.env.tpl -o docker-compose.env
     fi
