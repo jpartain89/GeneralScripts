@@ -6,13 +6,15 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARAMS=""
 
 DOCKER_FILE_LOCATION="${HOME}/git/docker_directory"
+DOCKER_FILE=docker-compose.yml
 DOCKER_FILE_CHILD_LOCATIONS=(
-  docker-compose.yml
-  authentik/docker-compose.yml
-  duplicati/docker-compose.yml
-  grafana/docker-compose.yml
-  paperless-ng/docker-compose.yml
-  unpoller/docker-compose.yml
+  .
+  authentik
+  duplicati
+  grafana
+  paperless-ng
+  snipeit
+  unpoller
 )
 
 die() {
@@ -36,7 +38,13 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 for i in "${DOCKER_FILE_CHILD_LOCATIONS[@]}"; do
-  docker compose -f "${DOCKER_FILE_LOCATION}/${i}" pull &&
-  docker compose -f "${DOCKER_FILE_LOCATION}/${i}" up -d
+    if [[ -e .env.tpl ]]; then
+        op inject -i .env.tpl -o .env
+    elif [[ -e docker-compose.env.tpl ]]; then
+        op inject -i docker-compose.env.tpl -o docker-compose.env
+    fi
+
+  docker compose -f "${DOCKER_FILE_LOCATION}/${i}/${DOCKER_FILE}" pull &&
+  docker compose -f "${DOCKER_FILE_LOCATION}/${i}/${DOCKER_FILE}" up -d
 done
-  
+
