@@ -59,16 +59,16 @@ main() {
   done< <(find ${LOCATION} -iname "*.${EXT}" -exec echo {} \;)
 }
 
-SHORT=leh
-LONG=location,ext,help
+#SHORT=leh
+#LONG=location,ext,help
 
-OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
+#OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
 if [ $? != 0 ] ; then
   die "Failed to parse options...exiting." >&2
 fi
 
-eval set -- "${OPTS}"
+#eval set -- "${OPTS}"
 
 while (( "$#" )); do
   case "$1" in
