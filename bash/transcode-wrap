@@ -54,7 +54,7 @@ main() {
       #cd $(dirname "$i") &&
       transcode-video --quick --mp4 "$i" \
         "${i%${EXT}}mp4" &&
-      cd "${DIR}";
+      #cd "${DIR}";
     done;
   done< <(find "${LOCATION}" -iname "*.${EXT}" -exec echo {} \;)
 }
@@ -96,4 +96,3 @@ while (( "$#" )); do
 done
 
 main
-
