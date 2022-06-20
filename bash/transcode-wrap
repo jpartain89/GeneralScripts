@@ -70,16 +70,14 @@ fi
 
 eval set -- "${OPTS}"
 
-while true; do
+while (( "$#" )); do
   case "$1" in
     -l | --location )
       LOCATION="${2}";
-      shift;
       break;
       ;;
     -e | --extension )
       EXT="${2}"
-      shift;
       break;
       ;;
     -h | --help )
@@ -90,9 +88,9 @@ while true; do
       shift
       break
       ;;
+    * ) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
   esac
 done
-
-main
-
-exit 0
