@@ -94,3 +94,6 @@ while (( "$#" )); do
       ;;
   esac
 done
+
+main
+
