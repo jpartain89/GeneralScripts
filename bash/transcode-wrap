@@ -56,7 +56,7 @@ main() {
         "$(basename "${i%${EXT}}mp4")" &&
       cd "${DIR}";
     done;
-  done< <(find ${LOCATION} -iname "*.${EXT}" -exec echo {} \;)
+  done< <(find "${LOCATION}" -iname "*.${EXT}" -exec echo {} \;)
 }
 
 #SHORT=leh
