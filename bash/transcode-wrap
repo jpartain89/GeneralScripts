@@ -59,8 +59,8 @@ main() {
   done< <(find ${LOCATION} -iname "*.${EXT}" -exec echo {} \;)
 }
 
-SHORT=le
-LONG=location,ext,
+SHORT=leh
+LONG=location,ext,help
 
 OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
