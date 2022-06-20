@@ -36,6 +36,18 @@ if [[ "${TRANSCODE}" == "" ]]; then
   exit 1
 fi
 
+usage() {
+  cat << EOF
+$PROGRAM_NAME [ -l | --location ] /foo/bar [ -e | --extension ] .bar
+
+    - l | --location    : Sets the directory location for the files you are
+                          wanting trascoded.
+    -e | --extension    : Sets the extension of the files you want transcoded
+
+                  Can only parse one at time for both items
+EOF
+}
+
 main() {
   while IFS= read -r file; do
     for i in "$file"; do
