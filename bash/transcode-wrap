@@ -74,11 +74,11 @@ while (( "$#" )); do
   case "$1" in
     -l | --location )
       LOCATION="${2}";
-      break;
+      shift;
       ;;
     -e | --extension )
       EXT="${2}"
-      break;
+      shift;
       ;;
     -h | --help )
       usage
