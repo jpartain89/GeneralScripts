@@ -14,6 +14,7 @@ DOCKER_FILE_CHILD_LOCATIONS=(
   grafana
   paperless-ng
   snipeit
+  guac
   unpoller
 )
 
@@ -38,6 +39,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 eval $(op signin)
+git pull "${DOCKER_FILE_LOCATION}" &&
 for i in "${DOCKER_FILE_CHILD_LOCATIONS[@]}"; do
     if [[ -e "${DOCKER_FILE_LOCATION}/${i}/.env.tpl" ]]; then
         op inject -i "${DOCKER_FILE_LOCATION}/${i}/.env.tpl" -o "${DOCKER_FILE_LOCATION}/${i}/.env"
