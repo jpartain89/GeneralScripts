@@ -43,19 +43,14 @@ op_process() {
     # Force sign-in to 1Password-CLI
     eval $(op signin)
 
-    # Walks through the directories below $DIR to create the .env files from the .tpl files
-    for i in "${DF_CHILD_LOCATIONS[@]}"; do
-        OP_TPL=$(find "${i}" -iname "*.tpl")
-        if [[ -e "${OP_TPL}" ]]; then
-            op inject -i "${OP_TPL}" -o "${OP_TPL%.*}"
-        fi
-    done
-
-    # Performs the same on the root of $DIR
-    OP_TPL=$(find "${DIR}" -iname "*.tpl")
-    if [[ -e "${OP_TPL}" ]]; then
-        op inject -i "${OP_TPL}" -o "${OP_TPL%.*}"
-    fi
+    # Walks through all the found .tpl files
+    while IFS=\n read -r file; do
+        for i in "${file}"; do
+            if [[ -e "${i}" ]]; then
+                op inject -i "${i}" -o "${i%.*}"
+            fi
+        done
+    done< <(find "${DF_LOCATION}" -iname "*.tpl" -exec echo {} \;)
 }
 
 start_containers() {
