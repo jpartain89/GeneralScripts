@@ -56,12 +56,12 @@ op_process() {
 }
 
 start_containers() {
-    while IFS= read -r ${DF_CHILD_LOCATIONS[@]}; do
-        for i in "${DF_CHILD_LOCATIONS[@]}"; do
+    while IFS= read -r file; do
+        for i in "${file}"; do
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
         done
-    done
+    done< <(echo "${DF_CHILD_LOCATIONS})
 
     ${DOCKER_CMD} ${DF_LOCATION}/${DF} pull &&
     ${DOCKER_CMD} ${DF_LOCATION}/${DF} up -d --remove-orphans
