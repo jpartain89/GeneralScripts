@@ -68,9 +68,11 @@ start_containers() {
 }
 
 stop_containers() {
-    for i in "${DF_CHILD_LOCATIONS[@]}"; do
-        ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
-    done
+    while IFS= read -r file; do
+        for i in "${file}"; do
+            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
+        done
+    done< <(echo "${DF_CHILD_LOCATIONS}")
 
     ${DOCKER_CMD} ${DF_LOCATION}/${DF} down || true
     while IFS= read -r file; do
