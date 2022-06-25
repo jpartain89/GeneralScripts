@@ -47,7 +47,7 @@ op_process() {
     while IFS=\n read -r file; do
         for i in "${file}"; do
             if [[ -e "${i}" ]]; then
-                op inject -i "${i}" -o "${i%.*}"
+                op inject --force -i "${i}" -o "${i%.*}"
             fi
         done
     done< <(find "${DF_LOCATION}" -iname "*.tpl" -exec echo {} \;)
