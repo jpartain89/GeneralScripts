@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-PROGRAM_NAME=start_docker_containers
+PROGRAM_NAME=ssdc
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PARAMS=""
+REPO_NAME="generalscripts"
 
 # File/Directory based variables
 DF_LOCATION="${HOME}/git/docker_directory"
@@ -86,6 +86,10 @@ stop_containers() {
 
     "${DOCKER_CMD}" "${DF_LOCATION}/${DF}" down
 }
+
+if [ $? != 0 ] ; then
+    die "Failed to parse options...exiting." >&2
+fi
 
 while (( "$#" )); do
     case "$1" in
