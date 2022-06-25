@@ -56,9 +56,11 @@ op_process() {
 }
 
 start_containers() {
-    for i in "${DF_CHILD_LOCATIONS[@]}"; do
-        ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
-        ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
+    while IFS= read -r ${DF_CHILD_LOCATIONS[@]}; do
+        for i in "${DF_CHILD_LOCATIONS[@]}"; do
+            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
+            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
+        done
     done
 
     ${DOCKER_CMD} ${DF_LOCATION}/${DF} pull &&
