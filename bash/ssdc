@@ -36,7 +36,9 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 git_pull() {
-    git pull "${DF_LOCATION}"
+    cd "${DF_LOCATION}" || exit
+    git pull
+    cd - || exit
 }
 
 op_process() {
