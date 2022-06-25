@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+set -e
+
+PROGRAM_NAME=ssdc
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+REPO_NAME="generalscripts"
+
+# File/Directory based variables
+DF_LOCATION="${HOME}/git/docker_directory"
+DF=docker-compose.yml
+DF_CHILD_LOCATIONS=$(source ${DF_LOCATION}/ssdc.conf)
+
+# Program based Variables
+DOCKER="$(command -v docker)"
+DOCKER_CMD="${DOCKER} compose -f"
+
+die() {
+    cd ${DIR}
+    echo "$PROGRAM_NAME: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
+git_pull() {
+    git pull "${DF_LOCATION}"
+}
+
+op_process() {
+    # Force sign-in to 1Password-CLI
+    eval $(op signin)
+
+    # Walks through the directories below $DIR to create the .env files from the .tpl files
+    for i in "${DF_CHILD_LOCATIONS[@]}"; do
+        OP_TPL=$(find "${i}" -iname "*.tpl")
+        if [[ -e "${OP_TPL}" ]]; then
+            op inject -i "${OP_TPL}" -o "${OP_TPL%.*}"
+        fi
+    done
+
+    # Performs the same on the root of $DIR
+    OP_TPL=$(find "${DIR}" -iname "*.tpl")
+    if [[ -e "${OP_TPL}" ]]; then
+        op inject -i "${OP_TPL}" -o "${OP_TPL%.*}"
+    fi
+}
+
+start_containers() {
+    for i in "${DF_CHILD_LOCATIONS[@]}"; do
+        ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
+        ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
+    done
+
+    ${DOCKER_CMD} ${DF_LOCATION}/${DF} pull &&
+    ${DOCKER_CMD} ${DF_LOCATION}/${DF} up -d --remove-orphans
+}
+
+stop_containers() {
+    for i in "${DF_CHILD_LOCATIONS[@]}"; do
+        ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
+    done
+
+    ${DOCKER_CMD} ${DF_LOCATION}/${DF} down || true
+    while IFS= read -r file; do
+        for i in "${file}"; do
+            if [[ -e "${i}" ]]; then
+                rm "${i}"
+            fi
+        done
+    done< <(find "${DF_LOCATION}" -iname "*.env" -exec echo {} \;)
+}
+
+if [ $? != 0 ] ; then
+    die "Failed to parse options...exiting." >&2
+fi
+
+while (( "$#" )); do
+    case "$1" in
+        start )
+            git_pull;
+            op_process;
+            start_containers;
+            shift;;
+        stop )
+            stop_containers;
+            shift;;
+        op )
+            op_process;
+            shift;;
+        * )
+            trap;;
+    esac
+done
+
