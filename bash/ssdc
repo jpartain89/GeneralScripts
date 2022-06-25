@@ -92,6 +92,10 @@ while (( "$#" )); do
     case "$1" in
         start )
             git_pull;
+            start_containers;
+            shift;;
+        full_start )
+            git_pull;
             op_process;
             start_containers;
             shift;;
