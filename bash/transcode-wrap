@@ -52,7 +52,7 @@ main() {
   while IFS= read -r file; do
     for i in "$file"; do
       #cd $(dirname "$i") &&
-      transcode-video --quick --mp4 "$i" "${i%${EXT}}mp4"
+        transcode-video --quick --mp4 "$i" "${i%${EXT}}mp4"
       #cd "${DIR}";
     done;
   done< <(find "${LOCATION}" -iname "*.${EXT}" -exec echo {} \;)
