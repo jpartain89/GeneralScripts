@@ -8,7 +8,7 @@ REPO_NAME="generalscripts"
 # File/Directory based variables
 DF_LOCATION="${HOME}/git/docker_directory"
 DF=docker-compose.yml
-DF_CHILD_LOCATIONS=$(. ${DF_LOCATION}/ssdc.conf)
+DF_CHILD_LOCATIONS=$(cat ${DF_LOCATION}/ssdc.conf)
 
 # Program based Variables
 DOCKER="$(command -v docker)"
