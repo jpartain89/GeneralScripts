@@ -77,6 +77,16 @@ stop_containers() {
     ${DOCKER_CMD} ${DF_LOCATION}/${DF} down || true
 }
 
+backup() {
+    while IFS= read -r file; do
+        for i in "${file}"; do
+            if [[ "${i}" != "duplicati" ]]; then
+                ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
+            fi
+        done
+    done< <(echo "${DF_CHILD_LOCATIONS}")
+}
+
 rm_op() {
     while IFS= read -r file; do
         for i in "${file}"; do
@@ -111,6 +121,9 @@ while (( "$#" )); do
             shift;;
         op )
             op_process;
+            shift;;
+        backup )
+            backup;
             shift;;
         * )
             trap;
