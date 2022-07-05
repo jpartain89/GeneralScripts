@@ -75,6 +75,9 @@ stop_containers() {
     done< <(echo "${DF_CHILD_LOCATIONS}")
 
     ${DOCKER_CMD} ${DF_LOCATION}/${DF} down || true
+}
+
+rm_op() {
     while IFS= read -r file; do
         for i in "${file}"; do
             if [[ -e "${i}" ]]; then
@@ -94,13 +97,17 @@ while (( "$#" )); do
             git_pull;
             start_containers;
             shift;;
-        full_start )
+        full_start | full-start )
             git_pull;
             op_process;
             start_containers;
             shift;;
         stop )
             stop_containers;
+            shift;;
+        full_stop | full-stop )
+            stop_containers;
+            rm_op;
             shift;;
         op )
             op_process;
