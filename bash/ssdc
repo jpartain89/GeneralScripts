@@ -36,6 +36,8 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 git_pull() {
+    # Pulls the main repo for us
+    echo "**** Checking for updates to the docker repo ****"
     cd "${DF_LOCATION}" || exit
     git pull
     cd - || exit
@@ -43,7 +45,10 @@ git_pull() {
 
 op_process() {
     # Force sign-in to 1Password-CLI
-    eval $(op signin)
+    until eval $(op signin); do
+        echo "Looks like you failed the password prompt! Try again in 10 seconds!"
+        sleep 10
+    done
 
     # Walks through all the found .tpl files
     while IFS=\n read -r file; do
@@ -124,7 +129,7 @@ while (( "$#" )); do
             shift;;
         backup )
             backup;
-            shift;;
+            shift;;w
         * )
             trap;
             exit;;
