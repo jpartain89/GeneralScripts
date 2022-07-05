@@ -45,7 +45,7 @@ git_pull() {
 
 op_process() {
     # Force sign-in to 1Password-CLI
-    until eval $(op signin) 2>/dev/null; do
+    until eval $(op signin) 2>&1 /dev/null; do
         echo "Looks like you failed the password prompt! Try again in 10 seconds!"
         sleep 10
     done
