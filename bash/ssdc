@@ -129,7 +129,7 @@ while (( "$#" )); do
             shift;;
         backup )
             backup;
-            shift;;w
+            shift;;
         * )
             trap;
             exit;;
