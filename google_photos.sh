@@ -27,8 +27,7 @@ url=(
 "https://storage.googleapis.com/inactivity/20220702T012525Z/-6448198516074774275/434d3ab5-16e5-40a3-bbe0-af3a87d03119/1/be2e16ac-2b93-4026-98b2-cbca261776c0?GoogleAccessId=464346583554@developer.gserviceaccount.com&amp;Expires=1657147731&amp;Signature=vKUEPUdHrZTaVL0UdAcGEGu9nqPFKydxNCpzGzxh/q%2BGNMLO6hurhludMi%2BkTTQg7pEIAENTxyQRjD59P5/GjmqXGpuIM9qv0rDxw4dz5xL6u5gKT0TklU31jxHKhOsGo9%2BHPE3NgqMwumbEQ2MyP3hFgiJArjjDWYvva2Q9wSk%3D"
 )
 
-while IFS= read -r file; do
-  for i in $file; do
+for i in ${file[@]}; do
     wget "${i}"; 
   done
 done

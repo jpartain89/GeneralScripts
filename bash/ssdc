@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-_logging
-
 PROGRAM_NAME=ssdc
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_NAME="generalscripts"
@@ -11,8 +9,10 @@ REPO_NAME="generalscripts"
 DF_LOCATION="${HOME}/git/docker_directory"
 DF=docker-compose.yml
 DF_CHILD_LOCATIONS=$(cat ${DF_LOCATION}/ssdc.conf)
-eval $(~/git/generalscripts/bash/functions/bash_functions \
-    "${DF_LOCATION}/ssdc.conf")
+eval ~/git/generalscripts/bash/functions/bash_functions
+eval "${DF_LOCATION}/ssdc.conf"
+
+_logging;
 
 # Program based Variables
 DOCKER="$(command -v docker)"
