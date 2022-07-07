@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # My Starter bash functions script for my default stuff I use on all my scripts
 # This script needs to be installed or linked at
 ## ~/.config/functions/bash_functions
