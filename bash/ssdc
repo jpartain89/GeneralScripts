@@ -63,6 +63,7 @@ op_process() {
 start_containers() {
     while IFS= read -r file; do
         for i in "${file}"; do
+            [[ "${i}" =~ ^#.* ]] && continue
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
         done
@@ -75,6 +76,7 @@ start_containers() {
 stop_containers() {
     while IFS= read -r file; do
         for i in "${file}"; do
+            [[ "${i}" =~ ^#.* ]] && continue
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
         done
     done< <(echo "${DF_CHILD_LOCATIONS}")
@@ -85,9 +87,9 @@ stop_containers() {
 backup() {
     while IFS= read -r file; do
         for i in "${file}"; do
-            if [[ "${i}" != "duplicati" ]]; then
-                ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
-            fi
+            [[ "${i}" =~ ^#.* ]] && continue
+            [[ "${i}" == "duplicati" ]] && continue
+            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
         done
     done< <(echo "${DF_CHILD_LOCATIONS}")
 }
