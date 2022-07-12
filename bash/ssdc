@@ -63,7 +63,10 @@ op_process() {
 start_containers() {
     while IFS= read -r file; do
         for i in "${file}"; do
+            # Ignores any line in SSDC that starts with #
             [[ "${i}" =~ ^#.* ]] && continue
+
+            echo "Working ${i}"
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
         done
@@ -76,7 +79,9 @@ start_containers() {
 stop_containers() {
     while IFS= read -r file; do
         for i in "${file}"; do
+            # Ignores any line in ssdc.conf that starts with #
             [[ "${i}" =~ ^#.* ]] && continue
+
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
         done
     done< <(echo "${DF_CHILD_LOCATIONS}")
@@ -87,7 +92,9 @@ stop_containers() {
 backup() {
     while IFS= read -r file; do
         for i in "${file}"; do
+            # Ignores any line that starts with # in ssdc.conf
             [[ "${i}" =~ ^#.* ]] && continue
+            # Duplicati is the program running the background app
             [[ "${i}" == "duplicati" ]] && continue
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
         done
@@ -104,8 +111,12 @@ rm_op() {
     done< <(find "${DF_LOCATION}" -iname "*.env" -exec echo {} \;)
 }
 
-if [ $? != 0 ] ; then
-    die "Failed to parse options...exiting." >&2
+if [ $# == 0 ] ; then
+    echo "Auto-Running the backup utility..."
+    echo "If you do NOT want to do this, please, hit CTRL-C NOW!"
+    echo "Waiting 10 seconds..."
+    sleep 10
+    1=backup
 fi
 
 while (( "$#" )); do
