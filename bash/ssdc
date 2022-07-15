@@ -39,7 +39,8 @@ git_pull() {
     # Pulls the main repo for us
     echo "**** Checking for updates to the docker repo ****"
     cd "${DF_LOCATION}" || exit
-    git pull
+    git pull --recurse-submodules
+    git submodule update --init --recursive
     cd - || exit
 }
 
