@@ -2,7 +2,7 @@
 set -e
 
 # program info
-PROGRAM_NAME="rclone_backup_pre_script.sh"
+PROGRAM_NAME="rclone_backup_post_script.sh"
 REPO_NAME="generalscripts"
 VERSION="0.0.1"
 
@@ -14,12 +14,4 @@ _link_install
 
 SSDC=$(command -v ssdc)
 
-${SSDC} backup
-
-sudo mariadb-dump \
-  -ujpartain89 \
-  -plover0778 \
-  --all-databases \
-  --flush-privileges \
-  -f \
-    > /docker/mariadb/backup/$(date +%F_%R).sql 2>/dev/null
+${SSDC} start
