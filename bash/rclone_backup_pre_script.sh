@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
+# program info
+PROGRAM_NAME="rclone_backup_pre_script.sh"
+REPO_NAME="generalscripts"
+VERSION="0.0.1"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+eval ~/git/generalscripts/bash/functions/bash_functions
+
+_die
+_trap_die
+_trap
+_link_install
+
 SSDC=$(command -v ssdc)
 
 "${SSDC} backup"
