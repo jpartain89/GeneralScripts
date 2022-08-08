@@ -24,7 +24,7 @@ if [[ "${TRANSCODE}" == "" ]]; then
 fi
 
 usage() {
-  cat << EOF
+  echo -e "
 ${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
 
     -l | --location    : Sets the directory location for the files you are
@@ -37,7 +37,7 @@ ${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
       This one is not:
         ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi
 
-EOF
+"
 }
 
 main() {
