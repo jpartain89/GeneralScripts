@@ -87,7 +87,7 @@ _trap() {
 }
 
 _logging() {
-    exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+    exec 1> >(exec logger -s -t $(0##*/)) 2>&1
 }
 
 _getopt_test() {
