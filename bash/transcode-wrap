@@ -51,7 +51,7 @@ main() {
 #OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
 if [ $? == 0 ] ; then
-  die "Failed to parse options as there aren't any... exiting." >&2
+  _trap_die "Failed to parse options as there aren't any... exiting." >&2
 fi
 
 #eval set -- "${OPTS}"
