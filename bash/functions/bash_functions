@@ -5,33 +5,32 @@
 ## ~/.config/functions/bash_functions
 
 # program info
-PROGRAM_NAME="bash_functions"
-REPO_NAME="generalscripts"
+__PROGRAM_NAME="bash_functions"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+__DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-FUNCTIONS_LOCATION="${HOME}/.config/functions"
+__FUNCTIONS_LOCATION="${HOME}/.config/functions"
 
-if [[ ! -x "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}" ]]; then
-    if [[ ! -d "${FUNCTIONS_LOCATION}" ]]; then
+if [[ ! -x "${__FUNCTIONS_LOCATION}/${__PROGRAM_NAME}" ]]; then
+    if [[ ! -d "${__FUNCTIONS_LOCATION}" ]]; then
         echo "Creating ~/.config/functions"
-        mkdir -p "${FUNCTIONS_LOCATION}"
+        mkdir -p "${__FUNCTIONS_LOCATION}"
     fi
-    if [[ ! -d "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}" ]]; then
+    if [[ ! -d "${__FUNCTIONS_LOCATION}/${__PROGRAM_NAME}" ]]; then
         echo "Linking bash_functions to your home directory"
-        ln -svf "${DIR}/${PROGRAM_NAME}" "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}"
+        ln -svf "${__DIR}/${__PROGRAM_NAME}" "${__FUNCTIONS_LOCATION}/${__PROGRAM_NAME}"
     fi
 fi
 
 _link_install() {
     # This "auto-installs" git-auto into /usr/local/bin for ya!
-    command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    command -v "${PROGRAM_NAME}" 1>/dev/null 2>&1 || {
         (
             if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
                 sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
                 sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
             else
-                echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+                echo "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,"
                 echo "failed. My apologies for not being able to figure it out..."
                 exit 1
             fi
@@ -40,24 +39,24 @@ _link_install() {
 }
 
 _on_error_long() {
-    status=$?
-    script=$0
-    line=$1
+    status=${?}
+    script=${0}
+    line=${1}
     shift
     args=
-    for i in "$@"; do
-        args+="\"$i\" "
+    for i in "${@}"; do
+        args+="\"${i}\" "
     done
 
 cat <<- EOF
 
 ------------------------------------------------------------
-Error occurred on "$script" [Line "$line"]: Status $status
+Error occurred on "${script}" [Line "${line}"]: Status ${status}
 
-PID: $$
-User: "$USER"
-Current directory: "$PWD"
-Command line: "$script $args"
+PID: ${$}
+User: "${USER}"
+Current directory: "${PWD}"
+Command line: "${script} ${args}"
 ------------------------------------------------------------
 
 EOF
@@ -71,7 +70,7 @@ _trap_error() {
 
 _die() {
     usage 2>/dev/null || true
-    echo "${PROGRAM_NAME}: $1" >&2
+    echo "${PROGRAM_NAME}: ${1}" >&2
     exit "${2:-1}"
 }
 
@@ -87,7 +86,7 @@ _trap() {
 }
 
 _logging() {
-    exec 1> >(exec logger -s -t $(0##*/)) 2>&1
+    exec 1> >(logger -s -t "${0##*/}") 2>&1
 }
 
 _getopt_test() {
@@ -95,7 +94,7 @@ _getopt_test() {
         # This tests for gnu-getopt, as thats needed to run
         if [ -f /usr/local/opt/gnu-getopt/bin/getopt ]; then
             GETOPT="/usr/local/opt/gnu-getopt/bin/getopt"
-            if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
+            if [ "$("${GETOPT}" --test; echo $?)" != 4 ]; then
                 _die "You seem to have the wrong version of gnu-getopt?
                 Please investigate and have the proper one installed."
             fi
@@ -106,7 +105,7 @@ _getopt_test() {
     elif [[ "$(uname)" == "Linux" ]]; then
         if [ -f "$(command -v getopt)" ]; then
             GETOPT="$(command -v getopt)"
-            if [ "$("$GETOPT" --test; echo $?)" != 4 ]; then
+            if [ "$("${GETOPT}" --test; echo ${?})" != 4 ]; then
                 _die "You seem to have the wrong version of getopt!
                 Please, take care to investigate and rectify the situation."
             fi
@@ -118,18 +117,18 @@ _getopt_test() {
 }
 
 parse_yaml() {
-   local prefix=$2
+   local prefix=${2}
    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\):|\1|" \
-        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
+   sed -ne "s|^\(${s}\):|\1|" \
+        -e "s|^\(${s}\)\(${w}\)${s}:${s}[\"']\(.*\)[\"']${s}\$|\1${fs}\2${fs}\3|p" \
+        -e "s|^\(${s}\)\(${w}\)${s}:${s}\(.*\)${s}\$|\1${fs}\2${fs}\3|p"  ${1} |
+   awk -F${fs} '{
       indent = length($1)/2;
       vname[indent] = $2;
       for (i in vname) {if (i > indent) {delete vname[i]}}
       if (length($3) > 0) {
          vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+         printf("%s%s%s=\"%s\"\n", "'${prefix}'",vn, $2, $3);
       }
    }'
 }
