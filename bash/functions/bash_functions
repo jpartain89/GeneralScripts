@@ -153,3 +153,86 @@ term_screen_size() {
     If you think you received this message in error, you can post an issue on the GitHub at https://github.com/pivpn/pivpn/issues." ${r} ${c}
     # The r c at the end? Thats the sizing
 }
+
+# Colors
+end="\033[0m"
+black="\033[0;30m"
+blackb="\033[1;30m"
+white="\033[0;37m"
+whiteb="\033[1;37m"
+red="\033[0;31m"
+redb="\033[1;31m"
+green="\033[0;32m"
+greenb="\033[1;32m"
+yellow="\033[0;33m"
+yellowb="\033[1;33m"
+blue="\033[0;34m"
+blueb="\033[1;34m"
+purple="\033[0;35m"
+purpleb="\033[1;35m"
+lightblue="\033[0;36m"
+lightblueb="\033[1;36m"
+
+_black() {
+  echo -e "${black}${1}${end}"
+}
+
+_blackb() {
+  echo -e "${blackb}${1}${end}"
+}
+
+_white() {
+  echo -e "${white}${1}${end}"
+}
+
+_whiteb() {
+  echo -e "${whiteb}${1}${end}"
+}
+
+_red() {
+  echo -e "${red}${1}${end}"
+}
+
+_redb() {
+  echo -e "${redb}${1}${end}"
+}
+
+_green() {
+  echo -e "${green}${1}${end}"
+}
+
+_greenb() {
+  echo -e "${greenb}${1}${end}"
+}
+
+_yellow() {
+  echo -e "${yellow}${1}${end}"
+}
+
+_yellowb() {
+  echo -e "${yellowb}${1}${end}"
+}
+
+_blue() {
+  echo -e "${blue}${1}${end}"
+}
+
+_blueb() {
+  echo -e "${blueb}${1}${end}"
+}
+
+_purple() {
+  echo -e "${purple}${1}${end}"
+}
+
+_purpleb() {
+  echo -e "${purpleb}${1}${end}"
+}
+
+_lightblue() {
+  echo -e "${lightblue}${1}${end}"
+}
+
+_lightblueb() {
+  echo -e "${lightblueb}${1}${end}"
+}
