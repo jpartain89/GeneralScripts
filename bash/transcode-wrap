@@ -68,7 +68,7 @@ while (( "${#}" )); do
       shift;
       ;;
     -e | --extension )
-      EXT="${2}"
+      EXT="${2}";
         if [[ ${EXT} != .* ]]; then EXT=".${EXT}" fi;
       shift;
       ;;
