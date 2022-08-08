@@ -47,7 +47,7 @@ main() {
         transcode-video --quick --mp4 "$i" "${i%${EXT}}mp4"
       #cd "${DIR}";
     done;
-  done< <(find "${LOCATION}" -iname "*.${EXT}" -exec echo {} \;)
+  done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo {} \;)
 }
 
 #SHORT=leh
