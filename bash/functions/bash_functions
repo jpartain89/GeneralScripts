@@ -70,6 +70,7 @@ _trap_error() {
 }
 
 _die() {
+    usage 2>/dev/null || true
     echo "${PROGRAM_NAME}: $1" >&2
     exit "${2:-1}"
 }
