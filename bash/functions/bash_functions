@@ -65,7 +65,8 @@ EOF
 
 _trap_error() {
     _on_error_long "${@}"
-    trap 'onError ${LINENO} "${@}"' ERR
+    # use:
+    #trap _trap_error ERR
 }
 
 _die() {
@@ -75,12 +76,13 @@ _die() {
 
 _trap_die() {
     _die "${@}"
-    trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+    # Use
+    #trap "_trap_die" SIGHUP SIGINT SIGTERM
 }
 
 _trap() {
-    _trap_error
-    _trap_die
+    trap _trap_error ERRR
+    trap _trap_die SIGHUP SIGINT SIGTERM
 }
 
 _logging() {
