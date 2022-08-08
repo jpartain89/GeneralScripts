@@ -4,29 +4,16 @@ set -e
 #This is to call 'transcode-video' in batch-form
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 PROGRAM_NAME="transcode-wrap"
 REPO_NAME="generalscripts"
 
-die() {
-    echo "${PROGRAM_NAME}: $1" >&2
-    exit "${2:-1}"
-}
+. ~/.config/functions/bash_functions
 
-GETOPT=$(command -v getopt)
-
-# This "auto-installs" git-auto into /usr/local/bin for ya!
-command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
-  (
-    if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
-      sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
-      sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
-    else
-      echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
-      echo "failed. My apologies for not being able to figure it out..."
-      exit 1
-    fi
-  )
-}
+_link_install
+_trap
+_logging
+#_getopt_test
 
 TRANSCODE="$(command -v transcode-video)"
 
@@ -63,14 +50,14 @@ main() {
 
 #OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
-if [ $? != 0 ] ; then
-  die "Failed to parse options...exiting." >&2
+if [ $? == 0 ] ; then
+  die "Failed to parse options as there aren't any... exiting." >&2
 fi
 
 #eval set -- "${OPTS}"
 
-while (( "$#" )); do
-  case "$1" in
+while (( "${#}" )); do
+  case "${1}" in
     -l | --location )
       LOCATION="${2}";
       shift;

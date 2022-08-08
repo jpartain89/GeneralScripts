@@ -4,6 +4,25 @@
 # This script needs to be installed or linked at
 ## ~/.config/functions/bash_functions
 
+# program info
+PROGRAM_NAME="bash_functions"
+REPO_NAME="generalscripts"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+FUNCTIONS_LOCATION="${HOME}/.config/functions"
+
+if [[ ! -x "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}" ]]; then
+    if [[ ! -d "${FUNCTIONS_LOCATION}" ]]; then
+        echo "Creating ~/.config/functions"
+        mkdir -p "${FUNCTIONS_LOCATION}"
+    fi
+    if [[ ! -d "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}" ]]; then
+        echo "Linking bash_functions to your home directory"
+        ln -svf "${DIR}/${PROGRAM_NAME}" "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}"
+    fi
+fi
+
 _link_install() {
     # This "auto-installs" git-auto into /usr/local/bin for ya!
     command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
@@ -95,7 +114,7 @@ _getopt_test() {
     fi
 }
 
-function parse_yaml {
+parse_yaml() {
    local prefix=$2
    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
    sed -ne "s|^\($s\):|\1|" \
@@ -110,4 +129,24 @@ function parse_yaml {
          printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
       }
    }'
+}
+
+term_screen_size() {
+    # Find the rows and columns. Will default to 80x24 if it can not be detected.
+    screen_size=$(stty size 2>/dev/null || echo 24 80)
+    rows=$(echo "${screen_size}" | awk '{print $1}')
+    columns=$(echo "${screen_size}" | awk '{print $2}')
+
+    # Divide by two so the dialogs take up half of the screen, which looks nice.
+    r=$(( rows / 2 ))
+    c=$(( columns / 2 ))
+    # Unless the screen is tiny
+    r=$(( r < 20 ? 20 : r ))
+    c=$(( c < 70 ? 70 : c ))
+
+    # You use this in a whiptail command structure, aka:
+    whiptail --msgbox --backtitle "INVALID OS DETECTED" --title "Invalid OS" "We have not been able to detect a supported OS.
+    Currently this installer supports Raspbian and Debian (Jessie and Stretch), Devuan (Jessie) and Ubuntu from 14.04 (trusty) to 17.04 (zesty).
+    If you think you received this message in error, you can post an issue on the GitHub at https://github.com/pivpn/pivpn/issues." ${r} ${c}
+    # The r c at the end? Thats the sizing
 }
