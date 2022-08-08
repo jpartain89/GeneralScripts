@@ -12,7 +12,7 @@ REPO_NAME="generalscripts"
 
 _link_install
 _trap
-_logging
+#_logging
 #_getopt_test
 
 TRANSCODE="$(command -v transcode-video)"
