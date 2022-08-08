@@ -81,7 +81,7 @@ _trap_die() {
 }
 
 _trap() {
-    trap _trap_error ERRR
+    trap _trap_error ERR
     trap _trap_die SIGHUP SIGINT SIGTERM
 }
 
