@@ -55,7 +55,7 @@ main() {
 
 #OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
-if [ $? == 0 ] ; then
+if [ "${#}" == 0 ] ; then
   _trap_die "Failed to parse options as there aren't any... exiting." >&2
 fi
 
@@ -80,7 +80,7 @@ while (( "${#}" )); do
       break
       ;;
     * ) # preserve positional arguments
-      PARAMS="$PARAMS $1"
+      PARAMS="${PARAMS} ${1}"
       shift
       ;;
   esac
