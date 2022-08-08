@@ -69,7 +69,7 @@ while (( "${#}" )); do
       ;;
     -e | --extension )
       EXT="${2}"
-      [ ${EXT} != .* ] && EXT=".${EXT}" fi
+      [[ ${EXT} != .* ]] && EXT=".${EXT}" fi
       shift;
       ;;
     -h | --help )
