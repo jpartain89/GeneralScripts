@@ -31,10 +31,10 @@ ${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
                           wanting trascoded.
     -e | --extension   : Sets the extension of the files you want transcoded
 
-    NOTE: Can only parse one at time for both items.
-      This one is allowed:
+    _red "NOTE: Can only parse one at time for both items."
+      _redb "This one is allowed:"
         ${PROGRAM_NAME} -l /media/drive -e .mkv
-      This one is not:
+      _redb "This one is not:"
         ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi
 
 EOF
