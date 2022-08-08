@@ -43,11 +43,15 @@ ${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
 main() {
   while IFS= read -r file; do
     for i in "$file"; do
-      if [[ ! -e "${i%${EXT}}.mp4" ]]; then
-        transcode-video --quick --mp4 "${i}" "${i%${EXT}}.mp4"
-      elif [[ -e "${i%${EXT}}.mp4" ]]; then
-        echo "${i${EXT}}" "${i${EXT}}.log"
-        #rm "${i${EXT}}" "${i${EXT}}.log"
+
+      # This assigns the substituted variable to the letter j
+      j="${i%${EXT}}.mp4"
+
+      if [[ ! -e "${j}" ]]; then
+        transcode-video --quick --mp4 "${i}" "${j}"
+      elif [[ -e "${j}" ]]; then
+        echo "${j}" "${j}.log"
+        #rm "${j}" "${j}.log"
       fi
     done;
   done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo {} \;)
