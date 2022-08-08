@@ -68,8 +68,8 @@ while (( "${#}" )); do
       shift;
       ;;
     -e | --extension )
-      EXT="${2}";
-        if [[ ${EXT} != .* ]]; then EXT=".${EXT}" fi;
+      EXT="${2}"
+      if [[ ${EXT} != .* ]] then EXT=".${EXT}" fi
       shift;
       ;;
     -h | --help )
