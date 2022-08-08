@@ -43,9 +43,12 @@ ${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
 main() {
   while IFS= read -r file; do
     for i in "$file"; do
-      #cd $(dirname "$i") &&
-        transcode-video --quick --mp4 "$i" "${i%${EXT}}mp4"
-      #cd "${DIR}";
+      if [[ ! -e "${i%${EXT}}mp4" ]]; then
+        transcode-video --quick --mp4 "${i}" "${i%${EXT}}mp4"
+      elif [[ -e "${i%${EXT}}mp4" ]]; then
+        echo "${i${EXT}" "${i${EXT}}.log"
+        #rm "${i${EXT}" "${i${EXT}}.log"
+      fi
     done;
   done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo {} \;)
 }
