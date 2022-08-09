@@ -60,7 +60,7 @@ main() {
         echo "${j}" "${j}.log"
         #rm "${j}" "${j}.log"
       fi
-      
+
       unset j
     done;
   done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo {} \;)
