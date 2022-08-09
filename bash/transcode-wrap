@@ -8,41 +8,48 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROGRAM_NAME="transcode-wrap"
 REPO_NAME="generalscripts"
 
+TRANSCODE="$(command -v transcode-video)"
+ANSI="$(command -v ansi)"
+
 . ~/.config/functions/bash_functions
+. "${ANSI}"
 
 _link_install
 _trap
 #_logging
 #_getopt_test
 
-TRANSCODE="$(command -v transcode-video)"
+declare -a REQ_APPS=(
+  "${TRANSCODE}"
+  "${ANSI}"
+)
 
-if [[ "${TRANSCODE}" == "" ]]; then
-  echo "You don't have the necessary program."
-  echo "You need to install ${TRANSCODE}"
-  exit 1
-fi
+for i in "${REQ_APPS[@]}"; do
+  if [[ "${i}" == "" ]]; then
+    echo "You don't have the necessary programs."
+    echo "You need to install ${i}"
+    exit 1
+  fi
+done
 
 usage() {
   echo -e "
 ${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
-
-    -l | --location    : Sets the directory location for the files you are
-                          wanting trascoded.
-    -e | --extension   : Sets the extension of the files you want transcoded
-
-    ${_red}NOTE: Can only parse one at time for both items.${_end}
-      This one is allowed:
-        ${_redb}${PROGRAM_NAME} -l /media/drive -e .mkv${_end}
-      This one is not:
-        ${_redb}${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi${_end}
-
 "
+ansi::blueIntense --no-newlines "   -l | --location    " ; ansi::bgBlueIntense ": Sets the directory location for the files you are
+                          wanting trascoded."
+ansi::blueIntense --no-newlines "       -e | --extension   " ; ansi::bgBlueIntense": Sets the extension of the files you want transcoded
+"
+ansi::bgRedIntense --no-newlines "    NOTE:" ; ansi::RedIntense " Can only parse one at time for both items."
+ansi::bgGreen "      This one is allowed:"
+ansi::Red "        ${PROGRAM_NAME} -l /media/drive -e .mkv"
+ansi::bgGreen "     This one is not:"
+ansi::Red "       ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
 main() {
   while IFS= read -r file; do
-    for i in "$file"; do
+    for i in "${file}"; do
 
       # This assigns the substituted variable to the letter j
       j="${i%${EXT}}.mp4"
@@ -53,6 +60,8 @@ main() {
         echo "${j}" "${j}.log"
         #rm "${j}" "${j}.log"
       fi
+      
+      unset j
     done;
   done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo {} \;)
 }
