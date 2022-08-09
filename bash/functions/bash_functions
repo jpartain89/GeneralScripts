@@ -42,7 +42,6 @@ _on_error_long() {
     status=${?}
     script=${0}
     line=${1}
-    shift
     args=
     for i in "${@}"; do
         args+="\"${i}\" "
