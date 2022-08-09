@@ -12,7 +12,7 @@ TRANSCODE="$(command -v transcode-video)"
 ANSI="$(command -v ansi)"
 
 . ~/.config/functions/bash_functions
-. "${ANSI}" 
+. "${ANSI}"
 
 _link_install
 _trap
@@ -56,9 +56,9 @@ main() {
 
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" "${j}" &&
-        rm "${j}" "${j}.log"
+        rm "${i}" "${j}.log"
       elif [[ -e "${j}" ]]; then
-        rm "${j}" "${j}.log"
+        rm "${i}" "${j}.log"
       fi
 
       unset j
