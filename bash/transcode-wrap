@@ -56,9 +56,6 @@ main() {
 
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" "${j}" &&
-        rm "${i}" "${j}.log"
-      elif [[ -e "${j}" ]]; then
-        rm "${i}" "${j}.log"
       fi
 
       unset j
