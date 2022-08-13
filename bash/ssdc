@@ -138,6 +138,18 @@ while (( "$#" )); do
             stop_containers;
             rm_op;
             shift;;
+        restart )
+            git_pull;
+            stop_containers;
+            start_containers;
+            shift;;
+        full_restart | full-restart )
+            git_pull;
+            stop_containers;
+            rm_op;
+            op_process;
+            start_containers;
+            shift;;
         op )
             op_process;
             shift;;
