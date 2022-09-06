@@ -54,6 +54,8 @@ op_process() {
     # Walks through all the found .tpl files
     while IFS=\n read -r file; do
         for i in "${file}"; do
+            [[ "${i}" =~ ^#.* ]] && continue
+
             if [[ -e "${i}" ]]; then
                 op inject --force -i "${i}" -o "${i%.*}"
             fi
