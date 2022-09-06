@@ -6,41 +6,41 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_NAME="generalscripts"
 
 die() {
-    cd ${DIR}
-    echo "$PROGRAM_NAME: $1" >&2
-    exit "${2:-1}"
+  cd ${DIR}
+  echo "$PROGRAM_NAME: $1" >&2
+  exit "${2:-1}"
 }
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
-    (
-        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
-            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
-            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
-        else
-            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
-            echo "failed. My apologies for not being able to figure it out..."
-            exit 1
-        fi
-    )
+  (
+    if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+      sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+      sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+    else
+      echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+      echo "failed. My apologies for not being able to figure it out..."
+      exit 1
+    fi
+  )
 }
 
 
 # login information for your remote host, no quotes
-login=
+login=op://Personal/MySeedit4.me/username
 
 # password information for your remote host, no quotes
-pass=
+pass=op://Personal/MySeedit4.me/password
 
 # host info for your remote host. include full URL standard format is sftp://ftp.servername.com
-host=
+host=op://Personal/MySeedit4.me/hostname
 
 #remote location where your finished downloads are on your seedbox
-remote_dir=
+remote_dir=op://Personal/MySeedit4.me/remote_dir
 
 #local directory where you are storing your downloads for further processing
-local_dir=/
+local_dir=op://Personal/MySeedit4.me/local_dir
 
 # The next few lines checks if lftp is running and stops the script if so.
 # Will also show the PID if you want to kill the lftp from running manually (although you can use pkill lftp)
