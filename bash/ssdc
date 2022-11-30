@@ -5,6 +5,8 @@ PROGRAM_NAME=ssdc
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_NAME="generalscripts"
 
+ARGS=$@
+
 # File/Directory based variables
 DF_LOCATION="${HOME}/git/docker_directory"
 DF=docker-compose.yml
@@ -39,8 +41,11 @@ git_pull() {
     # Pulls the main repo for us
     echo "**** Checking for updates to the docker repo ****"
     cd "${DF_LOCATION}" || exit
-    git pull --recurse-submodules
-    git submodule update --init --recursive
+    GUP=$(git pull --recurse-submodules)
+    GSU=$(git submodule update --init --recursive)
+    if [[ $GUP && $GSU ]]; then
+        exec $(command -v ssdc) "${ARGS}"
+    fi
     cd - || exit
 }
 
@@ -60,7 +65,8 @@ op_process() {
                 op inject --force -i "${i}" -o "${i%.*}"
             fi
         done
-    done< <(find "${DF_LOCATION}" -iname "*.tpl" -exec echo {} \;)
+    done< <(find "${DF_LOCATION}" -iname "*example*" -prune -o /
+        -iname "*.tpl" -exec echo {} \;)
 }
 
 start_containers() {
@@ -69,7 +75,7 @@ start_containers() {
             # Ignores any line in SSDC that starts with #
             [[ "${i}" =~ ^#.* ]] && continue
 
-            echo "Working ${i}"
+            echo "##### Starting Containers in ${DF_LOCATION}/${i} ######"
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
         done
@@ -85,6 +91,7 @@ stop_containers() {
             # Ignores any line in ssdc.conf that starts with #
             [[ "${i}" =~ ^#.* ]] && continue
 
+            echo "##### Stopping Containers in ${DF_LOCATION}/${i} ######"
             ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
         done
     done< <(echo "${DF_CHILD_LOCATIONS}")
@@ -111,7 +118,8 @@ rm_op() {
                 rm "${i}"
             fi
         done
-    done< <(find "${DF_LOCATION}" -iname "*.env" -exec echo {} \;)
+    done< <(find "${DF_LOCATION}" -iname "*example*" -prune -o /
+        -iname "*.env" -exec echo {} \;)
 }
 
 if [ $# == 0 ] ; then
@@ -119,7 +127,7 @@ if [ $# == 0 ] ; then
     echo "If you do NOT want to do this, please, hit CTRL-C NOW!"
     echo "Waiting 10 seconds..."
     sleep 10
-    1=backup
+    $1=backup
 fi
 
 while (( "$#" )); do
