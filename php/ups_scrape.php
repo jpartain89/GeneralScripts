@@ -4,12 +4,17 @@
 $command = "apcaccess";
 $args = "status";
 $tagsArray = array(
-"LOADPCT",
 "BATTV",
 "TIMELEFT",
 "BCHARGE",
 "LINEV",
-"NUMXFERS"
+"NUMXFERS",
+"LOADPCT",
+"MBATTCHG",
+"MINTIMEL",
+"MAXTIME",
+"LOTRANS",
+"HITRANS"
 );
 
 //do system call

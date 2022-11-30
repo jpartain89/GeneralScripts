@@ -13,7 +13,7 @@ if [[ "$#" -ge 1 ]]; then
            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "${apps}"
     done
 else
-    read -r "Paste in the GPG Key that needs to be retrieved: " gpgkey
+    read -p "Paste in the GPG Key that needs to be retrieved: " gpgkey
     while IFS= read -r file; do
         sudo gpg --no-default-keyring \
           --keyring /usr/share/keyrings/catchall.gpg \

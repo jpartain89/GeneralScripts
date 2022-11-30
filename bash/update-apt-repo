@@ -13,7 +13,7 @@ if [ -z "${PROG_NAME}" ]
       echo -e "No argument supplied.\n"
       echo -e "usage: `basename $0` program_name version distro\n"
       echo -e "DISTRO is the distribution description (i.e. stretch, jessie, etc).\n"
-      echo -e"The way to use this script is to do the changes to the target repo first, i.e. delete or copy in the .deb file to $DIR/program_name/version/distro, and then run this script.\n"
+      echo -e "The way to use this script is to do the changes to the target repo first, i.e. delete or copy in the .deb file to $DIR/program_name/version/distro, and then run this script.\n"
       echo -e "This script can be run as an unprivileged user - root is not needed so long as your user can write to the local repository directory.\n"
       exit 1
 fi

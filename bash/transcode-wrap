@@ -11,7 +11,7 @@ REPO_NAME="generalscripts"
 TRANSCODE="$(command -v transcode-video)"
 ANSI="$(command -v ansi)"
 
-. ~/.config/functions/bash_functions
+. /home/jpartain89/.config/functions/bash_functions
 . "${ANSI}"
 
 _link_install
@@ -33,13 +33,11 @@ for i in "${REQ_APPS[@]}"; do
 done
 
 usage() {
-  echo -e "
-${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
+  echo -e "${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
 "
-ansi::blueIntense --no-newlines "   -l | --location    " ; ansi::bgBlueIntense ": Sets the directory location for the files you are
-                          wanting trascoded."
-ansi::blueIntense --no-newlines "       -e | --extension   " ; ansi::bgBlueIntense": Sets the extension of the files you want transcoded
-"
+ansi::blueIntense --no-newlines "   -l | --location    " ; ansi::bgBlueIntense ": Sets the directory location for the files you are wanting trascoded."
+ansi::blueIntense --no-newlines "   -e | --extension   " ; ansi::bgBlueIntense ": Sets the extension of the files you want transcoded"
+echo -e ""
 ansi::bgRedIntense --no-newlines "    NOTE:" ; ansi::RedIntense " Can only parse one at time for both items."
 ansi::bgGreen "      This one is allowed:"
 ansi::Red "        ${PROGRAM_NAME} -l /media/drive -e .mkv"
@@ -55,7 +53,7 @@ main() {
       j="${i%${EXT}}.mp4"
 
       if [[ ! -e "${j}" ]]; then
-        transcode-video --quick --mp4 "${i}" "${j}" &&
+        transcode-video --quick --mp4 "${i}" "${j}"
       fi
 
       unset j
@@ -69,7 +67,7 @@ main() {
 #OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
 if [ "${#}" == 0 ] ; then
-  _trap_die "Failed to parse options as there aren't any... exiting." >&2
+  _trap_die "Failed to parse options as there aren't any... exiting."
 fi
 
 #eval set -- "${OPTS}"
@@ -101,3 +99,4 @@ while (( "${#}" )); do
 done
 
 main
+
