@@ -65,8 +65,7 @@ op_process() {
                 op inject --force -i "${i}" -o "${i%.*}"
             fi
         done
-    done< <(find "${DF_LOCATION}" -iname "*example*" -prune -o /
-        -iname "*.tpl" -exec echo {} \;)
+    done< <(find "${DF_LOCATION}" -iname "*example*" -prune -o -iname "*.tpl" -exec echo {} \;)
 }
 
 start_containers() {
