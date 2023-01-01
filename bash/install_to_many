@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+# This is to use ansible to install programs listed on the CLI after the command name to install to the systems also listed on the CLI
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+SCRIPT_NAME=install_2_many
+ANSIBLE=$(command -v ansible)
+
+${ANSIBLE} ${HOSTS} 

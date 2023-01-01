@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+set -e
 
 # This script is to download prebuilt binary files from Monit for installation
 # rather than compiling from git.

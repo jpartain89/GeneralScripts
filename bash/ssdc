@@ -1,25 +1,87 @@
 #!/usr/bin/env bash
 set -e
 
+# This program is to help insert 1Password-saved secrets into their corresponding
+# config files, for docker-compose consumption and usage.
+
 PROGRAM_NAME=ssdc
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_NAME="generalscripts"
 
-ARGS=$@
+ARGS=$*
 
 # File/Directory based variables
-DF_LOCATION="${HOME}/git/docker_directory"
 DF=docker-compose.yml
-DF_CHILD_LOCATIONS=$(cat ${DF_LOCATION}/ssdc.conf)
+# this gives preference from top to bottom, aka:
+# if /etc/ssdc.conf is found first, then it stops looking any further
+if [[ -f /etc/ssdc.conf ]]; then
+    CONFIG_FILE=/etc/ssdc.conf
+elif [[ -f /etc/ssdc/ssdc.conf ]]; then
+    CONFIG_FILE=/etc/ssdc/ssdc.conf
+elif [[ -f "${HOME}/ssdc.conf" ]]; then
+    CONFIG_FILE="${HOME}/ssdc.conf"
+elif [[ -f "${HOME}/.config/ssdc.conf" ]]; then
+    CONFIG_FILE="${HOME}/.config/ssdc.conf"
+elif [[ -f "${HOME}/git/docker_directory/ssdc.conf" ]]; then
+    CONFIG_FILE="${HOME}/git/docker_directory/ssdc.conf"
+fi
+
+. ${CONFIG_FILE}
 
 # Program based Variables
 DOCKER="$(command -v docker)"
 DOCKER_CMD="${DOCKER} compose -f"
 
 die() {
-    cd ${DIR}
-    echo "$PROGRAM_NAME: $1" >&2
+    cd "${DIR}"
+    echo "${PROGRAM_NAME}: $1" >&2
     exit "${2:-1}"
+}
+
+help() {
+    echo "ssdc [ start ] | [ full-start | full_start ]
+        [ stop ] | [ full-stop | full_stop ]
+        [ restart ] | [ full-restart | full_restart ]
+        [ op ]"
+    cat << EOF
+SSDC is a program to auto-start, auto-update from git, and auto-create
+your various docker compose projects that also are using 1Password
+to hide/generate your various secrets that don't need to be saved in
+plaintext in a git repo.
+
+This script expects op to be installed and configured on your device,
+along with the corresponding git repos to exist.
+
+There also needs to be an ssdc.conf file on your system in one of the
+following locations:
+
+    /etc/ssdc.conf
+    /etc/ssdc/ssdc.conf
+    ~/ssdc.conf
+    ~/.config/ssdc.conf
+    ~/git/docker_directory/ssdc.conf
+
+The last one is how I personally have all of my git repos setup: ~/git holds
+all of them.
+
+Have a look at ssdc.conf in this repo for a working example of ssdc.conf.
+
+    start:      Starts your docker compose files after running git pull and
+                pulling down any updates to the containers
+    full-start:
+    full_start: Does the same as start, but this time asks for your master
+                password to inject your secrets to your .env files
+
+    stop:       Stops docker compose containers
+    full-stop:
+    full_stop:  Stops the containers and removes all op-injected .env files
+
+    restart:      Runs the stop and start commands
+    full-restart:
+    full_restart: Runs the full-stop and full-start commands
+
+    op:         Just recreates the op-injected files
+EOF
 }
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
@@ -30,7 +92,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
             sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
             sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
         else
-            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,"
             echo "failed. My apologies for not being able to figure it out..."
             exit 1
         fi
@@ -39,14 +101,22 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 git_pull() {
     # Pulls the main repo for us
-    echo "**** Checking for updates to the docker repo ****"
-    cd "${DF_LOCATION}" || exit
-    GUP=$(git pull --recurse-submodules)
-    GSU=$(git submodule update --init --recursive)
-    if [[ $GUP && $GSU ]]; then
-        exec $(command -v ssdc) "${ARGS}"
-    fi
-    cd - || exit
+    echo "**** Checking for updates to the docker repo(s) ****"
+    # This next command is to get a hash of the config file
+    # before running any git updating commands, and will reload
+    # the script if it finds the config file changed
+    m1=$(md5sum "${CONFIG_FILE}")
+    while true; do
+        for i in "${GIT_REPOS[@]}"; do
+            git pull --recurse-submodules "${i}"
+            git submodule update --init --recursive "${i}"
+        done
+        m2=$(md5sum "${CONFIG_FILE}")
+        if [[ "$m1" != "$m2" ]]; then
+            exec $(command -v ssdc) "${ARGS}"
+        fi
+    done
+    unset i m2 m1
 }
 
 op_process() {
@@ -65,49 +135,29 @@ op_process() {
                 op inject --force -i "${i}" -o "${i%.*}"
             fi
         done
-    done< <(find "${DF_LOCATION}" -iname "*example*" -prune -o -iname "*.tpl" -exec echo {} \;)
+    #This find command excludes any example.tpl files from being expanded
+    done< <(find "${DF_BASE}/${DF_LOCATION}" -iname "*example*" -prune -o -iname "*.tpl" -exec echo {} \;)
 }
 
 start_containers() {
-    while IFS= read -r file; do
-        for i in "${file}"; do
-            # Ignores any line in SSDC that starts with #
-            [[ "${i}" =~ ^#.* ]] && continue
+    for i in "${DF_LOCATION[@]}"; do
+        # Ignores any line in SSDC that starts with #
+        [[ "${i}" =~ ^#.* ]] && continue
 
-            echo "##### Starting Containers in ${DF_LOCATION}/${i} ######"
-            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} pull &&
-            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} up -d --remove-orphans
-        done
-    done< <(echo "${DF_CHILD_LOCATIONS}")
-
-    ${DOCKER_CMD} ${DF_LOCATION}/${DF} pull &&
-    ${DOCKER_CMD} ${DF_LOCATION}/${DF} up -d --remove-orphans
+        echo "##### Starting Containers in ${i} ######"
+        ${DOCKER_CMD} "${DF_BASE}/${i}/${DF}" pull &&
+        ${DOCKER_CMD} "${DF_BASE}/${i}/${DF}" up -d --remove-orphans
+    done
 }
 
 stop_containers() {
-    while IFS= read -r file; do
-        for i in "${file}"; do
-            # Ignores any line in ssdc.conf that starts with #
-            [[ "${i}" =~ ^#.* ]] && continue
+    for i in "${DF_LOCATION[@]}"; do
+        # Ignores any line in ssdc.conf that starts with #
+        [[ "${i}" =~ ^#.* ]] && continue
 
-            echo "##### Stopping Containers in ${DF_LOCATION}/${i} ######"
-            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
-        done
-    done< <(echo "${DF_CHILD_LOCATIONS}")
-
-    ${DOCKER_CMD} ${DF_LOCATION}/${DF} down || true
-}
-
-backup() {
-    while IFS= read -r file; do
-        for i in "${file}"; do
-            # Ignores any line that starts with # in ssdc.conf
-            [[ "${i}" =~ ^#.* ]] && continue
-            # Duplicati is the program running the background app
-            [[ "${i}" == "duplicati" ]] && continue
-            ${DOCKER_CMD} ${DF_LOCATION}/${i}/${DF} down || true
-        done
-    done< <(echo "${DF_CHILD_LOCATIONS}")
+        echo "##### Stopping Containers in ${i} ######"
+        ${DOCKER_CMD} "${DF_BASE}/${i}/${DF}" down || true
+    done
 }
 
 rm_op() {
@@ -117,16 +167,13 @@ rm_op() {
                 rm "${i}"
             fi
         done
-    done< <(find "${DF_LOCATION}" -iname "*example*" -prune -o /
+    done< <(find "${DF_BASE}/${DF_LOCATION}" -iname "*example*" -prune -o /
         -iname "*.env" -exec echo {} \;)
 }
 
 if [ $# == 0 ] ; then
-    echo "Auto-Running the backup utility..."
-    echo "If you do NOT want to do this, please, hit CTRL-C NOW!"
-    echo "Waiting 10 seconds..."
-    sleep 10
-    $1=backup
+    help
+    trap
 fi
 
 while (( "$#" )); do
@@ -162,10 +209,8 @@ while (( "$#" )); do
         op )
             op_process;
             shift;;
-        backup )
-            backup;
-            shift;;
         * )
+            help;
             trap;
             exit;;
     esac
