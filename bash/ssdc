@@ -106,7 +106,7 @@ git_pull() {
     # before running any git updating commands, and will reload
     # the script if it finds the config file changed
     m1=$(md5sum "${CONFIG_FILE}")
-    while true; do
+    until false; do
         for i in "${GIT_REPOS[@]}"; do
             git -C "${DF_BASE}/${i}" pull --recurse-submodules
             git -C "${DF_BASE}/${i}" submodule update --init --recursive
