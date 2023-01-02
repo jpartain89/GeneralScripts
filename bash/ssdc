@@ -137,7 +137,7 @@ op_process() {
             fi
         done
     #This find command excludes any example.tpl files from being expanded
-    done< <(find "${DF_BASE}/${DF_LOCATION[@]}" -iname "*example*" -prune -o -iname "*.tpl" -exec echo {} \;)
+    done< <(find "${DF_BASE}/${DF_LOCATION[*]}" -iname "*example*" -prune -o -iname "*.tpl" -exec echo {} \;)
 }
 
 start_containers() {
