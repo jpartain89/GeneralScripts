@@ -115,6 +115,7 @@ git_pull() {
         if [[ "$m1" != "$m2" ]]; then
             exec $(command -v ssdc) "${ARGS}"
         fi
+        break
     done
     unset i m2 m1
 }
