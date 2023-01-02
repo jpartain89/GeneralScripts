@@ -108,8 +108,8 @@ git_pull() {
     m1=$(md5sum "${CONFIG_FILE}")
     while true; do
         for i in "${GIT_REPOS[@]}"; do
-            git pull --recurse-submodules "${DF_BASE}/${i}"
-            git submodule update --init --recursive "${DF_BASE}/${i}"
+            git pull --recurse-submodules -C "${DF_BASE}/${i}"
+            git submodule update --init --recursive -C "${DF_BASE}/${i}"
         done
         m2=$(md5sum "${CONFIG_FILE}")
         if [[ "$m1" != "$m2" ]]; then
