@@ -137,7 +137,7 @@ op_process() {
             fi
         done
     #This find command excludes any example.tpl files from being expanded
-    done< <(find "${DF_BASE}/${GIT_REPOS[1]}" "${DF_BASE}/${GIT_REPOS[2]}" \
+    done< <(find "${DF_BASE}/${GIT_REPOS[0]}" "${DF_BASE}/${GIT_REPOS[1]}" \
         -iname "*example*" -prune -o -iname "*.tpl" -exec echo {} \;)
 }
 
