@@ -10,37 +10,14 @@ REPO_NAME="generalscripts"
 
 ARGS=$*
 
-# File/Directory based variables
-DF=docker-compose.yml
-# this gives preference from top to bottom, aka:
-# if /etc/ssdc.conf is found first, then it stops looking any further
-if [[ -f /etc/ssdc.conf ]]; then
-    CONFIG_FILE=/etc/ssdc.conf
-elif [[ -f /etc/ssdc/ssdc.conf ]]; then
-    CONFIG_FILE=/etc/ssdc/ssdc.conf
-elif [[ -f "${HOME}/ssdc.conf" ]]; then
-    CONFIG_FILE="${HOME}/ssdc.conf"
-elif [[ -f "${HOME}/.config/ssdc.conf" ]]; then
-    CONFIG_FILE="${HOME}/.config/ssdc.conf"
-elif [[ -f "${HOME}/git/docker_directory/ssdc.conf" ]]; then
-    CONFIG_FILE="${HOME}/git/docker_directory/ssdc.conf"
-else
-    echo "Looks like we were not able to locate any config file!"
-    echo "Please, make sure you have one in one of the designated locations"
-    help
-fi
-
-. ${CONFIG_FILE}
-
-# Program based Variables
-DOCKER="$(command -v docker)"
-DOCKER_CMD="${DOCKER} compose -f"
-
+# First we setup the output for when something crashes
 die() {
     cd "${DIR}"
     echo "${PROGRAM_NAME}: $1" >&2
     exit "${2:-1}"
 }
+
+# Then we have the help text
 
 help() {
     echo "ssdc [ start ] | [ full-start | full_start ]
@@ -88,8 +65,11 @@ Have a look at ssdc.conf in this repo for a working example of ssdc.conf.
 EOF
 }
 
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+# and this is what gets called when the program does crash
+trap "die 'trap called' help" SIGHUP SIGINT SIGTERM
 
+# This links the program from the source in its git repo to
+# a preset spot in a default $PATH location
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
     (
         if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
@@ -102,6 +82,32 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
         fi
     )
 }
+
+# File/Directory based variables
+DF=docker-compose.yml
+# this gives preference from top to bottom, aka:
+# if /etc/ssdc.conf is found first, then it stops looking any further
+if [[ -f /etc/ssdc.conf ]]; then
+    CONFIG_FILE=/etc/ssdc.conf
+elif [[ -f /etc/ssdc/ssdc.conf ]]; then
+    CONFIG_FILE=/etc/ssdc/ssdc.conf
+elif [[ -f "${HOME}/ssdc.conf" ]]; then
+    CONFIG_FILE="${HOME}/ssdc.conf"
+elif [[ -f "${HOME}/.config/ssdc.conf" ]]; then
+    CONFIG_FILE="${HOME}/.config/ssdc.conf"
+elif [[ -f "${HOME}/git/docker_directory/ssdc.conf" ]]; then
+    CONFIG_FILE="${HOME}/git/docker_directory/ssdc.conf"
+else
+    echo "Looks like we were not able to locate any config file!"
+    echo "Please, make sure you have one in one of the designated locations"
+    help && exit 2
+fi
+
+. ${CONFIG_FILE}
+
+# Program based Variables
+DOCKER="$(command -v docker)"
+DOCKER_CMD="${DOCKER} compose -f"
 
 git_pull() {
     # Pulls the main repo for us
