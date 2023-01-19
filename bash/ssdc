@@ -4,6 +4,8 @@ set -e
 # This program is to help insert 1Password-saved secrets into their corresponding
 # config files, for docker-compose consumption and usage.
 
+# TODO: modify ssdc to test for and then create the docker networks
+
 PROGRAM_NAME=ssdc
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_NAME="generalscripts"
@@ -71,7 +73,7 @@ EOF
 }
 
 # and this is what gets called when the program does crash
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+trap "die trap called" SIGHUP SIGINT SIGTERM
 
 # This links the program from the source in its git repo to
 # a preset spot in a default $PATH location
