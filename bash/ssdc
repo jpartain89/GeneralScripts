@@ -106,8 +106,13 @@ fi
 . ${CONFIG_FILE}
 
 # Program based Variables
-DOCKER="$(command -v docker)"
-DOCKER_CMD="${DOCKER} compose -f"
+if [[ -f "$(command -v docker)" ]]; then
+    DOCKER="$(command -v docker)"
+    DOCKER_CMD="${DOCKER} compose -f"
+elif [[ -f "$(command -v podman)" ]]; then
+    DOCKER="$(command -v podman)"
+    DOCKER_CMD="${DOCKER}-compose -f"
+fi
 
 git_pull() {
     # Pulls the main repo for us
