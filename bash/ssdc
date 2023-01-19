@@ -24,6 +24,10 @@ elif [[ -f "${HOME}/.config/ssdc.conf" ]]; then
     CONFIG_FILE="${HOME}/.config/ssdc.conf"
 elif [[ -f "${HOME}/git/docker_directory/ssdc.conf" ]]; then
     CONFIG_FILE="${HOME}/git/docker_directory/ssdc.conf"
+else
+    echo "Looks like we were not able to locate any config file!"
+    echo "Please, make sure you have one in one of the designated locations"
+    help
 fi
 
 . ${CONFIG_FILE}
