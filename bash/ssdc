@@ -14,6 +14,9 @@ ARGS=$*
 die() {
     cd "${DIR}"
     echo "${PROGRAM_NAME}: $1" >&2
+    echo ""
+    echo ""
+    help
     exit "${2:-1}"
 }
 
@@ -66,7 +69,7 @@ EOF
 }
 
 # and this is what gets called when the program does crash
-trap "die 'trap called' help" SIGHUP SIGINT SIGTERM
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
 # This links the program from the source in its git repo to
 # a preset spot in a default $PATH location
@@ -100,7 +103,7 @@ elif [[ -f "${HOME}/git/docker_directory/ssdc.conf" ]]; then
 else
     echo "Looks like we were not able to locate any config file!"
     echo "Please, make sure you have one in one of the designated locations"
-    help && exit 2
+    trap
 fi
 
 . ${CONFIG_FILE}
