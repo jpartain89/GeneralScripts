@@ -8,9 +8,20 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROGRAM_NAME="transcode-wrap"
 REPO_NAME="generalscripts"
 
+PIPE="/tmp/${PROGRAM_NAME}.out"
+mkfifo "${PIPE}"
+
+# Start logging to journal
+systemd-cat < "${PIPE}" &
+sleep_pid=$(
+  sleep 9999d > "${PIPE}" &  # keep pipe open
+  echo ${!}   # but allow us to close it later...
+)
+
 TRANSCODE="$(command -v transcode-video)"
 ANSI="$(command -v ansi)"
 
+# My personal bash_functions repo
 . /home/jpartain89/.config/functions/bash_functions
 . "${ANSI}"
 
@@ -53,7 +64,7 @@ main() {
       j="${i%${EXT}}.mp4"
 
       if [[ ! -e "${j}" ]]; then
-        transcode-video --quick --mp4 "${i}" "${j}"
+        transcode-video --quick --mp4 "${i}"
       fi
 
       unset j
