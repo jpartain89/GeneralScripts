@@ -237,8 +237,8 @@ while (( "$#" )); do
             shift;;
         restart )
             git_pull;
-            dockerNetwork_Destroy;
             stop_containers;
+            dockerNetwork_Destroy;
             dockerNetwork_Inspect;
             start_containers;
             shift;;
