@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+\#!/usr/bin/env bash
 set -e
 
 # This program is to help insert 1Password-saved secrets into their corresponding
@@ -195,7 +195,7 @@ rm_op() {
 
 dockerNetwork_Inspect() {
     for i in "${DF_NETWORKS[@]}"; do
-        if [[ $("${DOCKER}" network ls | awk '{print $2}' | grep -q "${i}") -eq 1 ]]; then
+        if [[ ! $("${DOCKER}" network ls | awk '{print $2}' | grep -q "${i}") ]]; then
             "${DOCKER}" network create "${i}"
         fi
     done
@@ -203,7 +203,7 @@ dockerNetwork_Inspect() {
 
 dockerNetwork_Destroy() {
     for i in "${DF_NETWORKS[@]}"; do
-        "${DOCKER}" network rm "${i}"
+        "${DOCKER}" network rm "${i}" >/dev/null 2>&1 || true
     done
     "${DOCKER}" network prune -f
 }
