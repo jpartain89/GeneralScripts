@@ -193,21 +193,6 @@ rm_op() {
         -iname "*.env" -exec echo {} \;)
 }
 
-dockerNetwork_Inspect() {
-    for i in "${DF_NETWORKS[@]}"; do
-        if [[ $("${DOCKER}" network ls | awk '{print $2}' | grep "${i}") != "${i}" ]]; then
-            "${DOCKER}" network create "${i}"
-        fi
-    done
-}
-
-dockerNetwork_Destroy() {
-    for i in "${DF_NETWORKS[@]}"; do
-        "${DOCKER}" network rm "${i}" >/dev/null 2>&1 || true
-    done
-    "${DOCKER}" network prune -f
-}
-
 if [ $# == 0 ] ; then
     help
     trap
@@ -217,38 +202,30 @@ while (( "$#" )); do
     case "$1" in
         start )
             git_pull;
-            dockerNetwork_Inspect;
             start_containers;
             shift;;
         full_start | full-start )
             git_pull;
             op_process;
-            dockerNetwork_Inspect;
             start_containers;
             shift;;
         stop )
             stop_containers;
-            dockerNetwork_Destroy;
             shift;;
         full_stop | full-stop )
             stop_containers;
-            dockerNetwork_Destroy;
             rm_op;
             shift;;
         restart )
             git_pull;
             stop_containers;
-            dockerNetwork_Destroy;
-            dockerNetwork_Inspect;
             start_containers;
             shift;;
         full_restart | full-restart )
             git_pull;
             stop_containers;
-            dockerNetwork_Destroy;
             rm_op;
             op_process;
-            dockerNetwork_Inspect;
             start_containers;
             shift;;
         op )
