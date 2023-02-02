@@ -195,7 +195,7 @@ rm_op() {
 
 dockerNetwork_Inspect() {
     for i in "${DF_NETWORKS[@]}"; do
-        if [[ $("${DOCKER}" network ls | awk '{print $2}' | grep -q "${i}") != "${i}" ]]; then
+        if [[ $("${DOCKER}" network ls | awk '{print $2}' | grep "${i}") != "${i}" ]]; then
             "${DOCKER}" network create "${i}"
         fi
     done
