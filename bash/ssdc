@@ -1,4 +1,4 @@
-\#!/usr/bin/env bash
+#!/usr/bin/env bash
 set -e
 
 # This program is to help insert 1Password-saved secrets into their corresponding
