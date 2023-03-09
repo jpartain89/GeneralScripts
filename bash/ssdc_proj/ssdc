@@ -162,6 +162,15 @@ op_process() {
 }
 
 start_containers() {
+
+    # Separating this step out, for the base of the directory, due to wonky
+    # "maping values are not allowed in this context" error messages
+    # We were getting directories like this:
+    # /home/jpartain89/git/docker_directory/.//docker-compose.yml
+    echo "###### Starting Containers in ${DF_BASE} ######"
+    ${DOCKER_CMD} "${DF_BASE}/${DF}" pull &&
+    ${DOCKER_CMD} "${DF_BASE}/${DF}" up -d --remove-orphans
+
     for i in "${DF_LOCATION[@]}"; do
         # Ignores any line in SSDC that starts with #
         [[ "${i}" =~ ^#.* ]] && continue
@@ -173,6 +182,8 @@ start_containers() {
 }
 
 stop_containers() {
+    echo "###### Stopping Containers in ${DF_BASE} #######"
+    "${DOCKER_CMD} ${DF_BASE}/${DF}" down || true
     for i in "${DF_LOCATION[@]}"; do
         # Ignores any line in ssdc.conf that starts with #
         [[ "${i}" =~ ^#.* ]] && continue
