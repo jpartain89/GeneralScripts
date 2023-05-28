@@ -22,12 +22,8 @@ GROUPS=(
   "Group Policy Creator Owners"
 )
 
-GROUPS="$(IFS=,; echo "${GROUPS[*]}")"
+GROUPS=$(IFS=",@"  ; echo "${GROUPS[*]}")
 
-declare -p GROUPS
-declare -p SHARED_DIRECTORIES
-
-while IFS= read -r file; do
-  for i in "${SHARED_DIRECTORIES[*]}"; do
+for i in "${SHARED_DIRECTORIES[*]}"; do
   sudo "${SYNOSHARE}" --setuser "/volume2/${i}" RW + "${GROUPS}"
 done
