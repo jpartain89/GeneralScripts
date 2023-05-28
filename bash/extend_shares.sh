@@ -24,6 +24,6 @@ GROUPS=(
 
 GROUPS="$(IFS=,; echo "${GROUPS[*]}")"
 
-for i in "${SHARE_DIRECTORIES[@]}"; do
+for i in "${SHARE_DIRECTORIES[*]}"; do
   sudo "${SYNOSHARE}" --setuser "/volume2/${i}" RW + "${GROUPS}"
 done
