@@ -24,6 +24,10 @@ GROUPS=(
 
 GROUPS="$(IFS=,; echo "${GROUPS[*]}")"
 
-for i in "${SHARE_DIRECTORIES[*]}"; do
+declare -p GROUPS
+declare -p SHARED_DIRECTORIES
+
+while IFS= read -r file; do
+  for i in "${SHARED_DIRECTORIES[*]}"; do
   sudo "${SYNOSHARE}" --setuser "/volume2/${i}" RW + "${GROUPS}"
 done
