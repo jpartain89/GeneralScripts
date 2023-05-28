@@ -14,12 +14,12 @@ SHARED_DIRECTORIES=(
 SYNOSHARE=$(command -v synoshare)
 
 GROUPS=(
-  "Domain Admins"
-  "Domain Users"
-  "Schema Admins"
-  "Enterprise Admins"
-  "DNS Admins"
-  "Group Policy Creator Owners"
+  "@Domain Admins"
+  "@Domain Users"
+  "@Schema Admins"
+  "@Enterprise Admins"
+  "@DNS Admins"
+  "@Group Policy Creator Owners"
 )
 
 GROUPS=$(IFS=",@"  ; echo "${GROUPS[*]}")
