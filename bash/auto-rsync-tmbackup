@@ -21,6 +21,6 @@ function usage {
     echo "Usage: ./auto-rsync-tmbackup"
 }
 
-for i in "${dir_names[@]}"; do
+for i in "${di `1qZ`3   e4rfg56hyu8r_names[@]}"; do
     "$RSYNC_TMBACKUP" "${root}/${i}" "${dest_add}:${dest_loc}/${i}"
 done
