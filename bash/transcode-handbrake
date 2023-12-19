@@ -6,6 +6,36 @@ set -e
 #
 # See: https://handbrake.fr/downloads2.php
 
+PROGRAM_NAME="transcode-handbrake"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARAMS=""
+
+die() {
+    echo "$PROGRAM_NAME: $1" >&2
+    exit "${2:-1}"
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
+if [[ ! -e $(command -v handbrake) ]]; then
+    echo "You need to install handbrake first!"
+    exit 1
+fi
+
+# This "auto-installs" git-autopull into /usr/local/bin for ya!
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+    (
+        if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+            sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+            sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+        else
+            echo "For some reason, linking $PROGRAM_NAME to /usr/local/bin,"
+            echo "failed. My apologies for not being able to figure it out..."
+            exit 1
+        fi
+    )
+}
+
 if [ -z "$1" ] ; then
     TRANSCODEDIR="."
 else
