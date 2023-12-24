@@ -5,20 +5,20 @@
 ## ~/.config/functions/bash_functions
 
 # program info
-__PROGRAM_NAME="bash_functions"
+PROGRAM_NAME="bash_functions"
 
-__DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-__FUNCTIONS_LOCATION="${HOME}/.config/functions"
+FUNCTIONS_LOCATION="${HOME}/.config/functions"
 
-if [[ ! -x "${__FUNCTIONS_LOCATION}/${__PROGRAM_NAME}" ]]; then
-    if [[ ! -d "${__FUNCTIONS_LOCATION}" ]]; then
+if [[ ! -x "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}" ]]; then
+    if [[ ! -d "${FUNCTIONS_LOCATION}" ]]; then
         echo "Creating ~/.config/functions"
-        mkdir -p "${__FUNCTIONS_LOCATION}"
+        mkdir -p "${FUNCTIONS_LOCATION}"
     fi
-    if [[ ! -d "${__FUNCTIONS_LOCATION}/${__PROGRAM_NAME}" ]]; then
+    if [[ ! -d "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}" ]]; then
         echo "Linking bash_functions to your home directory"
-        ln -svf "${__DIR}/${__PROGRAM_NAME}" "${__FUNCTIONS_LOCATION}/${__PROGRAM_NAME}"
+        ln -svf "${DIR}/${PROGRAM_NAME}" "${FUNCTIONS_LOCATION}/${PROGRAM_NAME}"
     fi
 fi
 
