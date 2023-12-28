@@ -7,8 +7,20 @@ set -e
 
 PROGRAM_NAME="rsync-porn.sh"
 REPO_NAME="generalscripts"
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+  (
+    if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+      sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+      sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+    else
+      echo "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,"
+      echo "failed. My apologies for not being able to figure it out..."
+      exit 1
+    fi
+  )
+}
 
 ## This is the standard directory where your files that you always
 ## want moved from and to are stored
