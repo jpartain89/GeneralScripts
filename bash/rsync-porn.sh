@@ -41,13 +41,13 @@ help() {
   Usage: rsync-porn.sh [ --dir | -d ] | [ --search-term | -st ] | [ --from ]
 
   -d | --dir :  This is the ending name of the directory that you want the file to end up inside of.
-  -st | --search-term :  This is the word that you want to use to search and then move multiple files over.
+  --iname | --name :  These match `find`'s style of "-iname" and "-name" flags, and the word after is the search term.
   --from    : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
 }
 
 FIND_CMD() {
-  find "${FROM}" -iname "${NAME_OF_FILE}" -exec echo {} \;
+  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec echo {} \;
 }
 
 main() {
@@ -70,7 +70,13 @@ while (( "$#" )); do
             TO_DIR=$2;
             shift;
             shift;;
-    -st | --search-term )
+    --iname )
+            SEARCH_TYPE=iname;
+            NAME_OF_FILE=$2;
+            shift;
+            shift;;
+    --name )
+            SEARCH_TYPE=name;
             NAME_OF_FILE=$2;
             shift;
             shift;;
