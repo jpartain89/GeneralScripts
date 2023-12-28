@@ -68,12 +68,15 @@ while (( "$#" )); do
   case "$1" in
     -d | --dir )
             TO_DIR=$2;
+            shift;
             shift;;
     -st | --search-term )
             NAME_OF_FILE=$2;
+            shift;
             shift;;
     --from )
             FROM=$2;
+            shift;
             shift;;
   esac
   main
