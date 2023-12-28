@@ -85,5 +85,5 @@ while (( "$#" )); do
             shift;
             shift;;
   esac
-  main
 done
+main
