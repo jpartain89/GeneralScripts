@@ -73,12 +73,12 @@ while (( "$#" )); do
     --iname )
             SEARCH_TYPE=iname;
             NAME_OF_FILE=$2;
-            shift;
+            #shift;
             shift;;
     --name )
             SEARCH_TYPE=name;
             NAME_OF_FILE=$2;
-            shift;
+            #shift;
             shift;;
     --from )
             FROM=$2;
