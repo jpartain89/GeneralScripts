@@ -26,10 +26,11 @@ trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
 help() {
   cat << EOF
-  Usage: rsync-porn.sh [ --dir | -d ] | [ --search-term | -st ]
+  Usage: rsync-porn.sh [ --dir | -d ] | [ --search-term | -st ] | [ --from ]
 
   -d | --dir :  This is the ending name of the directory that you want the file to end up inside of.
   -st | --search-term :  This is the word that you want to use to search and then move multiple files over.
+  --from    : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
 }
 
@@ -39,7 +40,7 @@ FIND_CMD() {
 
 main() {
   while IFS= read -r file; do
-    for i in ${file}; do
+    for i in "${file}"; do
       rsync -avhP "${i}" "${TO_1}/${TO_DIR}" &&
       rsync -avhP --remove-source-files "${i}" "${TO_2}/${TO_DIR}"
     done;
@@ -58,6 +59,9 @@ while (( "$#" )); do
             shift;;
     -st | --search-term )
             NAME_OF_FILE=$2;
+            shift;;
+    --from )
+            FROM=$2;
             shift;;
   esac
   main

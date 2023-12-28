@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+set -e
 
 # This script is meant to be downloaded on a new macOS device, either
 # bought new or freshly reinstalled.
@@ -6,10 +7,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 USER="${USER}"
-GITHUB_WEB="https://jpartain89@github.com/jpartain89"
 GITHUB_SSH="git@github.com:jpartain89"
 GITLAB_SSH="git@gitlab.com:jpartain89"
-GPG_KEY="AA90C7B4"
 GIT_LOC="$HOME/git"
 GITHUB_REPO=(
     brewdate
@@ -113,14 +112,14 @@ git clone git@gitlab.com:dallas-universal-life-church/nginx-deployment.git "${GI
 git clone git@gitlab.com:dallas-universal-life-church/wiki.git "${GIT_LOC}/Wiki" --recurse-submodules
 
 prompt "Installing dotfiles"
-sudo -u $USER bash "${GIT_LOC}/dotfiles/linking"
+sudo -u "${USER}" bash "${GIT_LOC}/dotfiles/linking"
 
 prompt "Installing NanoRC Files"
-sudo -u $USER bash "${GIT_LOC}/nanorc/install.sh"
+sudo -u "${USER}" bash "${GIT_LOC}/nanorc/install.sh"
 
 prompt "Installing git-autopull and brewdate"
-for i in brewdate git-autopull; do
-    sudo -u $USER bash "${GIT_LOC}/${i}/${i}"
+for i in brewdate git-autopull; doz
+    sudo -u "${USER}" bash "${GIT_LOC}/${i}/${i}"
 done
 
 ANSIBLE() {
@@ -153,7 +152,7 @@ brew install rcmdnk/file/brew-file &&
 
 read -r -p "What is this machine's brew-file name" BREW_FILE_NAME
 prompt "Setting brew-file's repo"
-brew-file set_repo "jpartain89/brewfile-marks_imac" &&
+brew-file set_repo "jpartain89/brewfile-${BREW_FILE_NAME}" &&
 
 echo "Now we run brew-file install, which tends to take a while and"
 echo "can be hinky. Good Luck"
