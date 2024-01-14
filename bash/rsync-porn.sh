@@ -6,7 +6,7 @@ set -e
 # and into their final destination.
 
 PROGRAM_NAME="rsync-porn.sh"
-REPO_NAME="generalscripts"
+#REPO_NAME="generalscripts"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
@@ -24,10 +24,35 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 ## This is the standard directory where your files that you always
 ## want moved from and to are stored
+# File/Directory based variables
+DF=docker-compose.yml
 
+# Setting these variables prior to sourcing the config files that may or may not exist.
+# This way, if they don't, then the defaults listed below still hold true.
 FROM="/media/Downloads/syncthing"
-TO_1="/media/Porn"
-TO_2="/media/8TB/Porn"
+DESTINATION_ONE="/media/Porn"
+DESTINATION_TWO="/media/8TB/Porn"
+
+# this gives preference from top to bottom, aka:
+# if /etc/rsync-porn.conf is found first, then it stops looking any further
+if [[ -f /etc/rsync-porn.conf ]]; then
+    CONFIG_FILE=/etc/rsync-porn.conf
+elif [[ -f /etc/rsync-porn/rsync-porn.conf ]]; then
+    CONFIG_FILE=/etc/rsync-porn/rsync-porn.conf
+elif [[ -f "${HOME}/rsync-porn.conf" ]]; then
+    CONFIG_FILE="${HOME}/rsync-porn.conf"
+elif [[ -f "${HOME}/.config/rsync-porn.conf" ]]; then
+    CONFIG_FILE="${HOME}/.config/rsync-porn.conf"
+elif [[ -f "${HOME}/git/docker_directory/rsync-porn.conf" ]]; then
+    CONFIG_FILE="${HOME}/git/docker_directory/rsync-porn.conf"
+else
+    cat << EOF > "${HOME}/.config/rsync-porn.conf"
+FROM="/media/Downloads/syncthing"
+DEESTINATION_ONE="/media/Porn"
+DESTINATION_TWO="/media/8TB/Porn"
+EOF
+
+fi
 
 die() {
     echo "$PROGRAM_NAME: $1" >&2
@@ -41,7 +66,7 @@ help() {
   Usage: rsync-porn.sh [ --dir | -d ] | [ --search-term | -st ] | [ --from ]
 
   -d | --dir :  This is the ending name of the directory that you want the file to end up inside of.
-  --iname | --name :  These match `find`'s style of "-iname" and "-name" flags, and the word after is the search term.
+  --iname :  These match `find`'s style of "-iname" and "-name" flags, and the word after is the search term.
   --from    : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
 }
@@ -52,7 +77,7 @@ FIND_CMD() {
 
 main() {
   while IFS= read -r file; do
-    for i in "${file}"; do
+    for i in "${file[@]}"; do
       rsync -avhP "${i}" "${TO_1}/${TO_DIR}" &&
       rsync -avhP --remove-source-files "${i}" "${TO_2}/${TO_DIR}"
     done;
@@ -75,15 +100,13 @@ while (( "$#" )); do
             NAME_OF_FILE=$2;
             #shift;
             shift;;
-    --name )
-            SEARCH_TYPE=name;
-            NAME_OF_FILE=$2;
-            #shift;
-            shift;;
     --from )
             FROM=$2;
             shift;
             shift;;
+    --* | -* | * )
+            help;
+            exit 2;;
   esac
 done
 main
