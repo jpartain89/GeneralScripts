@@ -95,7 +95,7 @@ while (( "$#" )); do
             shift;
             shift;;
     --iname )
-            SEARCH_TYPE=iname;
+            SEARCH_TYPE="-iname";
             NAME_OF_FILE=$2;
             #shift;
             shift;;
