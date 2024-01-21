@@ -83,30 +83,39 @@ main() {
   done< <(FIND_CMD)
 }
 
-if [ $# == 0 ] ; then
-  help
-  die 1
-fi
+has_argument() {
+  [[ ("$1" == *=* && -n ${1#*=}) || ( ! -z "$2" && "$2" != -*)  ]];
+}
 
-while (( "$#" )); do
+extract_argument() {
+  echo "${2:-${1#*=}}"
+}
+
+while [ $# -gt 0 ]; do
   case "$1" in
-    --dir )
-            TO_DIR=$2;
-            shift;
+    -h | --help )
+            help;
+            exit 0;;
+    --dir* )
+            if ! has_argument $@; then
+              echo "Directory not Specified." >&2;
+              help
+              exit 1
+            fi
+            TO_DIR=$(extract_argument "$@");
             shift;;
     --iname )
             SEARCH_TYPE="-iname";
-            NAME_OF_FILE=$2;
-            #shift;
+            NAME_OF_FILE=$(extract_argument "$@");
             shift;;
     --from )
-            FROM=$2;
-            shift;
+            FROM=$(extract_argument "$@");
             shift;;
     --* | -* | * )
             help;
             exit 2;;
   esac
-  main &&
-  exit 0
 done
+
+main &&
+exit 0
