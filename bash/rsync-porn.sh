@@ -103,14 +103,14 @@ while [ $# -gt 0 ]; do
               help
               exit 1
             fi
-            TO_DIR=$(extract_argument "$@");
+            TO_DIR=$(extract_argument "$2");
             shift;;
     --iname )
             SEARCH_TYPE="-iname";
-            NAME_OF_FILE=$(extract_argument "$@");
+            NAME_OF_FILE=$(extract_argument "$2");
             shift;;
     --from )
-            FROM=$(extract_argument "$@");
+            FROM=$(extract_argument "$2");
             shift;;
     --* | -* | * )
             help;
