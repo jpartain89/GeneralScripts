@@ -102,5 +102,5 @@ while (( "$#" )); do
             help;
             exit 2;;
   esac
+  main
 done
-main
