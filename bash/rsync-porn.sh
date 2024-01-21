@@ -80,7 +80,8 @@ main() {
       rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
       rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
     done;
-  done< <(FIND_CMD)
+  done< <(FIND_CMD) && \
+    exit 0
 }
 
 has_argument() {
