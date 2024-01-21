@@ -60,7 +60,7 @@ help() {
   Usage: rsync-porn.sh [ --dir | -d ] | [ --search-term | -st ] | [ --from ]
 
   --dir :  This is the ending name of the directory that you want the file to end up inside of.
-  --iname :  These match `find`'s style of "-iname" and "-name" flags, and the word after is the search term.
+  --iname :  These match \`find\`'s style of "-iname" and "-name" flags, and the word after is the search term.
   --from    : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
 }
