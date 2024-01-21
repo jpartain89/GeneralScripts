@@ -22,11 +22,6 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
   )
 }
 
-## This is the standard directory where your files that you always
-## want moved from and to are stored
-# File/Directory based variables
-DF=docker-compose.yml
-
 # Setting these variables prior to sourcing the config files that may or may not exist.
 # This way, if they don't, then the defaults listed below still hold true.
 FROM="/media/Downloads/syncthing"
@@ -48,10 +43,9 @@ elif [[ -f "${HOME}/git/docker_directory/rsync-porn.conf" ]]; then
 else
     cat << EOF > "${HOME}/.config/rsync-porn.conf"
 FROM="/media/Downloads/syncthing"
-DEESTINATION_ONE="/media/Porn"
+DESTINATION_ONE="/media/Porn"
 DESTINATION_TWO="/media/8TB/Porn"
 EOF
-
 fi
 
 die() {
@@ -65,7 +59,7 @@ help() {
   cat << EOF
   Usage: rsync-porn.sh [ --dir | -d ] | [ --search-term | -st ] | [ --from ]
 
-  -d | --dir :  This is the ending name of the directory that you want the file to end up inside of.
+  --dir :  This is the ending name of the directory that you want the file to end up inside of.
   --iname :  These match `find`'s style of "-iname" and "-name" flags, and the word after is the search term.
   --from    : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
@@ -91,7 +85,7 @@ fi
 
 while (( "$#" )); do
   case "$1" in
-    -d | --dir )
+    --dir )
             TO_DIR=$2;
             shift;
             shift;;
