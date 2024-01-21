@@ -9,6 +9,8 @@ PROGRAM_NAME="rsync-porn.sh"
 #REPO_NAME="generalscripts"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+ARGS="$*"
+
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
   (
     if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
@@ -92,7 +94,7 @@ extract_argument() {
   echo "${2:-${1#*=}}"
 }
 
-while [ $# -gt 0 ]; do
+for i in "${ARGS[@]}"; do
   case "$1" in
     -h | --help )
             help;
