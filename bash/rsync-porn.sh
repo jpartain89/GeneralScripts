@@ -32,14 +32,19 @@ DESTINATION_TWO="/media/8TB/Porn"
 # if /etc/rsync-porn.conf is found first, then it stops looking any further
 if [[ -f /etc/rsync-porn.conf ]]; then
     CONFIG_FILE=/etc/rsync-porn.conf
+    source "${CONFIG_FILE}"
 elif [[ -f /etc/rsync-porn/rsync-porn.conf ]]; then
     CONFIG_FILE=/etc/rsync-porn/rsync-porn.conf
+    source "${CONFIG_FILE}"
 elif [[ -f "${HOME}/rsync-porn.conf" ]]; then
     CONFIG_FILE="${HOME}/rsync-porn.conf"
+    source "${CONFIG_FILE}"
 elif [[ -f "${HOME}/.config/rsync-porn.conf" ]]; then
     CONFIG_FILE="${HOME}/.config/rsync-porn.conf"
+    source "${CONFIG_FILE}"
 elif [[ -f "${HOME}/git/docker_directory/rsync-porn.conf" ]]; then
     CONFIG_FILE="${HOME}/git/docker_directory/rsync-porn.conf"
+    source "${CONFIG_FILE}"
 else
     cat << EOF > "${HOME}/.config/rsync-porn.conf"
 FROM="/media/Downloads/syncthing"
@@ -72,8 +77,8 @@ FIND_CMD() {
 main() {
   while IFS= read -r file; do
     for i in "${file[@]}"; do
-      rsync -avhP "${i}" "${TO_1}/${TO_DIR}" &&
-      rsync -avhP --remove-source-files "${i}" "${TO_2}/${TO_DIR}"
+      rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
+      rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
     done;
   done< <(FIND_CMD)
 }
