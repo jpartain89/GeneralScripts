@@ -80,7 +80,7 @@ main() {
 
 if [ $# == 0 ] ; then
   help
-  trap
+  die 1
 fi
 
 while (( "$#" )); do
