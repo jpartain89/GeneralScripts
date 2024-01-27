@@ -110,3 +110,5 @@ for i in "${ARGS[@]}"; do
             exit 2;;
   esac
 done
+
+main
