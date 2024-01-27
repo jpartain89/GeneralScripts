@@ -9,6 +9,7 @@ PROGRAM_NAME="rsync-porn.sh"
 #REPO_NAME="generalscripts"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+ARGS="$*"
 
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
   (
