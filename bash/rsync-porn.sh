@@ -9,8 +9,6 @@ PROGRAM_NAME="rsync-porn.sh"
 #REPO_NAME="generalscripts"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-ARGS="$*"
-
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
   (
     if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
@@ -26,7 +24,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 # Setting these variables prior to sourcing the config files that may or may not exist.
 # This way, if they don't, then the defaults listed below still hold true.
-FROM="/media/Downloads/syncthing"
+FROM_Default="/media/Downloads/syncthing"
 DESTINATION_ONE="/media/Porn"
 DESTINATION_TWO="/media/8TB/Porn"
 
@@ -77,41 +75,25 @@ main() {
   done && exit 0
 }
 
-has_argument() {
-  [[ ("$1" == *=* && -n ${1#*=}) || ( ! -z "$2" && "$2" != -*)  ]];
-}
+needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-extract_argument() {
-  echo "${2:-${1#*=}}"
-}
-
-for i in "${ARGS[@]}"; do
-  case "${1}" in
-    -h | --help )
-            help;
-            exit 0;;
-    -d | --dir* )
-            if ! has_argument $@; then
-              echo "Directory not Specified." >&2;
-              help
-              exit 1
-            fi
-            TO_DIR=$(extract_argument "$2");
-            shift;
-            shift;;
-    -i | --iname )
-            SEARCH_TYPE="-iname";
-            NAME_OF_FILE=$(extract_argument "$2");
-            shift;
-            shift;;
-    --from )
-            FROM=$(extract_argument "$2");
-            shift;
-            shift;;
-    --* | -* | * )
-            help;
-            exit 2;;
+while getopts d:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
+  # support long options: https://stackoverflow.com/a/28466267/519360
+  if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
+    OPT="${OPTARG%%=*}"       # extract long option name
+    OPTARG="${OPTARG#$OPT}"   # extract long option argument (may be empty)
+    OPTARG="${OPTARG#=}"      # if long option argument, remove assigning `=`
+  fi
+  case "$OPT" in
+    d | dir ) needs_arg; TO_DIR="${OPTARG}";;
+    i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
+    f | from ) FROM="${OPTARG:-$FROM_Default}";;
+    h | help ) help; exit 0;;
+    \? ) help; exit 2;;
+    * ) die "Illegal option --$OPT";;
   esac
 done
+shift $((OPTIND-1)) # remove parsed options and args from $@ list
 
-main
+main &&
+exit 0
