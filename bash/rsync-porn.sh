@@ -66,44 +66,46 @@ help() {
   -i | --iname :  These match \`find\`'s style of "-iname" and "-name" flags, and the word after is the search term.
   -f | --from  : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
-
+}
 
 main() {
-<<<<<<< HEAD
-  while IFS= read -r file; do
-    for i in "${file[@]}"; do
-      rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
-      rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
-    done;
-  done< <(FIND_CMD)
-=======
   IFS= mapfile -t VID_RESULTS < <(find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -print0)
   for i in "${VID_RESULTS[*]}"; do
     rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
     rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
   done && exit 0
->>>>>>> 3e9ed1da74ddf2a9b945ec6d269b5946cc8704fa
 }
 
-needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
+has_argument() {
+  [[ ("$1" == *=* && -n ${1#*=}) || ( ! -z "$2" && "$2" != -*)  ]];
+}
 
-while getopts d:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
-  # support long options: https://stackoverflow.com/a/28466267/519360
-  if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
-    OPT="${OPTARG%%=*}"       # extract long option name
-    OPTARG="${OPTARG#$OPT}"   # extract long option argument (may be empty)
-    OPTARG="${OPTARG#=}"      # if long option argument, remove assigning `=`
-  fi
-  case "$OPT" in
-    d | dir ) needs_arg; TO_DIR="${OPTARG}";;
-    i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
-    f | from ) FROM="${OPTARG:-$FROM_Default}";;
-    h | help ) help; exit 0;;
-    \? ) help; exit 2;;
-    * ) die "Illegal option --$OPT";;
+extract_argument() {
+  echo "${2:-${1#*=}}"
+}
+
+for i in "${ARGS[@]}"; do
+  case "$1" in
+    -h | --help )
+            help;
+            exit 0;;
+    --dir* )
+            if ! has_argument $@; then
+              echo "Directory not Specified." >&2;
+              help
+              exit 1
+            fi
+            TO_DIR=$(extract_argument "$2");
+            shift;;
+    --iname )
+            SEARCH_TYPE="-iname";
+            NAME_OF_FILE=$(extract_argument "$2");
+            shift;;
+    --from )
+            FROM=$(extract_argument "$2");
+            shift;;
+    --* | -* | * )
+            help;
+            exit 2;;
   esac
 done
-shift $((OPTIND-1)) # remove parsed options and args from $@ list
-
-main &&
-exit 0
