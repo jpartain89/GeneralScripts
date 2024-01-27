@@ -70,20 +70,14 @@ help() {
   --iname :  These match \`find\`'s style of "-iname" and "-name" flags, and the word after is the search term.
   --from    : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
 EOF
-}
 
-FIND_CMD() {
-  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec echo {} \;
-}
 
 main() {
-  while IFS= read -r file; do
-    for i in "${file[@]}"; do
-      rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
-      rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
-    done;
-  done< <(FIND_CMD) && \
-    exit 0
+  IFS= mapfile -t VID_RESULTS < <(find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -print0)
+  for i in "${VID_RESULTS[*]}"; do
+    rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
+    rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
+  done && exit 0
 }
 
 has_argument() {
