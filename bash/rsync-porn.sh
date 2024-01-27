@@ -26,7 +26,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 # Setting these variables prior to sourcing the config files that may or may not exist.
 # This way, if they don't, then the defaults listed below still hold true.
-FROM_Default="/media/Downloads/syncthing"
+FROM="/media/Downloads/syncthing"
 DESTINATION_ONE="/media/Porn"
 DESTINATION_TWO="/media/8TB/Porn"
 
