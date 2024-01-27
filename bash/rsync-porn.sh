@@ -89,7 +89,7 @@ for i in "${ARGS[@]}"; do
     -h | --help )
             help;
             exit 0;;
-    --dir* )
+    -d | --dir* )
             if ! has_argument $@; then
               echo "Directory not Specified." >&2;
               help
@@ -97,7 +97,7 @@ for i in "${ARGS[@]}"; do
             fi
             TO_DIR=$(extract_argument "$2");
             shift;;
-    --iname )
+    -i | --iname )
             SEARCH_TYPE="-iname";
             NAME_OF_FILE=$(extract_argument "$2");
             shift;;
