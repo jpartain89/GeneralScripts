@@ -69,10 +69,16 @@ EOF
 
 main() {
   IFS= mapfile -t VID_RESULTS < <(find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -print0)
+
   for i in "${VID_RESULTS[@]}"; do
-    rsync -avhP "${i[*]}" "${DESTINATION_ONE}/${TO_DIR}" &&
-    rsync -avhP --remove-source-files "${i[*]}" "${DESTINATION_TWO}/${TO_DIR}"
-  done && exit 0
+    rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}"
+  done &&
+
+  for i in "${VID_RESULTS[@]}"; do
+    rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
+  done
+
+  exit 0
 }
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
