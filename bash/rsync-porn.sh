@@ -83,7 +83,7 @@ extract_argument() {
   echo "${2:-${1#*=}}"
 }
 
-for i in "${*[@]}"; do
+for i in "${*}"; do
   case "${i}" in
     -h | --help )
             help;
