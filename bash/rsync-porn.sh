@@ -97,13 +97,16 @@ for i in "${ARGS[@]}"; do
               exit 1
             fi
             TO_DIR=$(extract_argument "$2");
+            shift;
             shift;;
     -i | --iname )
             SEARCH_TYPE="-iname";
             NAME_OF_FILE=$(extract_argument "$2");
+            shift;
             shift;;
     --from )
             FROM=$(extract_argument "$2");
+            shift;
             shift;;
     --* | -* | * )
             help;
