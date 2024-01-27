@@ -86,7 +86,7 @@ extract_argument() {
 }
 
 for i in "${ARGS[@]}"; do
-  case "$1" in
+  case "${i}" in
     -h | --help )
             help;
             exit 0;;
