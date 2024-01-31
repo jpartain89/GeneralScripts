@@ -64,7 +64,12 @@ help() {
   -d | --dir   : This is the ending name of the directory that you want the file to end up inside of.
   -i | --iname :  These match \`find\`'s style of "-iname" and "-name" flags, and the word after is the search term.
   -f | --from  : Defaults to /media/Downloads/syncthing, but using this, you can set it to any location.
+  -v | --verbose : Adds verbosity to the script
 EOF
+}
+
+verbose() {
+  set -x
 }
 
 main() {
@@ -85,7 +90,7 @@ main() {
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts d:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
+while getopts vd:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -96,6 +101,7 @@ while getopts d:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
     d | dir ) needs_arg; TO_DIR="${OPTARG}";;
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
+    v | verbose ) verbose;;
     h | help ) help; exit 0;;
     \? ) help; exit 2;;
     * ) die "Illegal option --$OPT";;
