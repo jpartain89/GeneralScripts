@@ -72,11 +72,19 @@ verbose() {
   set -x
 }
 
+findCMD () {
+  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -printf %P\\0
+}
+
 main() {
 
-  rsync -avhP --files-from=<(find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}") "${FROM}" "${DESTINATION_ONE}/${TO_DIR}"
+  echo "Moving from ${FROM} to ${DESTINATION_ONE}/${TO_DIR}"
+  findCMD \
+    rsync -avhP --files-from=- --from0 "${FROM}" "${DESTINATION_ONE}/${TO_DIR}"
 
-  rsync -avhP --remove-source-files --files-from=<(find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}") "${FROM}" "${DESTINATION_TWO}/${TO_DIR}"
+  echo "Now DELETING from ${FROM} to ${DESTINATION_TWO}/${TO_DIR}"
+  findCMD \
+    rsync -avhP --remove-source-files --files-from=- --from0 "${FROM}" "${DESTINATION_TWO}/${TO_DIR}"
 
   exit 0
 }
