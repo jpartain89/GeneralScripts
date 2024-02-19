@@ -208,6 +208,28 @@ rm_op() {
         -iname "*.env" -exec echo {} \;)
 }
 
+dockerNetwork_Inspect() {
+    # Sets up the array of currently-active docker networks
+    dockerNetworks=$("${DOCKER}" network ls | awk '{print $2}')
+    # Introduces the list of networks to create
+    for i in "${DF_NETWORKS[@]}"; do
+        for j in "${!dockerNetworks[@]}"; do
+            if [[ "${dockerNetworks[j]}" = "${i}" ]]; then
+                unset 'dockerNetworks[j]'
+            else
+                "${DOCKER}" network create "${i}"
+            fi
+        done
+    done
+}
+
+dockerNetwork_Destroy() {
+    for i in "${DF_NETWORKS[@]}"; do
+        "${DOCKER}" network rm "${i}" >/dev/null 2>&1 || true
+    done
+    "${DOCKER}" network prune -f
+}
+
 if [ $# == 0 ] ; then
     help
     trap
@@ -217,30 +239,38 @@ while (( "$#" )); do
     case "$1" in
         start )
             git_pull;
+            dockerNetwork_Inspect;
             start_containers;
             shift;;
         full_start | full-start )
             git_pull;
             op_process;
+            dockerNetwork_Inspect;
             start_containers;
             shift;;
         stop )
             stop_containers;
+            dockerNetwork_Destroy;
             shift;;
         full_stop | full-stop )
             stop_containers;
+            dockerNetwork_Destroy;
             rm_op;
             shift;;
         restart )
             git_pull;
             stop_containers;
+            dockerNetwork_Destroy;
+            dockerNetwork_Inspect;
             start_containers;
             shift;;
         full_restart | full-restart )
             git_pull;
             stop_containers;
+            dockerNetwork_Destroy;
             rm_op;
             op_process;
+            dockerNetwork_Inspect;
             start_containers;
             shift;;
         op )
