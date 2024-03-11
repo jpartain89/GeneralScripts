@@ -100,6 +100,7 @@ while getopts vd:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
   case "$OPT" in
     d | dir ) needs_arg; TO_DIR="${OPTARG}";;
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
+    w | wholename ) SEARCH_TYPE="-iwholename"; NAME_OF_FILE="$OPTARG";;
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     v | verbose ) verbose;;
     h | help ) help; exit 0;;
