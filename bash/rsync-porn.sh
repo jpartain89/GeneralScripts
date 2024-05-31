@@ -48,7 +48,7 @@ elif [[ -f "${HOME}/git/docker_directory/rsync-porn.conf" ]]; then
     source "${CONFIG_FILE}"
 else
     cat << EOF > "${HOME}/.config/rsync-porn.conf"
-FROM="/media/Downloads/syncthing"
+FROM="/media/Downloads/syncthing"ci
 DESTINATION_ONE="/media/Porn"
 DESTINATION_TWO="/media/8TB/Porn"
 EOF
@@ -83,7 +83,7 @@ main() {
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts d:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
+while getopts d:hi:-: OPT; do
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -91,8 +91,12 @@ while getopts d:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
     OPTARG="${OPTARG#=}"      # if long option argument, remove assigning `=`
   fi
   case "$OPT" in
+    # Dir is the "to" location, you use quotes, no spaces and the Studio Name
     d | dir ) needs_arg; TO_DIR="${OPTARG}";;
+    # This is the search term, Use Quotes, '*' at the beginning and end of the search
+    # term, and spaces are ok.
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
+    # this is not a required flag as it has a defaulted option. 
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     h | help ) help; exit 0;;
     \? ) help; exit 2;;
