@@ -36,7 +36,7 @@ CLI="run \
   --pull always \
   --log-driver json-file --log-opt max-size=10m \
   --name PlexCleaner \
-  --uid 1000
+  --user 1000:1000 \
   --env TZ=America/Chicago \
   --volume /media:/media \
   --volume /docker/PlexCleaner:/docker/PlexCleaner \
