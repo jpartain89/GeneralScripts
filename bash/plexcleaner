@@ -29,8 +29,6 @@ DOCKER=$(command -v docker)
 VOLUME="/media:/media"
 IMAGE="docker.io/ptr727/plexcleaner"
 CMD="/PlexCleaner/PlexCleaner"
-SETTINGS_FILE="/docker/PlexCleaner/PlexCleaner.json"
-LOGFILE="/docker/PlexCleaner/PlexCleaner.log"
 
 CLI="run \
   -it \
@@ -44,11 +42,11 @@ CLI="run \
   --volume /docker/PlexCleaner:/docker/PlexCleaner \
   ${IMAGE} \
     ${CMD} \
-    --settingsfile ${SETTINGS_FILE} \
-    --logfile ${LOGFILE} \
+    --settingsfile /docker/PlexCleaner/PlexCleaner.json \
+    --logfile /docker/PlexCleaner/PlexCleaner.log \
     --logwarning \
     process \
-    parallel \
+    --parallel \
     --mediafiles /media/Movies \
     --mediafiles /media/Porn \
     --mediafiles /media/TV \
