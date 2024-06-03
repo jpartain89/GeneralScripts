@@ -90,7 +90,7 @@ main() {
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts vd:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
+while getopts p:w:vd:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -100,6 +100,7 @@ while getopts vd:hi:-: OPT; do  # allow -a, -b with arg, -c, and -- "with arg"
   case "$OPT" in
     d | dir ) needs_arg; TO_DIR="${OPTARG}";;
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
+    p | path ) SEARCH_TYPE="-ipath"; NAME_OF_FILE="$OPTARG";;
     w | wholename ) SEARCH_TYPE="-iwholename"; NAME_OF_FILE="$OPTARG";;
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     v | verbose ) verbose;;

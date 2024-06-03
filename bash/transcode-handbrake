@@ -43,4 +43,6 @@ else
 fi
     # Change the preset if you like (see options: "HandBrakeCLI --preset-list")
     # If you want to transcode ALL movie files, remove the -name option.
-    find "$TRANSCODEDIR"/* -type f -name "*.mp4" -exec bash -c 'HandBrakeCLI -i "$1" -o "${1%\.*}"1.mp4 --preset="Fast 1080p30"' __ {} \;
+    find "$TRANSCODEDIR"/* -type f \
+      -iname "*.mp4" -o -iname ".m4a" -o -iname "*.avi" -o -iname "*.wav" -o -iname "*.wmv" \
+      -exec bash -c 'HandBrakeCLI -i "$1" -o "${1%\.*}"1.mkv --preset="Fast 1080p30"' __ {} \;
