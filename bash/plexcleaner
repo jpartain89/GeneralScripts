@@ -27,20 +27,31 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 DOCKER=$(command -v docker)
 VOLUME="/media:/media"
-IMAGE="ptr727/plexcleaner"
+IMAGE="docker.io/ptr727/plexcleaner"
 CMD="/PlexCleaner/PlexCleaner"
-SETTINGS_FILE="/media/General/docker/PlexCleaner/PlexCleaner.json"
-LOGFILE="/media/General/docker/PlexCleaner/PlexCleaner.log"
+SETTINGS_FILE="/docker/PlexCleaner/PlexCleaner.json"
+LOGFILE="/docker/PlexCleaner/PlexCleaner.log"
 
 CLI="run \
-  -i -t \
+  -it \
   --rm \
-  --user 1000:1000 \
+  --pull always \
+  --log-driver json-file --log-opt max-size=10m \
+  --name PlexCleaner
+  --user nobody:users \
   --env TZ=America/Chicago \
-  --volume ${VOLUME} \
+  --volume /media:/media \
+  --volume /docker/PlexCleaner:/docker/PlexCleaner \
   ${IMAGE} \
-  ${CMD} \
-  --settingsfile ${SETTINGS_FILE} \
-  --logfile ${LOGFILE} --logappend"
+    ${CMD} \
+    --settingsfile ${SETTINGS_FILE} \
+    --logfile ${LOGFILE} \
+    --logwarning \
+    process \
+    parallel \
+    --mediafiles /media/Movies \
+    --mediafiles /media/Porn \
+    --mediafiles /media/TV \
+    --mediafiles /media/8TB/Porn"
 
 ${DOCKER} ${CLI} "$@"
