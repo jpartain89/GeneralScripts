@@ -41,8 +41,7 @@ CLI="run \
   --volume /media:/media \
   --volume /docker/PlexCleaner:/docker/PlexCleaner \
   ${IMAGE} \
-    ${CMD} \
-    --settingsfile /docker/PlexCleaner/PlexCleaner.json \
+    ${CMD} --settingsfile /docker/PlexCleaner/PlexCleaner.json \
     --logfile /docker/PlexCleaner/PlexCleaner.log \
     --logwarning \
     process \
