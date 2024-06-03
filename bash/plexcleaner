@@ -41,10 +41,11 @@ CLI="run \
   --volume /media:/media \
   --volume /docker/PlexCleaner:/docker/PlexCleaner \
   ${IMAGE} \
-    ${CMD} --settingsfile /docker/PlexCleaner/PlexCleaner.json \
+    ${CMD} \
     --logfile /docker/PlexCleaner/PlexCleaner.log \
     --logwarning \
     process \
+    --settingsfile /docker/PlexCleaner/PlexCleaner.json \
     --parallel \
     --mediafiles /media/Movies \
     --mediafiles /media/Porn \
