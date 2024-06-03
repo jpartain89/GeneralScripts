@@ -35,7 +35,7 @@ CLI="run \
   --rm \
   --pull always \
   --log-driver json-file --log-opt max-size=10m \
-  --name PlexCleaner
+  --name PlexCleaner \
   --user nobody:users \
   --env TZ=America/Chicago \
   --volume /media:/media \
