@@ -74,7 +74,7 @@ FIND_CMD() {
 
 main() {
   while IFS= read -r file; do
-    for i in "${file[@]}"; do
+    for i in "${file[*]}"; do
       rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
       rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
     done;
