@@ -73,17 +73,22 @@ FIND_CMD() {
 }
 
 main() {
-  while IFS= read -r file; do
-    for i in "${file}"; do
-      rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}"
-    done;
-  done< <(FIND_CMD)
-  while IFS= read -r file; do
-    for i in "${file}"; do
-      rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
-    done;
-  done< <(FIND_CMD)
+  find "${FROM}" -type f "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec rsync -avhP {} "${DESTINATION_ONE}/${TO_DIR}" \; &&
+  find "${FROM}" -type f "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec rsync -avhP --remove-source-files {} "${DESTINATION_TWO}/${TO_DIR}" \;
 }
+
+#main() {
+#  while IFS= read -r file; do
+#    for i in "${file}"; do
+#      rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}"
+#    done;
+#  done< <(FIND_CMD)
+#  while IFS= read -r file; do
+#    for i in "${file}"; do
+#      rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
+#    done;
+#  done< <(FIND_CMD)
+#}
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
