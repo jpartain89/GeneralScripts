@@ -1,4 +1,4 @@
-#!/usr/local/bin bash
+#!/usr/bin/env bash
 set -e
 #
 # Parallel Rsync function 2020 by Pascal Suter @ DALCO AG, Switzerland
