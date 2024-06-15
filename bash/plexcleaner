@@ -47,9 +47,9 @@ CLI="run \
     process \
     --settingsfile /docker/PlexCleaner/PlexCleaner.json \
     --parallel \
-    --mediafiles /media/Movies \
-    --mediafiles /media/Porn \
-    --mediafiles /media/TV \
-    --mediafiles /media/8TB/Porn"
+    --mediafiles /media/Movies"
+    #--mediafiles /media/Porn \
+    #--mediafiles /media/TV \
+    #--mediafiles /media/8TB/Porn"
 
 ${DOCKER} ${CLI} "$@"
