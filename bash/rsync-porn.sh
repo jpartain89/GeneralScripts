@@ -48,7 +48,7 @@ elif [[ -f "${HOME}/git/docker_directory/rsync-porn.conf" ]]; then
     source "${CONFIG_FILE}"
 else
     cat << EOF > "${HOME}/.config/rsync-porn.conf"
-FROM="/media/Downloads/syncthing"ci
+FROM="/media/Downloads/syncthing"
 DESTINATION_ONE="/media/Porn"
 DESTINATION_TWO="/media/8TB/Porn"
 EOF
@@ -69,10 +69,10 @@ EOF
 }
 
 main() {
-
-  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec echo {} \;
-      rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
-      rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
+  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" | \
+    rsync -avhP --files-from - --no-relative . "${DESTINATION_ONE}/${TO_DIR}" &&
+  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" | \
+    rsync -avhP --remove-source-files --files-from - --no-relative . "${DESTINATION_TWO}/${TO_DIR}"
 }
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
