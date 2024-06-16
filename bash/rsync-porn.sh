@@ -68,22 +68,16 @@ help() {
 EOF
 }
 
-FIND_CMD() {
-  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec echo {} \;
-}
-
 main() {
-  while IFS= read -r file; do
-    for i in "${file[@]}"; do
+
+  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec echo {} \;
       rsync -avhP "${i}" "${DESTINATION_ONE}/${TO_DIR}" &&
       rsync -avhP --remove-source-files "${i}" "${DESTINATION_TWO}/${TO_DIR}"
-    done;
-  done< <(FIND_CMD)
 }
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts d:hi:-: OPT; do
+while getopts d:hi:i2:o-: OPT; do
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -96,6 +90,8 @@ while getopts d:hi:-: OPT; do
     # This is the search term, Use Quotes, '*' at the beginning and end of the search
     # term, and spaces are ok.
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
+    o ) SEARCH_TYPE="${SEARCH_TYPE} ${NAME_OF_FILE} -o";;
+    i2 | iname2 ) SEARCH_TYPE="${SEARCH_TYPE} -iname ${OPTARG}"
     # this is not a required flag as it has a defaulted option. 
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     h | help ) help; exit 0;;
