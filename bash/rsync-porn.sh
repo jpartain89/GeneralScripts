@@ -69,9 +69,15 @@ EOF
 }
 
 main() {
-  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" | \
+  if [[ "${O_FLAG}" == 1 ]]; then
+    FIND_BUILD="${SEARCH_TYPE} ${NAME_OF_FILE} -o ${SEARCH_TYPE2} ${NAME_OF_FILE2}"
+  elif [[ "${O_FLAG}" == 0 ]]; then
+    FIND_BUILD="${SEARCH_TYPE} ${NAME_OF_FILE}"
+  fi
+
+  find "${FROM}" "${FIND_BUILD}" | \
     rsync -avhP --files-from - --no-relative . "${DESTINATION_ONE}/${TO_DIR}" &&
-  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" | \
+  find "${FROM}" "${FIND_BUILD}" | \
     rsync -avhP --remove-source-files --files-from - --no-relative . "${DESTINATION_TWO}/${TO_DIR}"
 }
 
@@ -90,8 +96,8 @@ while getopts d:hi:i2:o-: OPT; do
     # This is the search term, Use Quotes, '*' at the beginning and end of the search
     # term, and spaces are ok.
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
-    o ) SEARCH_TYPE="${SEARCH_TYPE} ${NAME_OF_FILE} -o";;
-    i2 | iname2 ) SEARCH_TYPE="${SEARCH_TYPE} -iname ${OPTARG}";;
+    o ) O_FLAG=1;;
+    i2 | iname2 ) SEARCH_TYPE2="-iname"; NAME_OF_FILE2="${OPTARG}";;
     # this is not a required flag as it has a defaulted option.
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     h | help ) help; exit 0;;
