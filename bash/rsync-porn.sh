@@ -91,8 +91,8 @@ while getopts d:hi:i2:o-: OPT; do
     # term, and spaces are ok.
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
     o ) SEARCH_TYPE="${SEARCH_TYPE} ${NAME_OF_FILE} -o";;
-    i2 | iname2 ) SEARCH_TYPE="${SEARCH_TYPE} -iname ${OPTARG}"
-    # this is not a required flag as it has a defaulted option. 
+    i2 | iname2 ) SEARCH_TYPE="${SEARCH_TYPE} -iname ${OPTARG}";;
+    # this is not a required flag as it has a defaulted option.
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     h | help ) help; exit 0;;
     \? ) help; exit 2;;
