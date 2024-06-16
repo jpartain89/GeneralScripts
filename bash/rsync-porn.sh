@@ -77,13 +77,13 @@ main() {
 
   find "${FROM}" "${FIND_BUILD}" | \
     rsync -avhP --files-from - --no-relative . "${DESTINATION_ONE}/${TO_DIR}" &&
-  find "${FROM}" "${FIND_BUILD}" | \
+  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" | \
     rsync -avhP --remove-source-files --files-from - --no-relative . "${DESTINATION_TWO}/${TO_DIR}"
 }
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts d:hi:i2:o-: OPT; do
+while getopts d:hi:j:o-: OPT; do
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -97,7 +97,7 @@ while getopts d:hi:i2:o-: OPT; do
     # term, and spaces are ok.
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
     o ) O_FLAG=1;;
-    i2 | iname2 ) SEARCH_TYPE2="-iname"; NAME_OF_FILE2="${OPTARG}";;
+    j | iname2 ) SEARCH_TYPE2="-iname"; NAME_OF_FILE2="${OPTARG}";;
     # this is not a required flag as it has a defaulted option.
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     h | help ) help; exit 0;;
