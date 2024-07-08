@@ -76,9 +76,9 @@ main() {
     FIND_BUILD="${SEARCH_TYPE} \"${NAME_OF_FILE}\""
   fi
 
-  find ${FROM} "${FIND_BUILD}" | \
+  find ${FROM} ${FIND_BUILD} | \
     rsync -avhP --files-from - --no-relative / "${DESTINATION_ONE}/${TO_DIR}" &&
-  find ${FROM} "${FIND_BUILD}" | \
+  find ${FROM} ${FIND_BUILD} | \
     rsync -avhP --remove-source-files --files-from - --no-relative / "${DESTINATION_TWO}/${TO_DIR}"
 }
 
