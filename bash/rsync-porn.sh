@@ -70,21 +70,15 @@ EOF
 }
 
 main() {
-  if [[ "${O_FLAG}" == 1 ]]; then
-    FIND_BUILD="${SEARCH_TYPE} \"${NAME_OF_FILE}\" -o ${SEARCH_TYPE2} \"${NAME_OF_FILE2}\""
-  elif [[ "${O_FLAG}" == 0 ]]; then
-    FIND_BUILD="${SEARCH_TYPE} \"${NAME_OF_FILE}\""
-  fi
-
-  find ${FROM} ${FIND_BUILD} | \
+  find ${FROM} ${SEARCH_TYPE} "${NAME_OF_FILE}" | \
     rsync -avhP --files-from - --no-relative / "${DESTINATION_ONE}/${TO_DIR}" &&
-  find ${FROM} ${FIND_BUILD} | \
+  find ${FROM} ${SEARCH_TYPE} "${NAME_OF_FILE}" | \
     rsync -avhP --remove-source-files --files-from - --no-relative / "${DESTINATION_TWO}/${TO_DIR}"
 }
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
 
-while getopts d:hi:j:o-: OPT; do
+while getopts d:hi:j: OPT; do
   # support long options: https://stackoverflow.com/a/28466267/519360
   if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
     OPT="${OPTARG%%=*}"       # extract long option name
@@ -97,8 +91,6 @@ while getopts d:hi:j:o-: OPT; do
     # This is the search term, Use Quotes, '*' at the beginning and end of the search
     # term, and spaces are ok.
     i | iname ) SEARCH_TYPE="-iname"; NAME_OF_FILE="$OPTARG";;
-    o ) O_FLAG=1;;
-    j | iname2 ) SEARCH_TYPE2="-iname"; NAME_OF_FILE2="${OPTARG}";;
     # this is not a required flag as it has a defaulted option.
     f | from ) FROM="${OPTARG:-$FROM_Default}";;
     h | help ) help; exit 0;;
