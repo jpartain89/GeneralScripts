@@ -77,9 +77,9 @@ main() {
   fi
 
   find ${FROM} "${FIND_BUILD}" | \
-    rsync -avhP --files-from - --no-relative . "${DESTINATION_ONE}/${TO_DIR}" &&
+    rsync -avhP --files-from - --no-relative / "${DESTINATION_ONE}/${TO_DIR}" &&
   find ${FROM} "${FIND_BUILD}" | \
-    rsync -avhP --remove-source-files --files-from - --no-relative . "${DESTINATION_TWO}/${TO_DIR}"
+    rsync -avhP --remove-source-files --files-from - --no-relative / "${DESTINATION_TWO}/${TO_DIR}"
 }
 
 needs_arg() { if [ -z "$OPTARG" ]; then die "No arg for --$OPT option"; fi; }
