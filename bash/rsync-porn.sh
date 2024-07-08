@@ -71,9 +71,9 @@ EOF
 
 main() {
   if [[ "${O_FLAG}" == 1 ]]; then
-    FIND_BUILD="${SEARCH_TYPE}" "${NAME_OF_FILE}" -o ${SEARCH_TYPE2} "${NAME_OF_FILE2}"
+    FIND_BUILD="${SEARCH_TYPE} \"${NAME_OF_FILE}\" -o ${SEARCH_TYPE2} \"${NAME_OF_FILE2}\""
   elif [[ "${O_FLAG}" == 0 ]]; then
-    FIND_BUILD="${SEARCH_TYPE}" "${NAME_OF_FILE}"
+    FIND_BUILD="${SEARCH_TYPE} \"${NAME_OF_FILE}\""
   fi
 
   find ${FROM} "${FIND_BUILD}" | \
