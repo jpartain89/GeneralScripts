@@ -71,14 +71,14 @@ EOF
 
 main() {
   if [[ "${O_FLAG}" == 1 ]]; then
-    FIND_BUILD="${SEARCH_TYPE} ${NAME_OF_FILE} -o ${SEARCH_TYPE2} ${NAME_OF_FILE2}"
+    FIND_BUILD="${SEARCH_TYPE}" "${NAME_OF_FILE}" -o ${SEARCH_TYPE2} "${NAME_OF_FILE2}"
   elif [[ "${O_FLAG}" == 0 ]]; then
-    FIND_BUILD="${SEARCH_TYPE} ${NAME_OF_FILE}"
+    FIND_BUILD="${SEARCH_TYPE}" "${NAME_OF_FILE}"
   fi
 
-  find ${FROM} ${FIND_BUILD} | \
+  find ${FROM} "${FIND_BUILD}" | \
     rsync -avhP --files-from - --no-relative . "${DESTINATION_ONE}/${TO_DIR}" &&
-  find ${FROM} ${SEARCH_TYPE} ${NAME_OF_FILE} | \
+  find ${FROM} "${FIND_BUILD}" | \
     rsync -avhP --remove-source-files --files-from - --no-relative . "${DESTINATION_TWO}/${TO_DIR}"
 }
 
