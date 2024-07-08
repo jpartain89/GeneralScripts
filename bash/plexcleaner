@@ -42,6 +42,7 @@ CLI="run \
   --volume /docker/PlexCleaner:/docker/PlexCleaner \
   ${IMAGE} \
     ${CMD} \
+    --logappend \
     --logfile /docker/PlexCleaner/PlexCleaner.log \
     --logwarning \
     process \

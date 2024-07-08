@@ -9,6 +9,7 @@ PROGRAM_NAME="rsync-porn.sh"
 #REPO_NAME="generalscripts"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+O_FLAG=0
 
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
   (
@@ -70,14 +71,14 @@ EOF
 
 main() {
   if [[ "${O_FLAG}" == 1 ]]; then
-    FIND_BUILD="\"${SEARCH_TYPE}\" \"${NAME_OF_FILE}\" -o \"${SEARCH_TYPE2}\" \"${NAME_OF_FILE2}\""
+    FIND_BUILD="${SEARCH_TYPE} ${NAME_OF_FILE} -o ${SEARCH_TYPE2} ${NAME_OF_FILE2}"
   elif [[ "${O_FLAG}" == 0 ]]; then
-    FIND_BUILD="\"${SEARCH_TYPE}\" \"${NAME_OF_FILE}\""
+    FIND_BUILD="${SEARCH_TYPE} ${NAME_OF_FILE}"
   fi
 
-  find "${FROM}" "${FIND_BUILD}" | \
+  find ${FROM} ${FIND_BUILD} | \
     rsync -avhP --files-from - --no-relative . "${DESTINATION_ONE}/${TO_DIR}" &&
-  find "${FROM}" "${SEARCH_TYPE}" "${NAME_OF_FILE}" | \
+  find ${FROM} ${SEARCH_TYPE} ${NAME_OF_FILE} | \
     rsync -avhP --remove-source-files --files-from - --no-relative . "${DESTINATION_TWO}/${TO_DIR}"
 }
 
