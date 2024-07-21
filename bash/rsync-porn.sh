@@ -57,7 +57,7 @@ fi
 
 die() { echo "$*" >&2; exit 2; }  # complain to STDERR and exit with error
 
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+trap "die 'trap called, $(echo $@)'" SIGHUP SIGINT SIGTERM
 
 help() {
   cat << EOF

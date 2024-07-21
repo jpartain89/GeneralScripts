@@ -21,12 +21,24 @@ sleep_pid=$(
 TRANSCODE="$(command -v transcode-video)"
 ANSI="$(command -v ansi)"
 
-# My personal bash_functions repo
-. /home/jpartain89/.config/functions/bash_functions
+# ANSI - https://github.com/fidian/ansi
 . "${ANSI}"
 
-_link_install
-_trap
+command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
+  (
+    if [ -x "${DIR}/${PROGRAM_NAME}" ]; then
+      sudo ln -svf "${DIR}/${PROGRAM_NAME}" "/usr/local/bin/${PROGRAM_NAME}"
+      sudo chmod -R 0775 "/usr/local/bin/${PROGRAM_NAME}"
+    else
+      echo "For some reason, linking ${PROGRAM_NAME} to /usr/local/bin,"
+      echo "failed. My apologies for not being able to figure it out..."
+      exit 1
+    fi
+  )
+}
+
+trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+
 #_logging
 #_getopt_test
 
@@ -78,7 +90,7 @@ main() {
 #OPTS=$(${GETOPT} --options ${SHORT} --long ${LONG} --name "$0" -- "$@")
 
 if [ "${#}" == 0 ] ; then
-  _trap_die "Failed to parse options as there aren't any... exiting."
+  trap "Failed to parse options as there aren't any... exiting."
 fi
 
 #eval set -- "${OPTS}"
