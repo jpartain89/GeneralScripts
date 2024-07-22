@@ -11,8 +11,6 @@ REPO_NAME="generalscripts"
 PIPE="/tmp/${PROGRAM_NAME}.out"
 if [[ ! -p "${PIPE}" ]]; then
   mkfifo "${PIPE}"
-else
-  continue
 fi
 
 # Start logging to journal
@@ -44,7 +42,6 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 die () {
   rm "${PIPE}" &&
   echo "$*" >&2; exit 2; }  # complain to STDERR and exit with error
-}
 
 trap "die 'trap called'" SIGHUP SIGINT SIGTERM
 
