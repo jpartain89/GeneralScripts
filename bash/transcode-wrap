@@ -43,7 +43,7 @@ die () {
   rm "${PIPE}" &&
   echo "$*" >&2; exit 2; }  # complain to STDERR and exit with error
 
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+trap die 'trap called' SIGHUP SIGINT SIGTERM
 
 #_logging
 #_getopt_test
