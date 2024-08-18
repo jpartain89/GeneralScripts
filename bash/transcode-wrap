@@ -79,6 +79,27 @@ usage() {
         ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
+rm_question{} (
+  read -rpv "Remove ${i}? " reponse
+  case "$response" in
+    [Yy][Ee][Ss]|[Yy])
+      rm "$i";;
+    *)
+      shift;;
+  esac
+  sed -i "\|${i}\n||d" "${CHANGED_FILES}"
+)
+
+rm{} (
+  ARRAY=()
+  ARRAY="$(cat "${HOME}/transcoded-files.log")"
+  while IFS= ; do
+    for i in "${ARRAY[*]}"; do
+      rm_question
+    done
+  done
+)
+
 main() {
   while IFS= read -r file; do
     for i in "${file}"; do
@@ -122,6 +143,10 @@ while (( "${#}" )); do
       EXT="${2}"
       [[ ${EXT} != .* ]] && EXT=".${EXT}"
       shift;
+      ;;
+    --rm )
+      rm;
+      exit 0
       ;;
     -h | --help )
       usage
