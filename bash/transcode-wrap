@@ -80,23 +80,21 @@ usage() {
 }
 
 rm_question{} (
-  read -rpv "Remove ${i}? " reponse
-  case "$response" in
-    [Yy][Ee][Ss]|[Yy] )
-      rm "$i";;
-    * )
-      shift;;
-  esac
-  sed -i "\|${i}||d" "${CHANGED_FILES}"
+
 )
 
 rm{} (
-  ARRAY=()
-  ARRAY="$(cat "${HOME}/transcoded-files.log")"
-  while IFS= ; do
-    for i in "${ARRAY[*]}"; do
-      rm_question
-    done
+  declare -a ARRAY="$(cat "${HOME}/transcoded-files.log")"
+  arrayLenth=${#ARRAY[@]}
+  for (( i=0; i<${arrayLength}; i++ )); do #i in "${ARRAY[*]}"; do
+    read -rpv "Remove ${ARRAY[$i]}? " reponse &&
+    case "$response" in
+      [Yy][Ee][Ss]|[Yy] )
+        rm "${ARRAY[$i]}";;
+      * )
+        shift;;
+    esac
+  sed -i "\|${i}||d" "${CHANGED_FILES}"
   done
 )
 
