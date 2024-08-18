@@ -81,18 +81,25 @@ usage() {
         ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
+function ask_yes_or_no() {
+  read -p "$1 ([y]es or [N]o): "
+  case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+    y|yes) echo "yes" ;;
+    *)     echo "no" ;;
+  esac
+}
+
 rm() {
   mapfile -t ARRAY < "${CHANGED_FILES}"
-  arrayLenth=${#ARRAY[@]}
   for (( i=0; i<${#ARRAY[@]}; i++ )); do #i in "${ARRAY[*]}"; do
-    read -rpv "Remove ${ARRAY[$i]}? " reponse &&
-    case "$response" in
-      [Yy][Ee][Ss]|[Yy] )
-        rm "${ARRAY[$i]}";;
-      * )
-        shift;;
-    esac
-  sed -i "\|${i}||d" "${CHANGED_FILES}"
+    if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) || \
+          "yes" == $(ask_yes_or_no "Are you really sure? ") ]]; then
+          rm "${ARRAY[$i]}";;
+      else
+        echo "Skipped";
+        sed -f "\|${ARRAY[i]}||d" "${CHANGED_FILES}"
+    fi
+
   done
 }
 
