@@ -9,8 +9,8 @@ PROGRAM_NAME="transcode-wrap"
 REPO_NAME="generalscripts"
 
 PIPE="/tmp/${PROGRAM_NAME}.out"
-CHANGED_FILES_VERBOSE="~/transcoded-vids-verbose.log"
-CHANGED_FILES="~/transcoded-vids.log"
+CHANGED_FILES_VERBOSE="${HOME}/transcoded-vids-verbose.log"
+CHANGED_FILES="${HOME}/transcoded-vids.log"
 if [[ ! -p "${PIPE}" ]]; then
   mkfifo "${PIPE}"
 fi
