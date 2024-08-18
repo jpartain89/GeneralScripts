@@ -84,7 +84,7 @@ usage() {
 rm() {
   mapfile -t ARRAY < "${CHANGED_FILES}"
   arrayLenth=${#ARRAY[@]}
-  for (( i=0; i<${arrayLength}; i++ )); do #i in "${ARRAY[*]}"; do
+  for (( i=0; i<"${arrayLength}"; i++ )); do #i in "${ARRAY[*]}"; do
     read -rpv "Remove ${ARRAY[$i]}? " reponse &&
     case "$response" in
       [Yy][Ee][Ss]|[Yy] )
