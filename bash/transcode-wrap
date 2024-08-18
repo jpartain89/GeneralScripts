@@ -93,7 +93,7 @@ rm() {
   mapfile -t ARRAY < "${CHANGED_FILES}"
   echo "${ARRAY[@]}"
   i=0
-  for i in "${ARRAY[*]}"; do
+  for i in "${ARRAY[@]}"; do
     echo "Removing ${ARRAY[$i]}";
     if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) ]]; then
       rm "${ARRAY[$i]}"
