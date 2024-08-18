@@ -46,7 +46,8 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 die() {
   rm -rv "${PIPE}" &&
-  echo "$PROGRAM_NAME: $1" >&2
+  echo "$PROGRAM_NAME: $1" >&2 &&
+  exit 1
 }
 
 trap die 1 2 3 6 9
