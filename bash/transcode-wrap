@@ -97,6 +97,7 @@ rm() {
     if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) ]]; then
       rm "${ARRAY[$i]}";
       sed -f "|${ARRAY[i]}|d" "${CHANGED_FILES}"
+      mapfile -t ARRAY < "${CHANGED_FILES}"
     else
       echo "Skipped"
     fi
