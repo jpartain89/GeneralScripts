@@ -91,7 +91,9 @@ ask_yes_or_no() {
 
 rm() {
   mapfile -t ARRAY < "${CHANGED_FILES}"
+  echo "${ARRAY[@]}"
   for (( i=0; i<${#ARRAY[@]}; i++ )); do #i in "${ARRAY[*]}"; do
+    echo "Removing ${ARRAY[$i]}";
     if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) || \
           "yes" == $(ask_yes_or_no "Are you really sure? ") ]]; then
           rm "${ARRAY[$i]}";
