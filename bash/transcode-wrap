@@ -94,14 +94,12 @@ rm() {
   echo "${ARRAY[@]}"
   for (( i=0; i<${#ARRAY[@]}; i++ )); do #i in "${ARRAY[*]}"; do
     echo "Removing ${ARRAY[$i]}";
-    if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) || \
-          "yes" == $(ask_yes_or_no "Are you really sure? ") ]]; then
-          rm "${ARRAY[$i]}";
-      else
-        echo "Skipped";
-        continue
+    if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) ]]; then
+      rm "${ARRAY[$i]}";
+      sed -f "|${ARRAY[i]}|d" "${CHANGED_FILES}"
+    else
+      echo "Skipped"
     fi
-    sed -f "\|${ARRAY[i]}||d" "${CHANGED_FILES}"
   done
 }
 
