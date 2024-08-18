@@ -88,7 +88,7 @@ main() {
 
       # Writing the mkv file to the $CHANGED_FILE file, prior to the endcoding
       printf "About to encode ${i} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
-      printf "${j}" | tee -a "${CHANGED_FILES}"
+      printf "${i}\n" | tee -a "${CHANGED_FILES}"
 
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" --output "${j}"
@@ -98,7 +98,7 @@ main() {
 
       unset j
     done;
-  done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo {} \;)
+  done< <(find "${LOCATION}" -iname "*${EXT}")
 }
 
 #SHORT=leh
