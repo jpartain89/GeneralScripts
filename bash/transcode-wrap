@@ -99,9 +99,9 @@ rm() {
           rm "${ARRAY[$i]}";
       else
         echo "Skipped";
-        sed -f "\|${ARRAY[i]}||d" "${CHANGED_FILES}"
+        continue
     fi
-
+    sed -f "\|${ARRAY[i]}||d" "${CHANGED_FILES}"
   done
 }
 
