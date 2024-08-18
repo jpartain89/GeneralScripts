@@ -40,12 +40,11 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 }
 
 die() {
-  rm "${PIPE}" &&
+  rm -rv "${PIPE}" &&
   echo "$PROGRAM_NAME: $1" >&2
-  exit "${2:-1}"
 }
 
-trap "die 'trap called'" SIGHUP SIGINT SIGTERM
+trap die 1 2 3 6 9
 
 #_logging
 #_getopt_test
