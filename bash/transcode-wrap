@@ -59,15 +59,14 @@ done
 
 usage() {
   echo -e "${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
-"
---no-newlines "   -l | --location     : Sets the directory location for the files you are wanting trascoded."
---no-newlines "   -e | --extension    : Sets the extension of the files you want transcoded"
-echo -e ""
---no-newlines "         NOTE:  Can only parse one at time for both items."
-"      This one is allowed:"
-"        ${PROGRAM_NAME} -l /media/drive -e .mkv"
-"     This one is not:"
-"       ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
+    -l | --location     : Sets the directory location for the files you are wanting trascoded.
+    -e | --extension    : Sets the extension of the files you want transcoded
+
+        NOTE:  Can only parse one at time for both items.
+      This one is allowed:
+        ${PROGRAM_NAME} -l /media/drive -e .mkv
+      This one is not:
+        ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
 main() {
