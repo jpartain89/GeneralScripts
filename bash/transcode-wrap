@@ -82,7 +82,7 @@ usage() {
 }
 
 rm() {
-  declare -a ARRAY="$(cat "${CHANGED_FILES}")"
+  declare -a ARRAY="$(IFS= ; cat "${CHANGED_FILES}")"
   arrayLenth=${#ARRAY[@]}
   for (( i=0; i<${arrayLength}; i++ )); do #i in "${ARRAY[*]}"; do
     read -rpv "Remove ${ARRAY[$i]}? " reponse &&
