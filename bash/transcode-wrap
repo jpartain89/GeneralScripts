@@ -92,15 +92,15 @@ ask_yes_or_no() {
 rm() {
   mapfile -t ARRAY < "${CHANGED_FILES}"
   echo "${ARRAY[@]}"
-  for (( i=0; i<${#ARRAY[@]}; i++ )); do #i in "${ARRAY[*]}"; do
+  i=0
+  for i in "${ARRAY[*]}"; do
     echo "Removing ${ARRAY[$i]}";
     if [[ "yes" == $(ask_yes_or_no "Are you sure? " ) ]]; then
       rm "${ARRAY[$i]}"
-      sed -f "|${ARRAY[$i]}|d" "${CHANGED_FILES}"
-      mapfile -t ARRAY < "${CHANGED_FILES}"
     else
       echo "Skipped"
     fi
+    i=$((i+1))
   done
 }
 
