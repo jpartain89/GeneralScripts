@@ -9,8 +9,17 @@ PROGRAM_NAME="transcode-wrap"
 REPO_NAME="generalscripts"
 
 PIPE="/tmp/${PROGRAM_NAME}.out"
+CHANGED_FILES_VERBOSE="~/transcoded-vids-verbose.log"
+CHANGED_FILES="~/transcoded-vids.log"
 if [[ ! -p "${PIPE}" ]]; then
   mkfifo "${PIPE}"
+fi
+
+if [[ ! -f "${CHANGED_FILES}" ]]; then
+  touch "${CHANGED_FILES}"
+fi
+if [[ ! -f "${CHANGED_FILES_VERBOSE}" ]]; then
+  touch "${CHANGED_FILES_VERBOSE}"
 fi
 
 # Start logging to journal
@@ -76,9 +85,15 @@ main() {
       # This assigns the substituted variable to the letter j
       j="${i%${EXT}}.mp4"
 
+      # Writing the mkv file to the $CHANGED_FILE file, prior to the endcoding
+      printf "About to encode ${i} to ${j} \n" >> "${CHANGED_FILE_VERBOSE}"
+      printf "${j}" >> "${CHANGED_FILE}
+
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" --output "${j}"
       fi
+
+      printf "Finished encoding to \n ${j}" >> "${CHANGED_FILE_VERBOSE}"
 
       unset j
     done;
