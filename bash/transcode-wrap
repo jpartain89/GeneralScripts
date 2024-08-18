@@ -46,6 +46,7 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 die() {
   rm -rv "${PIPE}" &&
+  unset ARRAY
   echo "$PROGRAM_NAME: $1" >&2 &&
   exit 1
 }
@@ -66,6 +67,7 @@ for i in "${REQ_APPS[@]}"; do
     exit 1
   fi
 done
+unset i
 
 usage() {
   echo -e "${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
@@ -79,7 +81,7 @@ usage() {
         ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
-rm{} (
+rm() {
   declare -a ARRAY="$(cat "${HOME}/transcoded-files.log")"
   arrayLenth=${#ARRAY[@]}
   for (( i=0; i<${arrayLength}; i++ )); do #i in "${ARRAY[*]}"; do
@@ -92,7 +94,7 @@ rm{} (
     esac
   sed -i "\|${i}||d" "${CHANGED_FILES}"
   done
-)
+}
 
 main() {
   while IFS= read -r file; do
@@ -158,4 +160,3 @@ while (( "${#}" )); do
 done
 
 main
-
