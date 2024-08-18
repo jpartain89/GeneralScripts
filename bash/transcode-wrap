@@ -79,10 +79,6 @@ usage() {
         ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
-rm_question{} (
-
-)
-
 rm{} (
   declare -a ARRAY="$(cat "${HOME}/transcoded-files.log")"
   arrayLenth=${#ARRAY[@]}
