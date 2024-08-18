@@ -46,7 +46,6 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 
 die() {
   rm -rv "${PIPE}" &&
-  unset ARRAY
   echo "$PROGRAM_NAME: $1" >&2 &&
   exit 1
 }
@@ -67,7 +66,6 @@ for i in "${REQ_APPS[@]}"; do
     exit 1
   fi
 done
-unset i
 
 usage() {
   echo -e "${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
@@ -124,10 +122,6 @@ while (( "${#}" )); do
       EXT="${2}"
       [[ ${EXT} != .* ]] && EXT=".${EXT}"
       shift;
-      ;;
-    --rm )
-      rm;
-      exit 0
       ;;
     -h | --help )
       usage
