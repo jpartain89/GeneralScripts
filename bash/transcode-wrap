@@ -21,10 +21,6 @@ sleep_pid=$(
 )
 
 TRANSCODE="$(command -v transcode-video)"
-ANSI="$(command -v ansi)"
-
-# ANSI - https://github.com/fidian/ansi
-. "${ANSI}"
 
 command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
   (
@@ -51,7 +47,6 @@ trap die 1 2 3 6 9
 
 declare -a REQ_APPS=(
   "${TRANSCODE}"
-  "${ANSI}"
 )
 
 for i in "${REQ_APPS[@]}"; do
@@ -65,14 +60,14 @@ done
 usage() {
   echo -e "${PROGRAM_NAME} [ -l | --location ] /foo/bar [ -e | --extension ] .bar
 "
-ansi::blueIntense --no-newlines "   -l | --location    " ; ansi::bgBlueIntense ": Sets the directory location for the files you are wanting trascoded."
-ansi::blueIntense --no-newlines "   -e | --extension   " ; ansi::bgBlueIntense ": Sets the extension of the files you want transcoded"
+--no-newlines "   -l | --location     : Sets the directory location for the files you are wanting trascoded."
+--no-newlines "   -e | --extension    : Sets the extension of the files you want transcoded"
 echo -e ""
-ansi::bgRedIntense --no-newlines "    NOTE:" ; ansi::RedIntense " Can only parse one at time for both items."
-ansi::bgGreen "      This one is allowed:"
-ansi::Red "        ${PROGRAM_NAME} -l /media/drive -e .mkv"
-ansi::bgGreen "     This one is not:"
-ansi::Red "       ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
+--no-newlines "         NOTE:  Can only parse one at time for both items."
+"      This one is allowed:"
+"        ${PROGRAM_NAME} -l /media/drive -e .mkv"
+"     This one is not:"
+"       ${PROGRAM_NAME} -l /media/drive -l /some/other/spot -e .mkv,.avi"
 }
 
 main() {
@@ -83,7 +78,7 @@ main() {
       j="${i%${EXT}}.mp4"
 
       if [[ ! -e "${j}" ]]; then
-        transcode-video --quick --mp4 "${i}"
+        transcode-video --quick --mp4 "${i}" --output "${j}"
       fi
 
       unset j
