@@ -82,12 +82,12 @@ usage() {
 rm_question{} (
   read -rpv "Remove ${i}? " reponse
   case "$response" in
-    [Yy][Ee][Ss]|[Yy])
+    [Yy][Ee][Ss]|[Yy] )
       rm "$i";;
-    *)
+    * )
       shift;;
   esac
-  sed -i "\|${i}\n||d" "${CHANGED_FILES}"
+  sed -i "\|${i}||d" "${CHANGED_FILES}"
 )
 
 rm{} (
