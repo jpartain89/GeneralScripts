@@ -98,7 +98,7 @@ main() {
 
       unset j
     done;
-  done< <(find "${LOCATION}" -iname "*${EXT}")
+  done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo "{}" \;)
 }
 
 #SHORT=leh
