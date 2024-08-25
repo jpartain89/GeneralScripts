@@ -94,11 +94,12 @@ main() {
 
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" --output "${j}"
+
+        printf "##################################################################\n"
+        printf "Finished encoding to \n ${j}" >> "${CHANGED_FILES_VERBOSE}"
+        printf "##################################################################\n"
       fi
 
-      printf "##################################################################\n"
-      printf "Finished encoding to \n ${j}" >> "${CHANGED_FILES_VERBOSE}"
-      printf "##################################################################\n"
 
       unset j
     done;
