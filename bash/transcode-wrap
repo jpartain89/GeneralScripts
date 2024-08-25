@@ -86,15 +86,19 @@ main() {
       # This assigns the substituted variable to the letter j
       j="${i%${EXT}}.mp4"
 
-      # Writing the mkv file to the $CHANGED_FILE file, prior to the endcoding
+      # Writing the mkv file to the $CHANGED_FILE file, prior to the endcoding;
+      printf "##################################################################\n"
       printf "About to encode ${i} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
+      printf "/n"
       printf "${i}\n" | tee -a "${CHANGED_FILES}"
 
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" --output "${j}"
       fi
 
+      printf "##################################################################\n"
       printf "Finished encoding to \n ${j}" >> "${CHANGED_FILES_VERBOSE}"
+      printf "##################################################################\n"
 
       unset j
     done;
