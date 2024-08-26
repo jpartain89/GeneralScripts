@@ -81,7 +81,7 @@ usage() {
 
 main() {
   FILE=$(find "${LOCATION}" -iname "*${EXT}" -exec echo "{}" \;)
-  while IFS= $(echo $file);
+  while IFS= $(echo $file); do
     for i in "${file}"; do
 
       # This assigns the substituted variable to the letter j
