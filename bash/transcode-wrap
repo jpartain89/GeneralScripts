@@ -90,7 +90,7 @@ main() {
       printf "##################################################################\n"
       printf "About to encode ${i} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
       printf "/n"
-      printf "${FILE[$i]}\n" | tee -a "${CHANGED_FILES}"
+      printf "${i}\n" | tee -a "${CHANGED_FILES}"
 
       if [[ ! -e "${j}" ]]; then
         transcode-video --quick --mp4 "${i}" --output "${j}"
