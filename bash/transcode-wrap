@@ -80,7 +80,8 @@ usage() {
 }
 
 main() {
-  while IFS= read -r file; do
+  FILE=$(find "${LOCATION}" -iname "*${EXT}" -exec echo "{}" \;)
+  while IFS= $(echo $file);
     for i in "${file}"; do
 
       # This assigns the substituted variable to the letter j
@@ -100,10 +101,9 @@ main() {
         printf "##################################################################\n"
       fi
 
-
       unset j
     done;
-  done< <(find "${LOCATION}" -iname "*${EXT}" -exec echo "{}" \;)
+  done
 }
 
 #SHORT=leh
