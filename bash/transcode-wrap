@@ -120,7 +120,6 @@ while (( "${#}" )); do
   case "${1}" in
     -l | --location )
       LOCATION="${2}";
-      if [[ $LOCATION == "./" ]]; then LOCATION="$(pwd)"; fi
       shift;
       ;;
     -e | --extension )
