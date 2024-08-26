@@ -80,7 +80,7 @@ usage() {
 }
 
 main() {
-  find "${LOCATION}" -iname "*${EXT}" -printf '"%p"\0 "' | while IFS= read -d $'\0' file; do
+  find "${LOCATION}" -iname "*${EXT}" -printf '%p\0 ' | while IFS= read -d $'\0' file; do
     for i in "${file}"; do
 
       # This assigns the substituted variable to the letter j
