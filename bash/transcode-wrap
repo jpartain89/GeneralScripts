@@ -80,22 +80,20 @@ usage() {
 }
 
 main() {
-  declare -a FILE=()
-  FILE=$(find "${LOCATION}" -iname "*${EXT}" -print0 )
-  #while IFS= $(echo $FILE); do
-    for i in "${!FILE[@]}"; do
+  while IFS= read -r file; do
+    for i in "${file}"; do
 
       # This assigns the substituted variable to the letter j
-      j="${FILE[$i]%${EXT}}.mp4"
+      j="${i%${EXT}}.mp4"
 
       # Writing the mkv file to the $CHANGED_FILE file, prior to the endcoding;
       printf "##################################################################\n"
-      printf "About to encode ${FILE[$i]} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
+      printf "About to encode ${i} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
       printf "/n"
       printf "${FILE[$i]}\n" | tee -a "${CHANGED_FILES}"
 
       if [[ ! -e "${j}" ]]; then
-        transcode-video --quick --mp4 "${FILE[$i]}" --output "${j}"
+        transcode-video --quick --mp4 "${i}" --output "${j}"
 
         printf "##################################################################\n"
         printf "Finished encoding to \n ${j}" >> "${CHANGED_FILES_VERBOSE}"
@@ -104,7 +102,7 @@ main() {
 
       unset j
     done;
-  #done
+  done< <(find "${LOCATION}" -iname "*${EXT}" -print0 )
 }
 
 #SHORT=leh
