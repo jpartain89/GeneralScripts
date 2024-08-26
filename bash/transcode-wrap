@@ -81,8 +81,7 @@ usage() {
 
 main() {
   declare=()
-  FILE+=$(find "${LOCATION}" -iname "*${EXT}" -exec echo "\"{}\"" \;)
-  IFS="\n"
+  FILE+=$(find "${LOCATION}" -iname "*${EXT}" -exec echo "{}" \;)
   #while IFS= $(echo $FILE); do
     for i in "${!FILE[@]}"; do
 
