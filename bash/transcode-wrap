@@ -80,12 +80,7 @@ usage() {
 }
 
 main() {
-  #find "${LOCATION}" -iname "*${EXT}" -printf '%p\0 ' | while read -d $'\0' file; do
-  find ./ -iname "*.mkv" -exec $SHELL -c '
-    for i in "$@"; do
-      echo "$i"
-    done
-  ' {} + | while IFS= read -r -d '' file; do
+  find "${LOCATION}" -iname "*${EXT}" -printf '%p\0 ' | while read -d $'\0' file; do
     for i in "${file}"; do
 
       # This assigns the substituted variable to the letter j
@@ -97,7 +92,7 @@ main() {
         printf "About to encode ${i} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
         printf "/n"
         printf "${i}\n" | tee -a "${CHANGED_FILES}"
-
+s
         transcode-video --quick --mp4 "${i}" --output "${j}"
 
         printf "##################################################################\n"
