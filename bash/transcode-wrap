@@ -83,7 +83,7 @@ main() {
   declare=()
   FILE+=$(find "${LOCATION}" -iname "*${EXT}" -exec echo "\"{}\"" \;)
   #while IFS= $(echo $FILE); do
-    for i in "${FILE[@]}"; do
+    for i in "${FILE[*]}"; do
 
       # This assigns the substituted variable to the letter j
       j="${i%${EXT}}.mp4"
