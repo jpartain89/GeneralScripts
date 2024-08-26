@@ -102,8 +102,7 @@ main() {
 
       unset j
     done;
-  done< <(find "${LOCATION}" -iname "*${EXT}" -print0 )
-}
+  done< <(find "${LOCATION}" -iname "*${EXT}" -printf "\"%p\"\0 ")
 
 #SHORT=leh
 #LONG=location,ext,help
