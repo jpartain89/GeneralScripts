@@ -81,7 +81,7 @@ usage() {
 
 main() {
   declare=()
-  FILE+=$(find "${LOCATION}" -iname "*${EXT}")
+  FILE=$(find "${LOCATION}" -iname "*${EXT}")
   #while IFS= $(echo $FILE); do
     for i in "${!FILE[@]}"; do
 
