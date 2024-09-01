@@ -90,7 +90,7 @@ main() {
         # Writing the mkv file to the $CHANGED_FILE file, prior to the endcoding;
         printf "##################################################################\n"
         printf "About to encode ${i} to ${j}" | tee -a "${CHANGED_FILES_VERBOSE}"
-        printf "/n"
+        printf "\n"
         printf "${i}\n" | tee -a "${CHANGED_FILES}"
 
         transcode-video --quick --mp4 "${i}" --output "${j}"
