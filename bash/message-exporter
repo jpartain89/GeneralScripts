@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+open "smb://jpartain89@10.0.100.30/CentralShare"
+php "${HOME}/git/OSX-Messages-Exporter/messages-exporter.php" -o "/Volumes/CentralShare/General/iMessage"
+
