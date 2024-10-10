@@ -2,21 +2,40 @@ import os
 import shutil
 import json
 import re
+import signal
+import sys
 from pathlib import Path
 import logging
 
 # Setup logging for file movements and errors
-logging.basicConfig(filename='/media/Porn/file_move.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(filename='file_move.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 error_log = logging.getLogger('error_logger')
-error_handler = logging.FileHandler('/media/Porn/file_move_errors.log')
+error_handler = logging.FileHandler('file_move_errors.log')
 error_handler.setLevel(logging.ERROR)
 error_log.addHandler(error_handler)
 
 # Configuration variables
 SOURCE_DIR = '/media/Downloads/syncthing'  # Source directory where the video files are downloaded
 TARGET_DIR = '/media/Porn'  # Target directory where videos will be organized by studio
-DATABASE_FILE = '/media/Porn/studio_mapping.json'  # JSON database to map studio names to patterns
+DATABASE_FILE = 'studio_mapping.json'  # JSON database to map studio names to patterns
 VIDEO_EXTENSIONS = ['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.mpg']  # Supported video file extensions
+
+# Global flag and counter to track interruptions and number of moved files
+interrupted = False
+files_moved = 0
+
+def handle_signal(signum, frame):
+    """
+    Signal handler for clean shutdown.
+    Sets the global 'interrupted' flag to True when a signal is caught.
+    
+    Args:
+        signum (int): The signal number received.
+        frame (frame object): The current stack frame (not used).
+    """
+    global interrupted
+    interrupted = True
+    print("\nProcess interrupted. Cleaning up...")
 
 def load_studio_mapping():
     """
@@ -101,6 +120,7 @@ def move_video_file(file_path, studio_folder):
     Raises:
         Exception: If an error occurs during the file move process (e.g., permissions, invalid paths).
     """
+    global files_moved
     try:
         # Construct the full destination folder path
         destination_folder = os.path.join(TARGET_DIR, studio_folder)
@@ -119,32 +139,84 @@ def move_video_file(file_path, studio_folder):
             # Move the file to the destination folder
             shutil.move(file_path, destination_file)
             logging.info(f"File moved to: {destination_file}")
+        
+        # Increment the files moved counter
+        files_moved += 1
     except Exception as e:
         # Log any errors that occur during the move
         error_log.error(f"Error moving file {file_path}: {str(e)}")
         raise
 
+def show_progress(current, total, file_name):
+    """
+    Displays the progress of the file move process in percentage along with the file being moved.
+
+    Args:
+        current (int): The current number of files processed.
+        total (int): The total number of files to process.
+        file_name (str): The name of the file currently being processed.
+    """
+    percentage = (current / total) * 100
+    sys.stdout.write(f"\rMoving file: {file_name} ({current}/{total}) [{percentage:.2f}% complete]")
+    sys.stdout.flush()
+
+def log_interruption():
+    """
+    Logs the interruption of the process, including how many files were moved before the interruption.
+    """
+    logging.info(f"Process interrupted. {files_moved} files were moved before interruption.")
+    print(f"\nProcess interrupted. {files_moved} files were successfully moved before stopping.")
+
 def process_files():
     """
     Processes all video files in the source directory and moves them to the correct target directories
-    based on the studio mapping.
+    based on the studio mapping. Displays real-time progress of the move process. Handles clean exit
+    in case of signal interruptions.
     """
+    global interrupted  # Use the global 'interrupted' flag to track interruptions
+
     # Load the studio-to-pattern mapping from the database
     studio_mapping = load_studio_mapping()
 
-    # Walk through the source directory to find all video files
+    # Gather all the video files to be processed
+    video_files = []
     for root, _, files in os.walk(SOURCE_DIR):
         for file in files:
-            # Process only video files based on the supported extensions
             if any(file.endswith(ext) for ext in VIDEO_EXTENSIONS):
-                file_path = os.path.join(root, file)  # Get the full path to the file
-                print(f"Processing file: {file_path}")
+                video_files.append((root, file))
 
-                # Determine the appropriate studio folder for the file
-                studio_folder = get_studio_folder(file, studio_mapping)
+    # Track the total number of video files
+    total_files = len(video_files)
+    current_file = 0
 
-                # Move the file to the correct folder
-                move_video_file(file_path, studio_folder)
+    # Process each video file and track progress
+    for root, file in video_files:
+        if interrupted:
+            log_interruption()  # Log and notify the user about the interruption
+            break
+
+        current_file += 1
+        file_path = os.path.join(root, file)
+
+        # Show progress for the current file
+        show_progress(current_file, total_files, file)
+
+        # Determine the appropriate studio folder for the file
+        studio_folder = get_studio_folder(file, studio_mapping)
+
+        # Move the file to the correct folder
+        move_video_file(file_path, studio_folder)
+
+    # Ensure the progress bar completes to 100%
+    sys.stdout.write("\n")
 
 if __name__ == "__main__":
-    process_files()
+    # Register signal handlers for SIGINT and SIGTERM
+    signal.signal(signal.SIGINT, handle_signal)  # Handle Ctrl+C
+    signal.signal(signal.SIGTERM, handle_signal)  # Handle termination signal
+
+    try:
+        process_files()  # Start processing files
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        error_log.error(f"Unexpected error: {str(e)}")
