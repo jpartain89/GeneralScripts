@@ -20,6 +20,10 @@ then
     sudo apt-get install -y python3-pip
 fi
 
+echo "Creating venv"
+python3 -m venv venv
+source venv/bin/activate
+
 # Install Python dependencies
 echo "Installing Python dependencies..."
 pip3 install -r $PYTHON_REQUIREMENTS
@@ -33,7 +37,7 @@ directories:
   FROM: '/media/Downloads/syncthing'   # Source directory where files are downloaded
   TO: '/media/Porn'                    # Target directory where videos will be organized by studio
 
-studio_mappings:
+5studio_mappings:
   "Club Inferno": 
     - "Club Inferno"
     - "Powerhole"
