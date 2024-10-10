@@ -20,9 +20,12 @@ then
     sudo apt-get install -y python3-pip
 fi
 
-echo "Creating venv"
-python3 -m venv venv
-source venv/bin/activate
+if [[ ! -f venv ]]; then
+  echo "Creating venv"
+  python3 -m venv venv
+fi
+
+. venv/bin/activate
 
 # Install Python dependencies
 echo "Installing Python dependencies..."
