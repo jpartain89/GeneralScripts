@@ -20,6 +20,7 @@ error_log.addHandler(error_handler)
 interrupted = False
 files_moved = 0
 CONFIG_FILE = 'config.yml'
+VIDEO_EXTENSIONS = ['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.mpg']  # Supported video file extensions
 
 def handle_signal(signum, frame):
     """
@@ -148,7 +149,7 @@ def move_video_file(file_path, studio_folder, target_directory):
             # Move the file to the destination folder
             shutil.move(file_path, destination_file)
             logging.info(f"File moved to: {destination_file}")
-    
+
         # Increment the files moved counter
         files_moved += 1
     except Exception as e:
