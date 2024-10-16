@@ -217,4 +217,42 @@ def process_files():
     # Gather all the video files to be processed
     video_files = []
     for root, _, files in os.walk(source_directory):
-        for file
+        for file in files:
+            if any(file.endswith(ext) for ext in VIDEO_EXTENSIONS):
+                video_files.append((root, file))
+
+    # Track the total number of video files
+    total_files = len(video_files)
+    current_file = 0
+
+    # Process each video file and track progress
+    for root, file in video_files:
+        if interrupted:
+            log_interruption()  # Log and notify the user about the interruption
+            break
+
+        current_file += 1
+        file_path = os.path.join(root, file)
+
+        # Show progress for the current file
+        show_progress(current_file, total_files, file)
+
+        # Determine the appropriate studio folder for the file
+        studio_folder = get_studio_folder(file, studio_mapping)
+
+        # Move the file to the correct folder using rsync
+        move_video_file(file_path, studio_folder, target_directory)
+
+    # Ensure the progress bar completes to 100%
+    sys.stdout.write("\n")
+
+if __name__ == "__main__":
+    # Register signal handlers for SIGINT and SIGTERM
+    signal.signal(signal.SIGINT, handle_signal)  # Handle Ctrl+C
+    signal.signal(signal.SIGTERM, handle_signal)  # Handle termination signal
+
+    try:
+        process_files()  # Start processing files
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        error_log.error(f"Unexpected error: {str(e)}")
