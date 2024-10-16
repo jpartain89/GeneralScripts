@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 import os
-import shutil
 import re
 import signal
 import sys
 import yaml
+import subprocess
 from pathlib import Path
 import logging
 
@@ -20,19 +18,29 @@ error_log.addHandler(error_handler)
 interrupted = False
 files_moved = 0
 CONFIG_FILE = 'config.yml'
-VIDEO_EXTENSIONS = ['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.mpg']  # Supported video file extensions
+current_rsync_process = None  # To track the current rsync process
 
 def handle_signal(signum, frame):
     """
     Signal handler for clean shutdown.
     Sets the global 'interrupted' flag to True when a signal is caught.
+    Terminates the current rsync process if it is running.
 
     Args:
         signum (int): The signal number received.
         frame (frame object): The current stack frame (not used).
     """
     global interrupted
-    interrupted = True
+    global current_rsync_process
+
+    interrupted = True  # Mark that we've been interrupted
+
+    if current_rsync_process:
+        print("\nTerminating rsync process...")
+        current_rsync_process.terminate()  # Gracefully terminate the rsync process
+        current_rsync_process.wait()  # Wait for rsync to exit
+        print("rsync process terminated.")
+
     print("\nProcess interrupted. Cleaning up...")
 
 def load_config():
@@ -45,10 +53,10 @@ def load_config():
     """
     if not os.path.exists(CONFIG_FILE):
         raise FileNotFoundError(f"Configuration file '{CONFIG_FILE}' not found.")
-
+    
     with open(CONFIG_FILE, 'r') as f:
         config = yaml.safe_load(f)
-
+    
     return config
 
 def save_studio_mapping(studio_mapping):
@@ -120,7 +128,8 @@ def get_studio_folder(file_name, studio_mapping):
 
 def move_video_file(file_path, studio_folder, target_directory):
     """
-    Moves a video file to the appropriate studio folder. Handles duplicate files by moving them to a "duplicates" folder.
+    Moves a video file to the appropriate studio folder using rsync.
+    Rsync will copy the file, display progress, and then delete the source file (effectively moving it).
 
     Args:
         file_path (str): The path to the file to be moved.
@@ -128,34 +137,48 @@ def move_video_file(file_path, studio_folder, target_directory):
         target_directory (str): The root target directory.
 
     Raises:
-        Exception: If an error occurs during the file move process (e.g., permissions, invalid paths).
+        Exception: If an error occurs during the rsync process.
     """
     global files_moved
+    global current_rsync_process  # Track the current rsync process for termination
+
     try:
         # Construct the full destination folder path
         destination_folder = os.path.join(target_directory, studio_folder)
         os.makedirs(destination_folder, exist_ok=True)  # Ensure the folder exists
 
-        # Determine the destination file path
-        destination_file = os.path.join(destination_folder, os.path.basename(file_path))
+        # Use rsync to move the file with progress display and remove the source file after transfer
+        rsync_command = [
+            'rsync', 
+            '--remove-source-files',   # Remove the source file after transfer
+            '--progress',              # Show progress during the move
+            file_path,                 # Source file path
+            destination_folder         # Destination folder path
+        ]
 
-        # If the file already exists, move it to a "duplicates" folder
-        if os.path.exists(destination_file):
-            duplicate_folder = os.path.join(destination_folder, 'duplicates')
-            os.makedirs(duplicate_folder, exist_ok=True)
-            shutil.move(file_path, os.path.join(duplicate_folder, os.path.basename(file_path)))
-            logging.info(f"Duplicate file moved to: {duplicate_folder}/{os.path.basename(file_path)}")
+        # Execute the rsync command using subprocess.Popen (allows us to terminate)
+        current_rsync_process = subprocess.Popen(rsync_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        # Capture and print rsync output to the console in real-time
+        for line in current_rsync_process.stdout:
+            print(line, end='')
+
+        # Wait for rsync to finish
+        current_rsync_process.wait()
+
+        if current_rsync_process.returncode == 0:
+            logging.info(f"File successfully moved to: {destination_folder}/{os.path.basename(file_path)}")
+            files_moved += 1
         else:
-            # Move the file to the destination folder
-            shutil.move(file_path, destination_file)
-            logging.info(f"File moved to: {destination_file}")
+            error_log.error(f"Error moving file {file_path} with rsync: {current_rsync_process.stderr.read()}")
+            raise Exception(f"Error moving file {file_path}: {current_rsync_process.stderr.read()}")
 
-        # Increment the files moved counter
-        files_moved += 1
     except Exception as e:
-        # Log any errors that occur during the move
+        # Log any errors that occur during the rsync process
         error_log.error(f"Error moving file {file_path}: {str(e)}")
         raise
+    finally:
+        current_rsync_process = None  # Reset the current rsync process
 
 def show_progress(current, total, file_name):
     """
@@ -194,42 +217,4 @@ def process_files():
     # Gather all the video files to be processed
     video_files = []
     for root, _, files in os.walk(source_directory):
-        for file in files:
-            if any(file.endswith(ext) for ext in VIDEO_EXTENSIONS):
-                video_files.append((root, file))
-
-    # Track the total number of video files
-    total_files = len(video_files)
-    current_file = 0
-
-    # Process each video file and track progress
-    for root, file in video_files:
-        if interrupted:
-            log_interruption()  # Log and notify the user about the interruption
-            break
-
-        current_file += 1
-        file_path = os.path.join(root, file)
-
-        # Show progress for the current file
-        show_progress(current_file, total_files, file)
-
-        # Determine the appropriate studio folder for the file
-        studio_folder = get_studio_folder(file, studio_mapping)
-
-        # Move the file to the correct folder
-        move_video_file(file_path, studio_folder, target_directory)
-
-    # Ensure the progress bar completes to 100%
-    sys.stdout.write("\n")
-
-if __name__ == "__main__":
-    # Register signal handlers for SIGINT and SIGTERM
-    signal.signal(signal.SIGINT, handle_signal)  # Handle Ctrl+C
-    signal.signal(signal.SIGTERM, handle_signal)  # Handle termination signal
-
-    try:
-        process_files()  # Start processing files
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        error_log.error(f"Unexpected error: {str(e)}")
+        for file
