@@ -20,7 +20,7 @@ then
     sudo apt-get install -y python3-pip
 fi
 
-if [[ ! -f venv ]]; then
+if [[ -f venv ]]; then
   echo "Creating venv"
   python3 -m venv venv
 fi
@@ -40,18 +40,18 @@ directories:
   FROM: '/media/Downloads/syncthing'   # Source directory where files are downloaded
   TO: '/media/Porn'                    # Target directory where videos will be organized by studio
 
-5studio_mappings:
-  "Club Inferno": 
+studio_mappings:
+  "ClubInferno":
     - "Club Inferno"
     - "Powerhole"
-  "MEN": 
+  "MEN":
     - "[MEN]"
     - "Drill My Hole"
     - "Stepdick"
-  "Treasure Island Media": 
+  "TreasureIslandMedia":
     - "Treasure Island Media"
     - "Fucking Crazy"
-  "RawFuckClub": 
+  "RawFuckClub":
     - "RFC"
     - "RawFuckClub"
 EOL

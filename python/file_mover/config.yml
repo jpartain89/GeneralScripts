@@ -3,7 +3,7 @@ directories:
   TO: '/media/Porn'                    # Target directory where videos will be organized by studio
 
 studio_mappings:
-  "Club Inferno":
+  "ClubInferno":
     - "Club Inferno"
     - "Powerhole"
   "MEN":
