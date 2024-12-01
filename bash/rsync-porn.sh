@@ -28,7 +28,6 @@ command -v "$PROGRAM_NAME" 1>/dev/null 2>&1 || {
 # This way, if they don't, then the defaults listed below still hold true.
 FROM_Default="/media/Downloads/syncthing"
 DESTINATION_ONE="/media/Porn"
-DESTINATION_TWO="/media/8TB/Porn"
 
 # this gives preference from top to bottom, aka:
 # if /etc/rsync-porn.conf is found first, then it stops looking any further
@@ -51,7 +50,6 @@ else
     cat << EOF > "${HOME}/.config/rsync-porn.conf"
 FROM="/media/Downloads/syncthing"
 DESTINATION_ONE="/media/Porn"
-DESTINATION_TWO="/media/8TB/Porn"
 EOF
 fi
 
@@ -70,15 +68,8 @@ EOF
 }
 
 main() {
-<<<<<<<
   find ${FROM} ${SEARCH_TYPE} "${NAME_OF_FILE}" | \
-    rsync -avhP --files-from - --no-relative / "${DESTINATION_ONE}/${TO_DIR}" &&
-  find ${FROM} ${SEARCH_TYPE} "${NAME_OF_FILE}" | \
-    rsync -avhP --remove-source-files --files-from - --no-relative / "${DESTINATION_TWO}/${TO_DIR}"
-=======
-  find "${FROM}" -type f "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec rsync -avhP {} "${DESTINATION_ONE}/${TO_DIR}" \; &&
-  find "${FROM}" -type f "${SEARCH_TYPE}" "${NAME_OF_FILE}" -exec rsync -avhP --remove-source-files {} "${DESTINATION_TWO}/${TO_DIR}" \;
->>>>>>>
+    rsync -avhP --remove-source-files --files-from - --no-relative / "${DESTINATION_ONE}/${TO_DIR}"
 }
 
 #main() {

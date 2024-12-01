@@ -1,18 +1,117 @@
 directories:
-  FROM: '/media/Downloads/syncthing'   # Source directory where files are downloaded
-  TO: '/media/Porn'                    # Target directory where videos will be organized by studio
-
+  FROM: /media/Downloads/syncthing
+  TO: /media/Porn
 studio_mappings:
-  "ClubInferno":
-    - "Club Inferno"
-    - "Powerhole"
-  "MEN":
-    - "[MEN]"
-    - "Drill My Hole"
-    - "Stepdick"
-  "TreasureIslandMedia":
-    - "Treasure Island Media"
-    - "Fucking Crazy"
-  "RawFuckClub":
-    - "RFC"
-    - "RawFuckClub"
+  BareBack:
+  - BB
+  - Bareback
+  - "Breed Me Raw"
+  - BreedMeRaw
+  BoysHalfwayHouse:
+  - "Boys Halfway House"
+  - BoysHalfwayHouse
+  BrentEverett:
+  - "Brent Everett"
+  - BrentEverett
+  - "Brent-Everett"
+  Bromo:
+  - Bromo
+  CockyBoys:
+  - CockyBoys
+  DarkRoom:
+  - DarkRoom
+  EricRaw:
+  - "Eric Raw"
+  - EricRaw
+  - "Eric Videos"
+  - EricVideos
+  FF:
+  - "Club Inferno"
+  - Powerhole
+  - Fist
+  - FF
+  - "Axel Abysse"
+  - AxelAbysse
+  - Fisting
+  - "Dark Alley"
+  - DarkAlley
+  - RawFuckClub
+  - RFC
+  - "Raw Fuck Club"
+  - "Hot House"
+  - HotHouse
+  - "Gaping Holes"
+  - GapingHoles
+  FamilyDick:
+  - NextDoor
+  - "Next Door"
+  - SayUncle
+  - "Say Uncle"
+  - "Fun Size Boys"
+  - FunSizeBoys
+  - "Family Dick"
+  - FamilyDick
+  Fetish:
+  - pnp
+  - Football
+  - Skinhead
+  - fetish
+  FraternityX:
+  - FratX
+  - "Frat X"
+  - "Fraternity X"
+  - FraternityX
+  LatinLoads:
+  - latin
+  LucasEntertainment:
+  - LucasEntertainment
+  - "Lucas Entertainment"
+  - "Lucas Raunch"
+  - LucasRaunch
+  MachoFucker:
+  - Machofucker
+  NakedSword:
+  - NakedSword
+  - "Naked Sword"
+  OnlyFans:
+  - OnlyFans
+  - "Only Fans"
+  - "Just Fans"
+  - JustFans
+  - "4 My Fans"
+  - 4MyFans
+  PetoCoast:
+  - "Peto Coast"
+  - PetoCoast
+  SketchySex:
+  - "Sketchy Sex"
+  - SketchySex
+  SlamRush:
+  - "Slam Rush"
+  - SlamRush
+  - "Face Down Ass Up"
+  - FaceDown
+  StraightFraternity:
+  - StraightFraternity
+  - "Straight Fraternity"
+  TimTales:
+  - "Tim Tales"
+  - TIM
+  TrailerTrashBoys:
+  - "Trailer Trash Boys"
+  - TrailerTrashBoys
+  TreasureIslandMedia:
+  - Treasure Island Media
+  - "Fucking Crazy"
+  Unsorted:
+  - "Colby Knox"
+  unsorted:
+  - Cobra
+  - MEN
+video_extensions:
+- .mp4
+- .mkv
+- .avi
+- .mov
+- .wmv
+- .mpg

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import re
 import signal
@@ -13,10 +15,12 @@ error_log = logging.getLogger('error_logger')
 error_handler = logging.FileHandler('file_move_errors.log')
 error_handler.setLevel(logging.ERROR)
 error_log.addHandler(error_handler)
+VIDEO_EXTENSIONS = ['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.mpg']  # Supported video file extensions
 
 # Global flag and counter to track interruptions and number of moved files
 interrupted = False
 files_moved = 0
+USER_HOME = '/home/jpartain89/git/generalscripts/python/file_mover'
 CONFIG_FILE = 'config.yml'
 current_rsync_process = None  # To track the current rsync process
 
@@ -45,19 +49,29 @@ def handle_signal(signum, frame):
 
 def load_config():
     """
-    Loads the configuration from the YAML file. 
+    Loads the configuration from the YAML file.
     This includes the FROM/TO directories and studio mappings.
 
     Returns:
         dict: The configuration containing directory paths and studio mappings.
     """
-    if not os.path.exists(CONFIG_FILE):
+    if not os.path.exists(os.path.join(USER_HOME, CONFIG_FILE)):
         raise FileNotFoundError(f"Configuration file '{CONFIG_FILE}' not found.")
-    
+
     with open(CONFIG_FILE, 'r') as f:
         config = yaml.safe_load(f)
-    
+
     return config
+
+def get_file_extensions(VIDEO_EXTENSIONS):
+    """
+    Saves the file extensions from the config file to the environment.
+    """
+    with open(CONFIG_FILE, 'r') as f:
+        config = yaml.safe_load(f)
+
+    with open(CONFIG_FILE, 'w') as f:
+        yaml.dump(config, f, default_flow_style=False)
 
 def save_studio_mapping(studio_mapping):
     """
