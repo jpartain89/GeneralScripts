@@ -15,15 +15,13 @@ import requests
 ##    python -m pip install requests
 
 TAUTULLI_URL = 'http://localhost:8181'
-TAUTULLI_APIKEY = 'xxxxxxxxxx'
-PLEX_URL = 'http://localhost:32400'
-PLEX_TOKEN = 'xxxxxxxxxx'
+TAUTULLI_APIKEY = '4c5dab087fae446aa3c527b73d96c90d'
+PLEX_URL = 'http://10.0.100.41:32400'
+PLEX_TOKEN = 'toFRsy2zkC59RjiSkD-m'
 
 FALLBACK_MATCH_TITLE_YEAR = True  # True or False, fallback to matching by title and year if matching by ID fails
 FALLBACK_MATCH_TITLE = True       # True or False, fallback to matching by title ONLY if matching by title and year fails
-DRY_RUN = TRUE                    # True to dry run without making changes to the Tautulli database, False to make changes
-
-
+DRY_RUN = False                    # True to dry run without making changes to the Tautulli database, False to make changes
 
 ## CODE BELOW ##
 
