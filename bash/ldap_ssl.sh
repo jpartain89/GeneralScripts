@@ -3,7 +3,7 @@
 # copied from https://documentation.ubuntu.com/server/how-to/openldap/ldap-and-tls/
 
 SSL_ETC_DIR="/etc/ssl"
-LDAP_SERVER_FILENAME="syno01"
+LDAP_SERVER_FILENAME="syno"
 SSL_PRIVATE_DIR="${SSL_ETC_DIR}/private" # directory for private keys
 LDAP_LDIF_DIR="/etc/ldap/ldif" # directory for LDAP ldif files
 SSL_CERTS_DIR="${SSL_ETC_DIR}/certs" # directory for certificates
