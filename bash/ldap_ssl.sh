@@ -3,7 +3,7 @@
 # copied from https://documentation.ubuntu.com/server/how-to/openldap/ldap-and-tls/
 
 SSL_ETC_DIR="/etc/ssl"
-LDAP_SERVER_FILENAME="syno"
+LDAP_SERVER_FILENAME="pi5sts"
 SSL_PRIVATE_DIR="${SSL_ETC_DIR}/private" # directory for private keys
 LDAP_LDIF_DIR="/etc/ldap/ldif" # directory for LDAP ldif files
 SSL_CERTS_DIR="${SSL_ETC_DIR}/certs" # directory for certificates
@@ -19,29 +19,29 @@ KEY_BITS="4096"
 sudo apt install gnutls-bin ssl-cert
 
 # Create a private key for the Certificate Authority
-sudo certtool --generate-privkey --bits 4096 --outfile "${SSL_PRIV_KEY}"
+#sudo certtool --generate-privkey --bits 4096 --outfile "${SSL_PRIV_KEY}"
 
 #Create the template/file /etc/ssl/ca.info to define the CA
-cat << EOF | sudo tee /etc/ssl/ca.info
-cn = ${COMPANY}
-ca
-cert_signing_key
-expiration_days = ${EXPIRATION_DAYS}
-EOF
+#cat << EOF | sudo tee /etc/ssl/ca.info
+#cn = ${COMPANY}
+#ca
+#cert_signing_key
+#expiration_days = ${EXPIRATION_DAYS}
+#EOF
 
 # Create the self-signed CA certificate
-sudo certtool --generate-self-signed \
-  --load-privkey "${SSL_PRIV_KEY}" \
-  --template /etc/ssl/ca.info \
-  --outfile "${SSL_CA_CERT}"
+#sudo certtool --generate-self-signed \
+#  --load-privkey "${SSL_PRIV_KEY}" \
+#  --template /etc/ssl/ca.info \
+#  --outfile "${SSL_CA_CERT}"
 
 # Run update-ca-certificates to add the new CA certificate to the list of trusted CAs. Note the one added CA:
-sudo update-ca-certificates
+#sudo update-ca-certificates
 
 # Make a private key for the server
-sudo certtool --generate-privkey \
-  --bits ${KEY_BITS} \
-  --outfile "${SSL_LDAP_KEY}"
+#sudo certtool --generate-privkey \
+#  --bits ${KEY_BITS} \
+#  --outfile "${SSL_LDAP_KEY}"
 
 # Create /etc/ssl/${LDAP_SERVER_FILENAME}.info
 # The following certificate is good for 1 year, and it’s valid
@@ -68,23 +68,17 @@ sudo certtool --generate-certificate \
 sudo chgrp openldap "${SSL_LDAP_KEY}"
 sudo chmod 0640 "${SSL_LDAP_KEY}"
 
-#echo << EOF | sudo tee "${LDAP_LDIF_DIR}/certinfo.ldif"
-#dn: cn=config
-#add: olcTLSCACertificateFile
-#olcTLSCACertificateFile: "${SSL_CA_CERT}"
-#-
-#add: olcTLSCertificateFile
-#olcTLSCertificateFile: "/etc/ldap/${LDAP_SERVER_FILENAME}_slapd_cert.pem"
-#-
-#add: olcTLSCertificateKeyFile
-#olcTLSCertificateKeyFile: "/etc/ldap/${LDAP_SERVER_FILENAME}_slapd_key.pem"
-#EOF
-#
-#
-#sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f "${LDAP_LDIF_DIR}/certinfo.ldif"
+echo << EOF | sudo tee "${LDAP_LDIF_DIR}/certinfo.ldif"
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: "${SSL_CA_CERT}"
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: "/etc/ldap/${LDAP_SERVER_FILENAME}_slapd_cert.pem"
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: "/etc/ldap/${LDAP_SERVER_FILENAME}_slapd_key.pem"
+EOF
 
-sudo rsync -avhP \
-  "${SSL_LDAP_KEY}" \
-  "${SSL_SERVER_CERT}" \
-  "${SSL_CA_CERT}" \
-  /media/General/ssl_certs/
+
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f "${LDAP_LDIF_DIR}/certinfo.ldif"
