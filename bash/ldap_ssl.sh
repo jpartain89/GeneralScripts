@@ -5,7 +5,7 @@
 SSL_ETC_DIR="/etc/ssl"
 LDAP_SERVER_FILENAME="pi5touch"
 SSL_PRIVATE_DIR="${SSL_ETC_DIR}/private" # directory for private keys
-LDAP_LDIF_DIR="/etc/ldap/ldif" # directory for LDAP ldif files
+LDAP_LDIF_DIR="~/ldif" # directory for LDAP ldif files
 SSL_CERTS_DIR="${SSL_ETC_DIR}/certs" # directory for certificates
 SSL_PRIV_KEY="${SSL_PRIVATE_DIR}/The_CA_Key.pem" # private key for the CA
 SSL_CA_CERT="${SSL_CERTS_DIR}/The_CA_Cert.crt" # self-signed CA certificate
@@ -15,6 +15,7 @@ COMPANY="JPCDI"
 EXPIRATION_DAYS="3650"
 KEY_BITS="4096"
 
+mkdir "${LDAP_LDIF_DIR}" || true
 # This script configures LDAP to use SSL/TLS for secure communication.
 sudo apt install gnutls-bin ssl-cert
 
