@@ -22,10 +22,12 @@ sudo apt install gnutls-bin ssl-cert
 sudo certtool --generate-privkey --bits 4096 --outfile "${SSL_PRIV_KEY}"
 
 #Create the template/file /etc/ssl/ca.info to define the CA
+cat << EOF | sudo tee /etc/ssl/ca.info
 cn = ${COMPANY}
 ca
 cert_signing_key
 expiration_days = ${EXPIRATION_DAYS}
+EOF
 
 # Create the self-signed CA certificate
 sudo certtool --generate-self-signed \
