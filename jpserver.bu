@@ -1,0 +1,39 @@
+variant: fcos
+version: 1.6.0
+passwd:
+  groups:
+    - name: backup
+  users:
+    - name: jpartain89
+      ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFpgxljMxt/WULl2Rf+X4O8itFnBE4aRQYMtVWfmngpL
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDC36jXyyEUAMz3DJFRU4BmbGUVHbwHplEn5WV9QfGcJ
+      home_dir: /home/jpartain89
+      password_hash: "$6$BIzu3jXRAZlJDJOp$IRlHdlP3J/8/x1bh/aIXhAYf8jdbu1B5QvL1ovlAXesupxRuJYQBpFQeOEp2qTBb7oZ.Ek6YOjarZDQcMFcS4/"
+      groups:
+        - wheel
+        - docker
+        - sudo
+storage:
+  files:
+    - path: /etc/hostname
+      overwrite: true
+      contents:
+        inline: jpserver.jpcdi.com
+systemd:
+  units:
+    - name: var-mnt-CentralShare.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Mount CentralShare
+        After=network-online.target
+        Wants=network-online.target
+
+        [Mount]
+        What=10.0.100.30:/volume2/CentralShare
+        Where=/var/mnt/CentralShare
+        type=nfs4
+
+        [Install]
+        WantedBy=multi-user.target

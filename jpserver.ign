@@ -1,0 +1,49 @@
+{
+  "ignition": {
+    "version": "3.5.0"
+  },
+  "passwd": {
+    "groups": [
+      {
+        "name": "backup"
+      }
+    ],
+    "users": [
+      {
+        "groups": [
+          "wheel",
+          "docker",
+          "sudo"
+        ],
+        "homeDir": "/home/jpartain89",
+        "name": "jpartain89",
+        "passwordHash": "$6$BIzu3jXRAZlJDJOp$IRlHdlP3J/8/x1bh/aIXhAYf8jdbu1B5QvL1ovlAXesupxRuJYQBpFQeOEp2qTBb7oZ.Ek6YOjarZDQcMFcS4/",
+        "sshAuthorizedKeys": [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFpgxljMxt/WULl2Rf+X4O8itFnBE4aRQYMtVWfmngpL",
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDC36jXyyEUAMz3DJFRU4BmbGUVHbwHplEn5WV9QfGcJ"
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "overwrite": true,
+        "path": "/etc/hostname",
+        "contents": {
+          "compression": "",
+          "source": "data:,jpserver.jpcdi.com"
+        }
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Mount CentralShare\nAfter=network-online.target\nWants=network-online.target\n\n[Mount]\nWhat=10.0.100.30:/volume2/CentralShare\nWhere=/var/mnt/CentralShare\ntype=nfs4\n\n[Install]\nWantedBy=multi-user.target",
+        "enabled": true,
+        "name": "var-mnt-CentralShare.mount"
+      }
+    ]
+  }
+}
