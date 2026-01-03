@@ -3,7 +3,7 @@
 # copied from https://documentation.ubuntu.com/server/how-to/openldap/ldap-and-tls/
 
 SSL_ETC_DIR="/etc/ssl"
-LDAP_SERVER_FILENAME="pi5sts"
+LDAP_SERVER_FILENAME="pi5touch"
 SSL_PRIVATE_DIR="${SSL_ETC_DIR}/private" # directory for private keys
 LDAP_LDIF_DIR="/etc/ldap/ldif" # directory for LDAP ldif files
 SSL_CERTS_DIR="${SSL_ETC_DIR}/certs" # directory for certificates
@@ -68,7 +68,7 @@ sudo certtool --generate-certificate \
 sudo chgrp openldap "${SSL_LDAP_KEY}"
 sudo chmod 0640 "${SSL_LDAP_KEY}"
 
-echo << EOF | sudo tee "${LDAP_LDIF_DIR}/certinfo.ldif"
+cat << EOF | sudo tee "${LDAP_LDIF_DIR}/certinfo.ldif"
 dn: cn=config
 add: olcTLSCACertificateFile
 olcTLSCACertificateFile: "${SSL_CA_CERT}"
