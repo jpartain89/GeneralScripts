@@ -44,8 +44,8 @@ sudo certtool --generate-privkey \
 # Create /etc/ssl/${LDAP_SERVER_FILENAME}.info
 # The following certificate is good for 1 year, and it’s valid
 # only for the ${LDAP_SERVER_FILENAME}.jpcdi.com hostname
-# You can adjust this according to your needs.
-echo << EOF | sudo tee "/etc/ssl/${LDAP_SERVER_FILENAME}.info"
+# You can adjust this according to your needs
+cat << EOF | sudo tee "/etc/ssl/${LDAP_SERVER_FILENAME}.info"
 organization = ${COMPANY}
 cn = ${LDAP_SERVER_FILENAME}.jpcdi.com
 tls_www_server
