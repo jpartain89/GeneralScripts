@@ -3,6 +3,7 @@
 # copied from https://documentation.ubuntu.com/server/how-to/openldap/ldap-and-tls/
 
 SSL_ETC_DIR="/etc/ssl"
+LDAP_SERVER_FILENAME="syno01"
 SSL_PRIVATE_DIR="${SSL_ETC_DIR}/private" # directory for private keys
 LDAP_LDIF_DIR="/etc/ldap/ldif" # directory for LDAP ldif files
 SSL_CERTS_DIR="${SSL_ETC_DIR}/certs" # directory for certificates
@@ -10,7 +11,6 @@ SSL_PRIV_KEY="${SSL_PRIVATE_DIR}/The_CA_Key.pem" # private key for the CA
 SSL_CA_CERT="${SSL_CERTS_DIR}/The_CA_Cert.crt" # self-signed CA certificate
 SSL_LDAP_KEY="/etc/ldap/${LDAP_SERVER_FILENAME}_slapd_key.pem" # private key for LDAP server
 SSL_SERVER_CERT="/etc/ldap/${LDAP_SERVER_FILENAME}_slapd_cert.pem" # certificate for LDAP server
-LDAP_SERVER_FILENAME="syno01"
 COMPANY="JPCDI"
 EXPIRATION_DAYS="3650"
 KEY_BITS="4096"
