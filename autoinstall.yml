@@ -1,0 +1,106 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+  timezone: America/Chicago
+  hostname: jpserver
+  fqdn: jpserver.jpcdi.com
+  manage_etc_hosts: true
+  network:
+    version: 2
+    ethernets:
+      enp5s0f0:
+      enp5sof1:
+    bond0:
+      dhcp4: no
+      addresses:
+        - 10.0.100.41
+      gateway4: 10.0.100.1
+      nameservers:
+        addresses:
+          - 1.1.1.1
+
+
+# Users
+users:
+  - name: ${ssh_user}
+    groups: sudo, docker, ssh-users
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+%{ for key in ssh_keys ~}
+      - ${key}
+%{ endfor ~}
+
+# Packages
+package_update: true
+package_upgrade: true
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - git
+  - vim
+  - htop
+  - net-tools
+  - wget
+  - unzip
+  - software-properties-common
+  - qemu-guest-agent
+  - nfs-common
+  - cifs-utils
+
+# Docker installation
+runcmd:
+  # Install Docker
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update -y
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker ${ssh_user}
+  
+  # Install 1Password CLI
+  - curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | tee /etc/apt/sources.list.d/1password.list
+  - mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+  - curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+  - mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+  - curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+  - apt-get update -y
+  - apt-get install -y 1password-cli
+  
+  # Create docker directory structure
+  - mkdir -p /docker
+  - chown ${ssh_user}:${ssh_user} /docker
+  
+  # Enable qemu-guest-agent
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  
+  # GPU drivers (NVIDIA example - modify if using AMD)
+  - |
+    if lspci | grep -i nvidia; then
+      # Add NVIDIA repository
+      distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+      curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+      curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+      apt-get update
+      # Install NVIDIA drivers and container toolkit
+      apt-get install -y nvidia-driver-535 nvidia-container-toolkit
+      nvidia-ctk runtime configure --runtime=docker
+      systemctl restart docker
+    fi
+
+# Final message
+final_message: "Docker host is ready! System boot took $UPTIME seconds"
+
+# Power state
+power_state:
+  mode: reboot
+  condition: true
